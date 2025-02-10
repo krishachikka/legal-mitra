@@ -34,12 +34,14 @@ import firIpcLawsRouter from './routes/firIpcLaws.routes.js'
 import indianConstitution from './routes/indianConstitution.routes.js'
 import quesAndAnswers from './routes/quesAndAns.routes.js'
 import workerLaws from './routes/workerLaws.routes.js'
+import pastJudgement from './routes/caseJudgements.routes.js'
 
 app.use('/api/v1/common-laws', commonLawsRouter)
 app.use('/api/v1/fir-ipc-laws', firIpcLawsRouter)
 app.use('/api/v1/indian-constitution', indianConstitution)
 app.use('/api/v1/ques-ans', quesAndAnswers)
 app.use('/api/v1/worker-laws', workerLaws)
+app.use('/api/v1/past-judgement', pastJudgement)
 
 
 export { app };

@@ -14,6 +14,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt'; // for Case Studies
 import PeopleIcon from '@mui/icons-material/People'; // for Lawyers Directory
 import ArticleIcon from '@mui/icons-material/Article'; // for Legal News
 import HelpIcon from '@mui/icons-material/Help'; // for FAQ
+import MailIcon from '@mui/icons-material/Mail'; // for Contact Us
 import MenuIcon from '@mui/icons-material/Menu'; // Menu icon for opening the drawer
 import CloseIcon from '@mui/icons-material/Close'; // Close icon for closing the drawer
 
@@ -32,7 +33,7 @@ export default function SideDrawer() {
     };
 
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
+        <Box sx={{ width: 250 }} role="presentation" >
             {/* Logo */}
             <Box sx={{ padding: 2, textAlign: 'center' }}>
                 <h2>LegalMitra</h2>
@@ -54,12 +55,13 @@ export default function SideDrawer() {
             </List>
             <Divider />
             <List>
-                {['Legal News', 'FAQ', 'Contact Us'].map((text, index) => (
+            {['Legal News', 'FAQ', 'Contact Us'].map((text, index) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton onClick={() => handleItemClick(text)}>
                             <ListItemIcon>
                                 {index === 0 ? <ArticleIcon /> :
-                                    index === 1 ? <HelpIcon /> : null}
+                                    index === 1 ? <HelpIcon /> :
+                                        index === 2 ? <MailIcon /> : null} {/* Add icon for 'Contact Us' */}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>

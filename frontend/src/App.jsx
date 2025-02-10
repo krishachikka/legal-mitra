@@ -1,14 +1,22 @@
-// App.jsx
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SideDrawer from './components/SideDrawer';
-import PdfChat from './components/PdfChat';
+import LegalAdvice from './pages/LegalAdvice';
+import PdfChat from './components/PdfChat'; // Import PdfChat
 
 function App() {
   return (
-    <div>
-      <SideDrawer />
-      <PdfChat />
-    </div>
+    <Router>
+      <div>
+        <SideDrawer />
+
+        {/* Define Routes using Routes component */}
+        <Routes>
+          <Route path="/legal-advice" element={<LegalAdvice />} />
+          <Route path="/legal-chat" element={<PdfChat />} /> {/* Use PdfChat here */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

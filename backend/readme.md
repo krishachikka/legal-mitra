@@ -3,6 +3,8 @@
 cd backend
 python -m venv venv
 
+--- Do from below ---
+
 # Activate venv for running python
 
 .\venv\Scripts\activate
@@ -17,3 +19,7 @@ Note: for deactivating just type deactivate
 
 redirect to backend, activate venv and run this command
 uvicorn main:app --reload
+
+## Note:
+
+- only Legal Advice and Legal Chat routes are working from the sidebar

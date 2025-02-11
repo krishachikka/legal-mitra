@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom'; // Importing useNavigate
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -20,16 +21,29 @@ import CloseIcon from '@mui/icons-material/Close'; // Close icon for closing the
 
 export default function SideDrawer() {
     const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate(); // Initialize useNavigate
 
     // Toggles the open state of the drawer
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
 
-    // Function to handle item click
+    // Function to handle item click, including navigation
     const handleItemClick = (item) => {
-        console.log(`${item} clicked!`); // Replace with your desired action, e.g., navigation or state update
-        alert(`${item} clicked!`);
+        console.log(`${item} clicked!`);
+
+        // Navigating to different routes based on the item clicked
+        switch (item) {
+            case 'Legal Advice':
+                navigate('/legal-advice'); // Navigate to the Legal Advice page
+                break;
+            case 'Legal Chat':
+                navigate('/legal-chat'); // Navigate to the Legal Chat page (you need to create this route)
+                break;
+            default:
+                console.log(`No navigation for ${item}`);
+                break;
+        }
     };
 
     const DrawerList = (
@@ -40,13 +54,14 @@ export default function SideDrawer() {
             </Box>
             <Divider />
             <List>
-                {['Legal Advice', 'Legal Documents', 'Case Studies', 'Lawyers Directory'].map((text, index) => (
+                {['Legal Advice', 'Legal Documents', 'Case Studies', 'Lawyers Directory', 'Legal Chat'].map((text, index) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton onClick={() => handleItemClick(text)}>
                             <ListItemIcon>
                                 {index === 0 ? <GavelIcon /> :
                                     index === 1 ? <DocumentScannerIcon /> :
-                                        index === 2 ? <ListAltIcon /> : <PeopleIcon />}
+                                        index === 2 ? <ListAltIcon /> :
+                                            index === 3 ? <PeopleIcon /> : index === 4 ? <HelpIcon /> : null}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -55,13 +70,13 @@ export default function SideDrawer() {
             </List>
             <Divider />
             <List>
-            {['Legal News', 'FAQ', 'Contact Us'].map((text, index) => (
+                {['Legal News', 'FAQ', 'Contact Us'].map((text, index) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton onClick={() => handleItemClick(text)}>
                             <ListItemIcon>
                                 {index === 0 ? <ArticleIcon /> :
                                     index === 1 ? <HelpIcon /> :
-                                        index === 2 ? <MailIcon /> : null} {/* Add icon for 'Contact Us' */}
+                                        index === 2 ? <MailIcon /> : null}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -88,4 +103,3 @@ export default function SideDrawer() {
         </div>
     );
 }
- 

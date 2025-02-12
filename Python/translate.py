@@ -21,6 +21,3 @@ async def translate_text():
 
 # Run the async function
 asyncio.run(translate_text())
-
-
-# कृष्ण कृपया यार को बंद करें

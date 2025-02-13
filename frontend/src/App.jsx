@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SideDrawer from './components/SideDrawer';
 import LegalAdvice from './pages/LegalAdvice';
 import PdfChat from './components/PdfChat'; // Import PdfChat
+import Header from './components/Header';
 
 function App() {
   return (
     <Router>
       <div>
-        <SideDrawer />
+        <Header />
+        {/* <SideDrawer /> */}
 
         {/* Define Routes using Routes component */}
         <Routes>

@@ -70,14 +70,14 @@ const SearchBar = ({ onSearch }) => {
       />
 
       {/* Search Button */}
-      <button onClick={() => onSearch(query)} className="p-2 text-gray-600 hover:text-black transition">
+      <button onClick={() => onSearch(query)} className="p-2 text-gray-600 hover:text-black transition cursor-pointer">
         <SearchIcon />
       </button>
 
       {/* Mic Button */}
       <button
         onClick={startListening}
-        className={`p-2 transition rounded-full ${isListening ? "text-blue-600 animate-pulse" : "text-gray-600 hover:text-black"}`}
+        className={`p-2 transition rounded-full cursor-pointer ${isListening ? "text-blue-600 animate-pulse" : "text-gray-600 hover:text-black"}`}
       >
         <MicIcon />
       </button>

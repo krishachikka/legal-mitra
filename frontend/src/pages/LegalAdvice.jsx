@@ -31,7 +31,7 @@ const LegalAdvice = () => {
   return (
     <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gray-100">
       {/* Page Title */}
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
         Legal Advice
       </h1>
 

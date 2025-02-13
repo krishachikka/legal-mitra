@@ -1,44 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-    Container,
-    Box,
-    TextField,
-    Button,
-    Typography,
-    CircularProgress,
-    Card,
-    CardContent,
-    styled
-} from "@mui/material";
-
-// Custom styled components using Material UI styled API
-const ContainerStyled = styled(Container)(({ theme }) => ({
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "100vh",
-    padding: theme.spacing(3),
-}));
-
-const CardStyled = styled(Card)(({ theme }) => ({
-    width: "100%",
-    maxWidth: 600,
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    textAlign: "center",
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(1, 3),
-    backgroundColor: "#3f51b5",
-    color: "#fff",
-    "&:hover": {
-        backgroundColor: "#303f9f",
-    },
-}));
 
 const PdfChat = () => {
     const [pdfFiles, setPdfFiles] = useState(null);
@@ -100,73 +61,66 @@ const PdfChat = () => {
     };
 
     return (
-        <ContainerStyled>
-            <CardStyled>
-                <CardContent>
-                    <Typography variant="h4" gutterBottom>
-                        Chat with PDF
-                    </Typography>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+            <div className="bg-white/30 backdrop-blur-2xl border-red-900 border-4 p-6 rounded-3xl shadow-lg max-w-2xl w-full">
+                <h2 className="text-3xl font-semibold text-center mb-6">Chat using PDF</h2>
 
-                    {/* PDF Upload Section */}
-                    <Box>
-                        <ButtonStyled
-                            variant="contained"
-                            component="label"
-                        >
-                            Select PDF Files
-                            <input
-                                type="file"
-                                multiple
-                                hidden
-                                onChange={handleFileChange}
-                            />
-                        </ButtonStyled>
-                        {pdfFiles && pdfFiles.length > 0 && (
-                            <Typography variant="body2" color="textSecondary">
-                                {pdfFiles.length} file(s) selected
-                            </Typography>
-                        )}
-                        <ButtonStyled
-                            variant="outlined"
-                            onClick={uploadPdfFiles}
-                            disabled={!pdfFiles}
-                        >
-                            Upload and Process PDFs
-                        </ButtonStyled>
-                    </Box>
-
-                    {/* Question Section */}
-                    <Box>
-                        <TextField
-                            variant="outlined"
-                            label="Ask a question"
-                            fullWidth
-                            value={question}
-                            onChange={handleQuestionChange}
-                            disabled={loading}
+                {/* PDF Upload Section */}
+                <div className="flex flex-col items-center mb-6">
+                    <label className="cursor-pointer bg-red-800 text-white py-2 px-6 rounded-3xl hover:bg-red-900 transform hover:scale-110 transition duration-300 ease-in-out">
+                        Select PDF Files
+                        <input
+                            type="file"
+                            multiple
+                            hidden
+                            onChange={handleFileChange}
                         />
-                        <ButtonStyled
-                            variant="contained"
-                            onClick={askQuestion}
-                            disabled={loading}
-                        >
-                            {loading ? "Processing..." : "Ask"}
-                        </ButtonStyled>
-                    </Box>
+                    </label>
+                    {pdfFiles && pdfFiles.length > 0 && (
+                        <p className="mt-2 text-sm text-gray-600">{pdfFiles.length} file(s) selected</p>
+                    )}
+                    <button
+                        onClick={uploadPdfFiles}
+                        disabled={!pdfFiles}
+                        className="mt-4 bg-gray-800 text-white py-2 px-6 rounded-3xl hover:bg-gray-700 transform hover:scale-110 disabled:bg-gray-300 transition duration-300 ease-in-out"
+                    >
+                        Upload and Process PDFs
+                    </button>
+                </div>
 
-                    {/* Answer Display */}
-                    {loading && (
-                        <CircularProgress />
-                    )}
-                    {!loading && answer && (
-                        <Box sx={{ marginTop: 3, padding: 2, border: "1px solid #ddd", borderRadius: 2, backgroundColor: "#f9f9f9" }}>
-                            <Typography variant="h6">Answer:</Typography>
-                            <Typography>{answer}</Typography>
-                        </Box>
-                    )}
-                </CardContent>
-            </CardStyled>
-        </ContainerStyled>
+                {/* Question Section */}
+                <div className="flex flex-row mx-auto justify-between items-center">
+                    <input
+                        type="text"
+                        className="w-full p-2 border border-yellow-800 rounded-2xl bg-gray-100"
+                        placeholder="Ask a question"
+                        value={question}
+                        onChange={handleQuestionChange}
+                        disabled={loading}
+                    />
+                    <button
+                        onClick={askQuestion}
+                        disabled={loading}
+                        className="mx-2 bg-yellow-600 text-white py-2 px-6 rounded-3xl hover:bg-yellow-700 disabled:bg-gray-300 transform hover:scale-110 transition duration-300 ease-in-out"
+                    >
+                        {loading ? "Processing..." : "Ask"}
+                    </button>
+                </div>
+
+                {/* Answer Display */}
+                {loading && (
+                    <div className="flex justify-center">
+                        <div className="w-8 h-8 border-t-4 border-yellow-600 border-solid rounded-full animate-spin"></div>
+                    </div>
+                )}
+                {!loading && answer && (
+                    <div className="mt-6 p-4 border border-gray-300 rounded-md bg-gray-50">
+                        <h3 className="text-xl font-semibold mb-2">Answer:</h3>
+                        <p>{answer}</p>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };
 

@@ -1,2 +1,33 @@
+# Node.js dependencies
+node_modules/
+
+# Python virtual environment
+venv/
 .env
-/node_modules
+
+# IDE or editor-specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build output
+dist/
+build/
+*.tgz
+
+# Dependency directories
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Miscellaneous
+*.bak
+*.swp

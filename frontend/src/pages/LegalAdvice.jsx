@@ -1,37 +1,61 @@
 import React, { useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
-import { formatLegalAdvice } from "../utils/formatMiddleware"; // Import middleware function
+import { formatLegalAdvice } from "../utils/formatMiddleware"; // Middleware function
 
 const LegalAdvice = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const fetchKeywords = async (query) => {
+    try {
+      const response = await fetch("http://localhost:5001/extract_keywords", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) throw new Error("Failed to extract keywords");
+
+      const data = await response.json();
+      console.log("Extracted Keywords:", data.keywords);
+      return data.keywords;
+    } catch (error) {
+      console.error("Keyword extraction error:", error);
+      return [];
+    }
+  };
+
   const fetchLegalAdvice = async (query) => {
     setLoading(true);
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/common-laws");
-      let data = await response.json();
 
-      // Filter results based on search query (frontend filtering)
+    try {
+      // Extract keywords from query
+      const keywords = await fetchKeywords(query);
+
+      // Fetch legal data
+      const response = await fetch("http://localhost:3000/api/v1/common-laws");
+      const data = await response.json();
+
+      // Filter results based on extracted keywords
       const filteredResults = data.filter((item) =>
-        item.title.toLowerCase().includes(query.toLowerCase())
+        keywords.some((keyword) => item.title.toLowerCase().includes(keyword))
       );
 
       // Format results before setting state
       const formattedResults = formatLegalAdvice(filteredResults);
-
       setResults(formattedResults);
     } catch (error) {
       console.error("Error fetching legal advice:", error);
     }
+
     setLoading(false);
   };
 
   return (
     <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gray-100">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">
         Legal Advice
       </h1>
 

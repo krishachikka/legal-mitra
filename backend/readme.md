@@ -18,7 +18,7 @@ Note: for deactivating just type deactivate
 # Command to run the fastapi application
 
 redirect to backend, activate venv and run this command
-uvicorn main:app --reload
+uvicorn app:app --reload
 
 ## Note:
 

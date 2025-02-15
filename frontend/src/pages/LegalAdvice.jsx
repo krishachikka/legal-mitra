@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
+import { formatLegalAdvice } from "../utils/formatMiddleware"; // Middleware function
 
 const LegalAdvice = () => {
   const [results, setResults] = useState([]);
@@ -29,28 +30,20 @@ const LegalAdvice = () => {
     setLoading(true);
 
     try {
-      // Extract keywords from the search query
+      // Extract keywords from query
       const keywords = await fetchKeywords(query);
 
-      // Send the keywords to the search API to get relevant results
-      const response = await fetch(
-        `http://localhost:5000/api/v1/search/search?keywords=${JSON.stringify(keywords)}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch legal data");
-      }
-
+      // Fetch legal data
+      const response = await fetch("http://localhost:3000/api/v1/common-laws");
       const data = await response.json();
 
-      // Handle formatting directly here
-      const formattedResults = Array.isArray(data)
-        ? data.map((item) => ({
-            title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
-            description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
-          }))
-        : [];
+      // Filter results based on extracted keywords
+      const filteredResults = data.filter((item) =>
+        keywords.some((keyword) => item.title.toLowerCase().includes(keyword))
+      );
 
+      // Format results before setting state
+      const formattedResults = formatLegalAdvice(filteredResults);
       setResults(formattedResults);
     } catch (error) {
       console.error("Error fetching legal advice:", error);

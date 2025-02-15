@@ -61,7 +61,7 @@ const PdfChat = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 mt-4">
             <div className="bg-white/30 backdrop-blur-2xl border-red-900 border-4 p-6 rounded-3xl shadow-lg max-w-2xl w-full">
                 <h2 className="text-3xl font-semibold text-center mb-6">Chat using PDF</h2>
 

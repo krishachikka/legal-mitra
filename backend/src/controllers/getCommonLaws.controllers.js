@@ -17,3 +17,5 @@ export const getCommonLaws = async (req, res) => {
         return res.status(500).json({ message: 'Server error, unable to fetch common laws.' });
     }
 };
+
+

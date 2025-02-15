@@ -4,6 +4,7 @@ import SideDrawer from './components/SideDrawer';
 import LegalAdvice from './pages/LegalAdvice';
 import PdfChat from './components/PdfChat'; // Import PdfChat
 import Header from './components/Header';
+import SpeechTranslator from './pages/SpeechTranslator';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/legal-advice" element={<LegalAdvice />} />
           <Route path="/legal-chat" element={<PdfChat />} /> {/* Use PdfChat here */}
+          <Route path="/translate" element={<SpeechTranslator />} /> {/* Use PdfChat here */}
         </Routes>
       </div>
     </Router>

@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-black text-white p-4 flex justify-between mx-auto items-center">
+    <header className="bg-red-900 text-white p-2 flex justify-between mx-auto items-center">
       <IconButton
         sx={{ color: 'white' }}
         onClick={toggleDrawer(!open)} // Toggle drawer open/close

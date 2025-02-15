@@ -63,14 +63,17 @@ const SearchBar = ({ onSearch }) => {
         onKeyPress={(e) => {
           if (e.key === "Enter") {
             stopListening(); // Stop mic on Enter
-            onSearch(query);
+            onSearch(query); // Pass query to the parent
           }
         }}
         className="w-full px-4 py-2 text-gray-700 bg-transparent outline-none rounded-full"
       />
 
       {/* Search Button */}
-      <button onClick={() => onSearch(query)} className="p-2 text-gray-600 hover:text-black transition cursor-pointer">
+      <button
+        onClick={() => onSearch(query)} // Pass query to the parent
+        className="p-2 text-gray-600 hover:text-black transition cursor-pointer"
+      >
         <SearchIcon />
       </button>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import SideDrawer from './SideDrawer';
 import logo from '../../public/assets/legalmitra_white.png';
@@ -6,9 +6,16 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu'; 
 import CloseIcon from '@mui/icons-material/Close'; 
 
-const Header = () => {
+const Header = ({ setHeaderHeight }) => {
   const [open, setOpen] = useState(false); 
   const navigate = useNavigate(); 
+  const headerRef = useRef(null); // Ref for header element
+
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, [setHeaderHeight]);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -20,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-red-900 text-white p-2 flex justify-between mx-auto items-center">
+    <header ref={headerRef} className="bg-red-900 text-white p-2 flex justify-between mx-auto items-center fixed top-0 left-0 w-full z-50">
       <IconButton
         sx={{ color: 'white' }}
         onClick={toggleDrawer(!open)} // Toggle drawer open/close

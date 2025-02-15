@@ -43,8 +43,8 @@ const LegalAdvice = () => {
 
       const data = await response.json();
 
-          // Log the raw fetched data
-    console.log("Raw Fetched Data:", data);
+      // display all fetched data 
+      console.log("Raw formed data:" , data);
 
       // Handle formatting directly here
       const formattedResults = Array.isArray(data)

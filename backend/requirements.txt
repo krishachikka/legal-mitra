@@ -8,3 +8,9 @@ google-generativeai
 langchain-community
 faiss-cpu
 pydantic
+Flask
+flask-cors
+gtts
+pygame
+SpeechRecognition
+googletrans

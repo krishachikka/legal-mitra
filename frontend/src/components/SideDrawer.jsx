@@ -16,7 +16,7 @@ import ArticleIcon from '@mui/icons-material/Article'; // for Legal News
 import HelpIcon from '@mui/icons-material/Help'; // for FAQ
 import MailIcon from '@mui/icons-material/Mail'; // for Contact Us
 
-export default function SideDrawer({open, toggleDrawer}) {
+export default function SideDrawer({ open, toggleDrawer }) {
     const navigate = useNavigate(); // Initialize useNavigate
 
     // Function to handle item click, including navigation
@@ -31,6 +31,15 @@ export default function SideDrawer({open, toggleDrawer}) {
             case 'Legal Chat':
                 navigate('/legal-chat');
                 break;
+            case 'Legal News':
+                navigate('/legal-news')
+                break
+            case 'Case Studies':
+                navigate('/legal-case-studies')
+                break
+            case 'FAQ':
+                navigate('/FAQ');
+                break
             default:
                 console.log(`No navigation for ${item}`);
                 break;

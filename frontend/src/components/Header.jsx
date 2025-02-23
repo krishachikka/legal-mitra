@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 import logo from '../../public/assets/legalmitra_white.png';
-import IconButton from '@mui/material/IconButton'; 
-import MenuIcon from '@mui/icons-material/Menu'; 
-import CloseIcon from '@mui/icons-material/Close'; 
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Header = ({ setHeaderHeight }) => {
-  const [open, setOpen] = useState(false); 
-  const navigate = useNavigate(); 
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const headerRef = useRef(null); // Ref for header element
 
   useEffect(() => {

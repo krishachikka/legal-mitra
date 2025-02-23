@@ -5,6 +5,10 @@ import LegalAdvice from './pages/LegalAdvice';
 import PdfChat from './components/PdfChat'; // Import PdfChat
 import Header from './components/Header';
 import SpeechTranslator from './pages/SpeechTranslator';
+import LegalNews from './pages/LegalNews';
+import CaseStudies from './pages/CaseStudies';
+import FAQ from './pages/FAQ';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -14,9 +18,13 @@ function App() {
       <Header setHeaderHeight={setHeaderHeight} />
       <div style={{ marginTop: headerHeight + 'px' }}>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/legal-advice" element={<LegalAdvice />} />
-          <Route path="/legal-chat" element={<PdfChat />} /> {/* Use PdfChat here */}
-          <Route path="/translate" element={<SpeechTranslator />} /> {/* Use PdfChat here */}
+          <Route path="/legal-chat" element={<PdfChat />} />
+          <Route path="/translate" element={<SpeechTranslator />} />
+          <Route path="/legal-news" element={<LegalNews />} />
+          <Route path="/legal-case-studies" element={<CaseStudies />} />
+          <Route path="/faq" element={<FAQ />} />
         </Routes>
       </div>
     </Router>

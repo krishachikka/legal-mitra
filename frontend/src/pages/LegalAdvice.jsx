@@ -46,9 +46,9 @@ const LegalAdvice = () => {
       // Handle formatting directly here
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-          title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
-          description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
-        }))
+            title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
+            description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
+          }))
         : [];
 
       setResults(formattedResults);

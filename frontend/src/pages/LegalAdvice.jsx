@@ -34,7 +34,7 @@ const LegalAdvice = () => {
 
       // Send the keywords to the search API to get relevant results
       const response = await fetch(
-        `http://localhost:3000/api/v1/search/search?keywords=${JSON.stringify(keywords)}`
+        `http://localhost:5000/api/v1/search/search?keywords=${JSON.stringify(keywords)}`
       );
 
       if (!response.ok) {

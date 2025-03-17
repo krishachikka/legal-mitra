@@ -28,7 +28,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-
 # Function to extract text from PDFs
 def get_pdf_text(pdf_docs):
     text = ""
@@ -63,7 +62,7 @@ def get_conversational_chain():
 
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
     prompt = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
@@ -108,3 +107,4 @@ async def ask_question(request: QuestionRequest):
         {"input_documents": docs, "question": question}, return_only_outputs=True
     )
     return {"response": response["output_text"]}
+

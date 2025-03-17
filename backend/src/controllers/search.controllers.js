@@ -46,7 +46,7 @@ const searchInAllDatasets = async (keywords) => {
       .sort((a, b) => b.score - a.score) // Sort by highest keyword match
       .slice(0, 10); // Limit to top 10 results
 
-    return scoredResults;
+    return { scoredResults, datasets }; // Return both scored results and fetched datasets
   } catch (error) {
     console.error("Error searching datasets:", error);
     throw new Error("Error searching datasets");
@@ -62,8 +62,13 @@ const search = async (req, res) => {
 
   try {
     const parsedKeywords = JSON.parse(keywords);
-    const results = await searchInAllDatasets(parsedKeywords);
-    res.json(results);
+    const { scoredResults, datasets } = await searchInAllDatasets(parsedKeywords);
+    
+    // Send both scoredResults and fetched datasets as part of the response
+    res.json({
+      scoredResults,
+      datasets,  // Include the fetched data here
+    });
   } catch (error) {
     console.error("Error during search:", error);
     res.status(500).json({ message: "Error during search" });

@@ -1,0 +1,19 @@
+# Legal Mitra
+
+1. Landing Page - get started - Login / Signup
+2. Search feature - text and voice 
+    1) give summary of the answer
+    2) input - cards from database 
+3. Just Database of Case studies as of no use
+4. Recent Legal Updates, Change in any laws is visible on site 
+5. Lawyers directory
+    Filters for category on types of lawyers
+    location based Lawyers
+    if not found - then tell them to select a location (from the nearest ones)
+    on the basis of that show lawyers
+6. chat with document pdf no change
+7. any legal related news so this is the Page
+8. Legal Documents Templates
+
+yash chavan 
+

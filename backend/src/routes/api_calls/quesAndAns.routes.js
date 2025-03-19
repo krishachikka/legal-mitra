@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getQuesAndAns } from '../controllers/getQuesAndAns.controllers.js';
+import { getQuesAndAns } from '../../controllers/api_calls/getQuesAndAns.controllers.js';
 
 const router = Router();
 

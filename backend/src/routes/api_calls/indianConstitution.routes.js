@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getIndianConstitution } from '../controllers/getIndianConstitution.controllers.js'
+import { getIndianConstitution } from '../../controllers/api_calls/getIndianConstitution.controllers.js'
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import QuesAndAnswer from "../models/quesAndAns.models.js";
+import QuesAndAnswer from "../../models/dataset_models/quesAndAns.models.js";
 
 export const getQuesAndAns = async (req, res) => {
     try {

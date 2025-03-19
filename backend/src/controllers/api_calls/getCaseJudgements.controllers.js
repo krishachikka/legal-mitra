@@ -1,4 +1,4 @@
-import CaseJudgement from "../models/caseJugdements.models.js";
+import CaseJudgement from "../../models/dataset_models/caseJugdements.models.js";
 
 export const getCaseJudgements = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1 if no page is provided

@@ -1,16 +1,12 @@
 import speech_recognition as sr
-from googletrans import Translator
-import asyncio
+from deep_translator import GoogleTranslator
 from gtts import gTTS
-import pygame  # Import pygame for sound playback
+import pygame
 
 # Step 1: Audio to text translation
 r = sr.Recognizer()
 
-# Step 2: Text to text translation
-translator = Translator()
-
-# Indian language options for input speech
+# Available languages for speech input
 available_languages = {
     "Hindi": "hi",
     "Bengali": "bn",
@@ -38,37 +34,39 @@ def choose_language():
         return "hi"  # Default language in case of invalid input
 
 
-async def translate_text(speech_text):
-    # Translate the text to English
-    translated_text = await translator.translate(speech_text, dest="en")
-    print("Translated Text:", translated_text.text)
-    return translated_text.text  # Return translated text for use in TTS
+# Function for translating text
+def translate_text(speech_text, target_language="en"):
+    translated_text = GoogleTranslator(source="auto", target=target_language).translate(
+        speech_text
+    )
+    print("Translated Text:", translated_text)
+    return translated_text  # Return translated text for use in TTS
 
 
-async def main():
-    # Choose language
+def main():
+    # Choose input language
     input_language = choose_language()
 
     with sr.Microphone() as source:
-        # Step 1: Capture audio and recognize speech
         print(
-            f"Speak Now in {list(available_languages.keys())[list(available_languages.values()).index(input_language)]}..."
+            f"Speak now in {list(available_languages.keys())[list(available_languages.values()).index(input_language)]}..."
         )
         audio = r.listen(source)
         try:
+            # Recognize speech using Google Speech Recognition
             speech_text = r.recognize_google(audio, language=input_language)
             print("Recognized Speech:", speech_text)
 
-            # Step 2: Translate text to English
-            translated_text = await translate_text(speech_text)
+            # Translate text to English
+            translated_text = translate_text(speech_text)
 
-            # Step 3: Convert translated text to speech
-            voice = gTTS(translated_text, lang="en")
-            voice.save("voice.mp3")
+            # Convert translated text to speech
+            tts = gTTS(translated_text, lang="en")
+            tts.save("translated_voice.mp3")
 
-            # Initialize pygame mixer and play the sound
+            # Initialize pygame mixer and play the translated voice
             pygame.mixer.init()
-            pygame.mixer.music.load("voice.mp3")
+            pygame.mixer.music.load("translated_voice.mp3")
             pygame.mixer.music.play()
 
             # Wait until the music finishes playing
@@ -76,10 +74,11 @@ async def main():
                 pygame.time.Clock().tick(10)
 
         except sr.UnknownValueError:
-            print("Could not understand the speech")
+            print("Sorry, I couldn't understand the speech.")
         except sr.RequestError:
-            print("Could not request the result from Google API")
+            print("Sorry, there was an issue with the Google API request.")
 
 
-# Running the asynchronous main function
-asyncio.run(main())
+# Run the program
+if __name__ == "__main__":
+    main()

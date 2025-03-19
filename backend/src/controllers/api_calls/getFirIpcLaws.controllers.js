@@ -1,4 +1,4 @@
-import firIPC from "../models/firIPC.models.js";
+import firIPC from "../../models/dataset_models/firIPC.models.js";
 
 export const getFirIpcLaws = async (req, res) => {
 

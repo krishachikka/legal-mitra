@@ -1,0 +1,16 @@
+To run frontend and backend folder
+
+- npm i
+- npm run dev
+
+
+To run Python files with their connections:
+
+- if using PdfChat.jsx then run pdf_chat_rag.py using 
+    uvicorn pdf_chat_rag:app --reload
+
+- if using LegalAdvice.jsx start frontend and backend both and run keyword_extraction_and_api.py
+    python keyword_extraction_and_api
+
+- if using SpeechTranslator.jsx start then run stt.py
+    python stt.py

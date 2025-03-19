@@ -1,4 +1,4 @@
-import CommonLaws from '../models/commonLaws.models.js';
+import CommonLaws from '../../models/dataset_models/commonLaws.models.js';
 
 export const getCommonLaws = async (req, res) => {
     try {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getWorkerLaws } from '../controllers/workerLaws.controllers.js';
+import { getWorkerLaws } from '../../controllers/api_calls/workerLaws.controllers.js';
 
 const router = Router();
 

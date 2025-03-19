@@ -1,9 +1,9 @@
-import CaseJudgements from "../models/caseJugdements.models.js";
-import CommonLaws from "../models/commonLaws.models.js";
-import FirIpcLaws from "../models/firIPC.models.js";
-import IndianConstitution from "../models/indianConstitution.models.js";
-import QuesAndAns from "../models/quesAndAns.models.js";
-import WorkerLaws from "../models/workerLaws.models.js";
+import CaseJudgements from "../models/dataset_models/caseJugdements.models.js";
+import CommonLaws from "../models/dataset_models/commonLaws.models.js";
+import FirIpcLaws from "../models/dataset_models/firIPC.models.js";
+import IndianConstitution from "../models/dataset_models/indianConstitution.models.js";
+import QuesAndAns from "../models/dataset_models/quesAndAns.models.js";
+import WorkerLaws from "../models/dataset_models/workerLaws.models.js";
 
 // Function to search and rank results based on keyword matches
 const searchInAllDatasets = async (keywords) => {
@@ -46,7 +46,7 @@ const searchInAllDatasets = async (keywords) => {
       .sort((a, b) => b.score - a.score) // Sort by highest keyword match
       .slice(0, 10); // Limit to top 10 results
 
-    return { scoredResults, datasets }; // Return both scored results and fetched datasets
+    return scoredResults;
   } catch (error) {
     console.error("Error searching datasets:", error);
     throw new Error("Error searching datasets");
@@ -62,13 +62,8 @@ const search = async (req, res) => {
 
   try {
     const parsedKeywords = JSON.parse(keywords);
-    const { scoredResults, datasets } = await searchInAllDatasets(parsedKeywords);
-    
-    // Send both scoredResults and fetched datasets as part of the response
-    res.json({
-      scoredResults,
-      datasets,  // Include the fetched data here
-    });
+    const results = await searchInAllDatasets(parsedKeywords);
+    res.json(results);
   } catch (error) {
     console.error("Error during search:", error);
     res.status(500).json({ message: "Error during search" });

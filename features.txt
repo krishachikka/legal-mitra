@@ -1,18 +1,40 @@
 # Legal Mitra
 
 1. Landing Page - get started - Login / Signup
-2. Search feature - text and voice 
+2. Search feature - text and voice  // main 
     1) give summary of the answer
     2) input - cards from database 
-3. Just Database of Case studies as of no use
+3. Just Database of Case studies as of no use  // dont include
 4. Recent Legal Updates, Change in any laws is visible on site 
 5. Lawyers directory
     Filters for category on types of lawyers
     location based Lawyers
     if not found - then tell them to select a location (from the nearest ones)
     on the basis of that show lawyers
-6. chat with document pdf no change
+6. chat with document pdf no change  // database
 7. any legal related news so this is the Page
-8. Legal Documents Templates
+8. Legal Documents Templates   // optional
+
+# Additions:
+- vector databases
+- folder and file organization
+
+
+Yash
+- voice to Search - hugging face
+- lawyers directory
+
+
+Krisha
+- vector db for chat
+- Landing Page - get started 
+- Login / Signup
+
+Anjali
+- text summarization (pipeline - hugging face)
+- Recent Legal Updates, Change in any laws is visible on site 
+
+
+
 
 

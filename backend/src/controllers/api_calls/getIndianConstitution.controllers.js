@@ -1,4 +1,4 @@
-import IndianConstitution from "../models/indianConstitution.models.js"
+import IndianConstitution from "../../models/dataset_models/indianConstitution.models.js"
 
 export const getIndianConstitution = async (req, res) => {
 

@@ -11,7 +11,7 @@ import asyncio
 # Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS
+# Enable CORS for specific origin (e.g., localhost for development)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # Initialize recognizer and translator
@@ -60,6 +60,7 @@ def handle_audio_translation(input_language, callback):
 
 # API endpoint to handle translation from audio
 @app.route("/record_audio", methods=["POST"])
+@cross_origin(origins="http://localhost:5173")  # Allow cross-origin requests here
 def record_audio():
     input_language = request.json.get("input_language", "hi")
 
@@ -77,7 +78,7 @@ def record_audio():
 
 # API endpoint to handle text translation
 @app.route("/translate", methods=["POST"])
-@cross_origin(origins="http://localhost:5173")
+@cross_origin(origins="http://localhost:5173")  # Allow cross-origin requests here
 def handle_translation():
     data = request.json
     speech_text = data.get("speech_text", "")

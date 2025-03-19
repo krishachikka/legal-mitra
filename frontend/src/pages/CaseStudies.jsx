@@ -11,8 +11,9 @@ const CaseStudies = () => {
     const fetchJudgements = async (page) => {
         setLoading(true);
         try {
+            // Use the VITE_API_BASE_URL environment variable
             const response = await axios.get(
-                `http://localhost:3000/api/v1/past-judgement?page=${page}&limit=10`
+                `${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/past-judgement?page=${page}&limit=10`
             );
             setJudgements(response.data.judgements);
             setTotalPages(response.data.totalPages);
@@ -62,9 +63,6 @@ const CaseStudies = () => {
                         </p>
                         <p className="mt-2 text-gray-700">
                             <strong>Judgement By:</strong> {judgement.judgement_by}
-                        </p>
-                        <p className="mt-2 text-gray-700">
-                            {/* <strong>Judgement Date:</strong> {formatDate(judgement.judgment_dates)} */}
                         </p>
                         <div className="mt-4">
                             <a

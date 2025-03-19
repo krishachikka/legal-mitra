@@ -1,4 +1,4 @@
-import WorkerLaw from "../models/workerLaws.models.js"
+import WorkerLaw from "../../models/dataset_models/workerLaws.models.js"
 
 
 export const getWorkerLaws = async (req, res) => {

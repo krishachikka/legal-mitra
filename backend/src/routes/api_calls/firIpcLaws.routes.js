@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getFirIpcLaws } from '../controllers/getFirIpcLaws.controllers.js';
+import { getFirIpcLaws } from '../../controllers/api_calls/getFirIpcLaws.controllers.js';
 
 const router = Router();
 

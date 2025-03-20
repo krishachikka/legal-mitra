@@ -69,12 +69,12 @@ const LegalNews = () => {
     return (
         <div>
             {/* Category Dropdown */}
-            <div className="mb-4">
+            <div className="mx-auto mb-4 w-2/3 ">
                 <label className="block text-lg font-medium text-gray-700">Select Category</label>
                 <select
                     value={category}
                     onChange={handleCategoryChange}
-                    className="mt-2 p-2 border rounded-md w-full"
+                    className="mt-2 p-2 border rounded-3xl w-full"
                 >
                     <option value="business">Business</option>
                     <option value="entertainment">Entertainment</option>
@@ -90,7 +90,7 @@ const LegalNews = () => {
             <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 ${loading ? "fade-in" : ""}`}>
                 {filteredArticles.map((article, index) => (
                     <div
-                        className="max-w-sm rounded-lg shadow-lg bg-white overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+                        className="max-w-sm rounded-3xl shadow-lg bg-white overflow-hidden hover:shadow-2xl transition-shadow duration-300"
                         key={index}
                     >
                         <img
@@ -105,7 +105,7 @@ const LegalNews = () => {
                                 href={article.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-500 hover:text-blue-700 text-sm font-medium"
+                                className="text-red-700 hover:text-red-800 text-sm font-medium"
                             >
                                 Read more
                             </a>

@@ -50,8 +50,8 @@ const CaseStudies = () => {
             {/* Card Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {judgements.map((judgement) => (
-                    <div key={judgement._id} className="bg-white shadow-lg rounded-lg p-6">
-                        <h2 className="text-xl font-semibold text-blue-600">{judgement.case_no}</h2>
+                    <div key={judgement._id} className="bg-white border-2 border-red-900 shadow-lg shadow-red-950 rounded-3xl p-6">
+                        <h2 className="text-xl font-semibold text-red-800">{judgement.case_no}</h2>
                         <p className="mt-2 text-gray-700">
                             <strong>Diary No:</strong> {judgement.diary_no}
                         </p>
@@ -69,7 +69,7 @@ const CaseStudies = () => {
                                 href={judgement.temp_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                className="inline-block px-4 py-2 bg-red-900 text-white rounded-3xl hover:bg-blue-600"
                             >
                                 Download
                             </a>
@@ -83,7 +83,7 @@ const CaseStudies = () => {
                 <button
                     onClick={() => handlePageChange(page - 1)}
                     disabled={page === 1}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-l-lg hover:bg-gray-400 disabled:opacity-50"
+                    className="px-4 py-2 bg-red-900/60 text-black rounded-l-3xl hover:bg-red-800 disabled:opacity-30"
                 >
                     Previous
                 </button>
@@ -93,7 +93,7 @@ const CaseStudies = () => {
                 <button
                     onClick={() => handlePageChange(page + 1)}
                     disabled={page === totalPages}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-r-lg hover:bg-gray-400 disabled:opacity-50"
+                    className="px-4 py-2 bg-red-900/60 text-black rounded-r-3xl hover:bg-red-800 disabled:opacity-30"
                 >
                     Next
                 </button>

@@ -76,9 +76,9 @@ const PdfChat = () => {
             alert("Please enter a question.");
             return;
         }
-
+    
         setLoading(true);
-
+    
         try {
             const response = await axios.post("http://localhost:8000/ask_question/", {
                 question: question,
@@ -87,13 +87,14 @@ const PdfChat = () => {
                     "Content-Type": "application/json",
                 },
             });
-            setAnswer(response.data.response);
+    
+            // Add the question and answer to the history
             const updatedHistory = [...questionHistory, { question, answer: response.data.response }];
             setQuestionHistory(updatedHistory);
-
+    
             // Save the updated question history to localStorage
             localStorage.setItem("questionHistory", JSON.stringify(updatedHistory));
-
+    
             setFirstQuestionAsked(true);
         } catch (error) {
             console.error("Error asking question:", error);
@@ -101,9 +102,10 @@ const PdfChat = () => {
         } finally {
             setLoading(false);
         }
-
+    
         setQuestion("");
     };
+    
 
     const clearQuestionHistory = () => {
         if (window.confirm("Are you sure you want to clear all question history?")) {
@@ -173,7 +175,7 @@ const PdfChat = () => {
                     <div className="mt-6">
                         <button
                             onClick={clearQuestionHistory}
-                            className="w-full py-2 px-4 bg-red-500 text-white rounded-xl hover:bg-red-700"
+                            className="w-full py-2 px-4 bg-red-800 text-white rounded-3xl hover:bg-red-900"
                         >
                             Clear Questions
                         </button>

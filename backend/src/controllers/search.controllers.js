@@ -1,9 +1,9 @@
-import CaseJudgements from "../models/caseJugdements.models.js";
-import CommonLaws from "../models/commonLaws.models.js";
-import FirIpcLaws from "../models/firIPC.models.js";
-import IndianConstitution from "../models/indianConstitution.models.js";
-import QuesAndAns from "../models/quesAndAns.models.js";
-import WorkerLaws from "../models/workerLaws.models.js";
+import CaseJudgements from "../models/dataset_models/caseJugdements.models.js";
+import CommonLaws from "../models/dataset_models/commonLaws.models.js";
+import FirIpcLaws from "../models/dataset_models/firIPC.models.js";
+import IndianConstitution from "../models/dataset_models/indianConstitution.models.js";
+import QuesAndAns from "../models/dataset_models/quesAndAns.models.js";
+import WorkerLaws from "../models/dataset_models/workerLaws.models.js";
 
 // Function to search and rank results based on keyword matches
 const searchInAllDatasets = async (keywords) => {

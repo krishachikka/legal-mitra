@@ -26,12 +26,13 @@ app.use(express.urlencoded({
 }));
 
 // Import your existing routes
-import commonLawsRouter from './routes/commonLaws.routes.js';
-import firIpcLawsRouter from './routes/firIpcLaws.routes.js';
-import indianConstitution from './routes/indianConstitution.routes.js';
-import quesAndAnswers from './routes/quesAndAns.routes.js';
-import workerLaws from './routes/workerLaws.routes.js';
-import pastJudgement from './routes/caseJudgements.routes.js';
+import commonLawsRouter from './routes/api_calls/commonLaws.routes.js';
+import firIpcLawsRouter from './routes/api_calls/firIpcLaws.routes.js';
+import indianConstitution from './routes/api_calls/indianConstitution.routes.js';
+import quesAndAnswers from './routes/api_calls/quesAndAns.routes.js';
+import workerLaws from './routes/api_calls/workerLaws.routes.js';
+import pastJudgement from './routes/api_calls/caseJudgements.routes.js';
+import lawyersRoute from './routes/lawyer.routes.js'
 
 // Import the search route
 import searchRouter from './routes/search.routes.js';
@@ -43,6 +44,7 @@ app.use('/api/v1/indian-constitution', indianConstitution);
 app.use('/api/v1/ques-ans', quesAndAnswers);
 app.use('/api/v1/worker-laws', workerLaws);
 app.use('/api/v1/past-judgement', pastJudgement);
+app.use('/api/v1/lawyers-directory', lawyersRoute);
 
 // Add the search route
 app.use('/api/v1/search', searchRouter);

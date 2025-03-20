@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
-import { formatLegalAdvice } from "../utils/formatMiddleware"; // Middleware function
 
 const LegalAdvice = () => {
   const [results, setResults] = useState([]);
@@ -9,7 +8,7 @@ const LegalAdvice = () => {
 
   const fetchKeywords = async (query) => {
     try {
-      const response = await fetch("http://localhost:5001/extract_keywords", {
+      const response = await fetch(`${import.meta.env.VITE_PYTHON_BACKEND_URL}/extract_keywords`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
@@ -30,20 +29,31 @@ const LegalAdvice = () => {
     setLoading(true);
 
     try {
-      // Extract keywords from query
+      // Extract keywords from the search query
       const keywords = await fetchKeywords(query);
 
-      // Fetch legal data
-      const response = await fetch("http://localhost:3000/api/v1/common-laws");
-      const data = await response.json();
-
-      // Filter results based on extracted keywords
-      const filteredResults = data.filter((item) =>
-        keywords.some((keyword) => item.title.toLowerCase().includes(keyword))
+      // Send the keywords to the search API to get relevant results
+      const response = await fetch(
+        `${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/search/search?keywords=${JSON.stringify(keywords)}`
       );
 
-      // Format results before setting state
-      const formattedResults = formatLegalAdvice(filteredResults);
+      if (!response.ok) {
+        throw new Error("Failed to fetch legal data");
+      }
+
+      const data = await response.json();
+
+      // display all fetched data 
+      console.log("Raw formed data:", data);
+
+      // Handle formatting directly here
+      const formattedResults = Array.isArray(data)
+        ? data.map((item) => ({
+          title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
+          description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
+        }))
+        : [];
+
       setResults(formattedResults);
     } catch (error) {
       console.error("Error fetching legal advice:", error);

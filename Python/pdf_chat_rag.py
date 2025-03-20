@@ -28,6 +28,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+
 # Function to extract text from PDFs
 def get_pdf_text(pdf_docs):
     text = ""
@@ -107,4 +108,3 @@ async def ask_question(request: QuestionRequest):
         {"input_documents": docs, "question": question}, return_only_outputs=True
     )
     return {"response": response["output_text"]}
-

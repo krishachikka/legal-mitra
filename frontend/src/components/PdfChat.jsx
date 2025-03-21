@@ -84,11 +84,8 @@ const PdfChat = () => {
                 },
             });
     
-<<<<<<< HEAD
-            const updatedHistory = [...questionHistory, { question, answer: response.data.response }];
-            setQuestionHistory(updatedHistory);
-            localStorage.setItem("questionHistory", JSON.stringify(updatedHistory));
-=======
+
+
             // Add the question and answer to the history
             const updatedHistory = [...questionHistory, { question, answer: response.data.response }];
             setQuestionHistory(updatedHistory);
@@ -96,7 +93,7 @@ const PdfChat = () => {
             // Save the updated question history to localStorage
             localStorage.setItem("questionHistory", JSON.stringify(updatedHistory));
     
->>>>>>> 57ce73d1 (ok)
+
             setFirstQuestionAsked(true);
         } catch (error) {
             console.error("Error asking question:", error);

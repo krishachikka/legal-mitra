@@ -34,3 +34,7 @@ google-generativeai
 
 keyword_extraction:
 pip install Flask flask-cors keybert
+
+
+news.py:
+pip install beautifulsoup4 requests

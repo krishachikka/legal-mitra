@@ -32,8 +32,8 @@ import indianConstitution from './routes/api_calls/indianConstitution.routes.js'
 import quesAndAnswers from './routes/api_calls/quesAndAns.routes.js';
 import workerLaws from './routes/api_calls/workerLaws.routes.js';
 import pastJudgement from './routes/api_calls/caseJudgements.routes.js';
-import lawyersRoute from './routes/lawyer.routes.js'
-import summarizeRoutes from './routes/summarizeRoutes.js';
+import lawyersRoute from './routes/lawyer.routes.js';
+
 
 // Import the search route
 import searchRouter from './routes/search.routes.js';
@@ -47,7 +47,7 @@ app.use('/api/v1/worker-laws', workerLaws);
 app.use('/api/v1/past-judgement', pastJudgement);
 app.use('/api/v1/lawyers-directory', lawyersRoute);
 app.use('/api/v1/lawyers-directory', lawyersRoute);
-app.use('/api/v1/summarize', summarizeRoutes);
+
 
 // Add the search route
 app.use('/api/v1/search', searchRouter);

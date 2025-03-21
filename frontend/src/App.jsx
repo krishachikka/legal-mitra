@@ -5,7 +5,7 @@ import LegalAdvice from './pages/LegalAdvice';
 import PdfChat from './components/PdfChat';  // Import PdfChat
 import Header from './components/Header';
 import SpeechTranslator from './pages/SpeechTranslator';
-import LegalNews from './pages/LegalNews';
+
 import CaseStudies from './pages/CaseStudies';
 import FAQ from './pages/FAQ';
 import LandingPage from './pages/LandingPage';
@@ -13,6 +13,7 @@ import Translator from './Translator';
 import LawyersLandingPage from './pages/Lawyers_Directory/LawyersLandingPage';
 import LawyerDetailsPage from './pages/Lawyers_Directory/LawyerDetailsPage';
 import Summarizer from './pages/Summarizer';
+import LegalNews from './pages/LegaNews';
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -30,7 +31,7 @@ function App() {
           <Route path="/legal-chat" element={<PdfChat />} />
           <Route path="/translate" element={<Translator />} />
           {/* <Route path="/translate" element={<SpeechTranslator />} /> */}
-          <Route path="/legal-news" element={<LegalNews />} />
+          <Route path="/legal-news" element={<LegalNews/>} />
 
           {/* Lawyers Directory */}
           <Route path='/lawyers-directory' element={<LawyersLandingPage />} />

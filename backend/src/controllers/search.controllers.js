@@ -47,12 +47,16 @@ const searchInAllDatasets = async (keywords) => {
       .slice(0, 10); // Limit to top 10 results
 
     return scoredResults;
+
+  
+
   } catch (error) {
     console.error("Error searching datasets:", error);
     throw new Error("Error searching datasets");
   }
 };
 
+// In the backend search controller
 const search = async (req, res) => {
   const { keywords } = req.query;
 
@@ -63,7 +67,17 @@ const search = async (req, res) => {
   try {
     const parsedKeywords = JSON.parse(keywords);
     const results = await searchInAllDatasets(parsedKeywords);
-    res.json(results);
+
+
+    // If description is available, map it to content
+    const formattedResults = results.map((item) => ({
+      ...item,
+      content: item.description, // Make sure content is available for summarization
+    }));
+
+    res.json(formattedResults); // Send the formatted results to frontend
+
+
   } catch (error) {
     console.error("Error during search:", error);
     res.status(500).json({ message: "Error during search" });

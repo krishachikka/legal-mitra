@@ -12,6 +12,7 @@ import LandingPage from './pages/LandingPage';
 import Translator from './Translator';
 import LawyersLandingPage from './pages/Lawyers_Directory/LawyersLandingPage';
 import LawyerDetailsPage from './pages/Lawyers_Directory/LawyerDetailsPage';
+import Summarizer from './pages/Summarizer';
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -37,6 +38,8 @@ function App() {
           {/* Lawyers Directory */}
           <Route path='/lawyers-directory' element={<LawyersLandingPage />} />
           <Route path="/lawyer-details/:lawyerId" element={<LawyerDetailsPage />} />
+          <Route path="/summarize" element={<Summarizer />} />
+
 
           {/* Not so important features */}
           <Route path="/legal-case-studies" element={<CaseStudies />} />

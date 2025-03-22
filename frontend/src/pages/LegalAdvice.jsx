@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios"; 
+import axios from "axios";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
 
@@ -49,7 +49,7 @@ const LegalAdvice = () => {
           },
         }
       );
-  
+
       // Check if the response has summary_text
       if (response.data && response.data[0] && response.data[0].summary_text) {
         const summary = response.data[0].summary_text;
@@ -60,7 +60,7 @@ const LegalAdvice = () => {
       }
     } catch (error) {
       console.error("Summarization error:", error);
-  
+
       // If the error is from Hugging Face, show a better message
       if (error.response) {
         if (error.response.status === 500) {
@@ -69,12 +69,12 @@ const LegalAdvice = () => {
           return "Unauthorized: Please check your API key.";
         }
       }
-  
+
       // Return a general error message
       return "Error summarizing content.";
     }
   };
-  
+
   // Function to fetch legal advice data
   const fetchLegalAdvice = async (query) => {
     setLoading(true);

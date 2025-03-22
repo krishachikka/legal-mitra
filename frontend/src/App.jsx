@@ -36,6 +36,8 @@ function App() {
           {/* Lawyers Directory */}
           <Route path='/lawyers-directory' element={<LawyersLandingPage />} />
           <Route path="/lawyer-details/:lawyerId" element={<LawyerDetailsPage />} />
+          <Route path="/summarize" element={<Summarizer />} />
+
 
           {/* Not so important features */}
           <Route path="/legal-case-studies" element={<CaseStudies />} />

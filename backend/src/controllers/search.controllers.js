@@ -17,12 +17,12 @@ const searchInAllDatasets = async (keywords) => {
 
     // Fetch results from all datasets in parallel
     const datasets = await Promise.all([
-      CaseJudgements.find({ $or: searchConditions }),
+      // CaseJudgements.find({ $or: searchConditions }),
       CommonLaws.find({ $or: searchConditions }),
-      FirIpcLaws.find({ $or: searchConditions }),
-      IndianConstitution.find({ $or: searchConditions }),
-      QuesAndAns.find({ $or: searchConditions }),
-      WorkerLaws.find({ $or: searchConditions }),
+      // FirIpcLaws.find({ $or: searchConditions }),
+      // IndianConstitution.find({ $or: searchConditions }),
+      // QuesAndAns.find({ $or: searchConditions }),
+      // WorkerLaws.find({ $or: searchConditions }),
     ]);
 
     // Flatten all results into a single array

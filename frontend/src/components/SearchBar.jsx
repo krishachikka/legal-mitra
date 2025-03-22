@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import MicIcon from "@mui/icons-material/Mic";
+import axios from "axios";
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [selectedLang, setSelectedLang] = useState("en");  // Language selection state
+  const [translatedText, setTranslatedText] = useState("");
 
   useEffect(() => {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
       const speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      speechRecognition.lang = "en-IN"; // Indian English
-      speechRecognition.continuous = true; // Keep listening while speaking
-      speechRecognition.interimResults = true; // Show partial results
+      speechRecognition.lang = selectedLang; // Set speech recognition to selected language
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
 
       setRecognition(speechRecognition);
 
@@ -21,19 +24,19 @@ const SearchBar = ({ onSearch }) => {
         for (let i = 0; i < event.results.length; i++) {
           transcript += event.results[i][0].transcript + " ";
         }
-        setQuery(transcript.trim()); // Update search bar live
+        setQuery(transcript.trim());
       };
 
       speechRecognition.onstart = () => {
         setIsListening(true);
-        setQuery(""); // Clear previous search when starting again
+        setQuery(""); // Clear previous query when starting again
       };
 
       speechRecognition.onend = () => setIsListening(false);
     } else {
       console.error("Speech Recognition API is not supported in this browser.");
     }
-  }, []);
+  }, [selectedLang]);
 
   // Start listening
   const startListening = () => {
@@ -52,18 +55,56 @@ const SearchBar = ({ onSearch }) => {
     }
   };
 
+  // Handle language selection change
+  const handleLangChange = (e) => {
+    setSelectedLang(e.target.value);
+  };
+
+  // Handle text input change
+  const handleTextChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  // Handle form submission to request translation
+  const handleTranslate = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/translate", {
+        text: query,
+        target_lang: "en",  // Always translate to English
+        source_lang: selectedLang
+      });
+      setTranslatedText(response.data.translated_text);
+      setQuery(response.data.translated_text);  // Automatically set the translated text in the search query
+    } catch (error) {
+      console.error("Error translating:", error);
+    }
+  };
+
   return (
     <div className="relative flex items-center w-full max-w-lg mx-auto bg-white/80 backdrop-blur-md shadow-lg rounded-full p-1 transition-all duration-300 hover:shadow-xl">
+      {/* Language selection dropdown */}
+      <div className="mr-2">
+        <select
+          value={selectedLang}
+          onChange={handleLangChange}
+          className="p-2 border border-gray-300 rounded-md shadow-sm"
+        >
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="mr">Marathi</option>
+        </select>
+      </div>
+
       {/* Input Field */}
       <input
         type="text"
-        placeholder="Search legal topics..."
+        placeholder="Enter text to translate or search..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleTextChange}
         onKeyPress={(e) => {
           if (e.key === "Enter") {
             stopListening(); // Stop mic on Enter
-            onSearch(query); // Pass query to the parent
+            onSearch(query); // Pass query to the parent on search
           }
         }}
         className="w-full px-4 py-2 text-gray-700 bg-transparent outline-none rounded-full"
@@ -71,7 +112,7 @@ const SearchBar = ({ onSearch }) => {
 
       {/* Search Button */}
       <button
-        onClick={() => onSearch(query)} // Pass query to the parent
+        onClick={() => onSearch(query)} // Pass query to the parent on search
         className="p-2 text-gray-600 hover:text-black transition cursor-pointer"
       >
         <SearchIcon />
@@ -84,6 +125,21 @@ const SearchBar = ({ onSearch }) => {
       >
         <MicIcon />
       </button>
+
+      {/* Translate Button */}
+      <button
+        onClick={handleTranslate}
+        className="p-2 text-blue-600 hover:text-blue-800 transition cursor-pointer ml-2"
+      >
+        Translate
+      </button>
+
+      {/* If translation is available, display it */}
+      {/* {translatedText && (
+        <div className="mt-4 p-2 bg-gray-100 rounded-md">
+          <strong>Translated Text:</strong> {translatedText}
+        </div>
+      )} */}
     </div>
   );
 };

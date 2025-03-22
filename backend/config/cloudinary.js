@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-console.log('Cloud Name:', process.env.VITE_CLOUDINARY_CLOUD_NAME);
-console.log('API Key:', process.env.VITE_CLOUDINARY_API_KEY);
-console.log('API Secret:', process.env.VITE_CLOUDINARY_API_SECRET);
 
 
 // Configure Cloudinary with environment variables

@@ -46,7 +46,7 @@ app.use('/api/v1/ques-ans', quesAndAnswers);
 app.use('/api/v1/worker-laws', workerLaws);
 app.use('/api/v1/past-judgement', pastJudgement);
 app.use('/api/v1/lawyers-directory', lawyersRoute);
-app.use('/api/v1/lawyers-directory', lawyersRoute);
+
 
 
 // Add the search route

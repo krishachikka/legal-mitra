@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importing useNavigate
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -18,33 +18,18 @@ import MailIcon from '@mui/icons-material/Mail'; // for Contact Us
 
 export default function SideDrawer({ open, toggleDrawer }) {
     const navigate = useNavigate(); // Initialize useNavigate
+    const location = useLocation(); // Track the current route
 
     // Function to handle item click, including navigation
-    const handleItemClick = (item) => {
+    const handleItemClick = (item, path) => {
         console.log(`${item} clicked!`);
 
         // Navigating to different routes based on the item clicked
-        switch (item) {
-            case 'Legal Advice':
-                navigate('/legal-advice');
-                break;
-            case 'Legal Chat':
-                navigate('/legal-chat');
-                break;
-            case 'Legal News':
-                navigate('/legal-news')
-                break
-            case 'Case Studies':
-                navigate('/legal-case-studies')
-                break
-            case 'FAQ':
-                navigate('/FAQ');
-                break
-            default:
-                console.log(`No navigation for ${item}`);
-                break;
-        }
+        navigate(path);
     };
+
+    // Function to check if the current route matches the given path
+    const isActive = (path) => location.pathname === path;
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation" >
@@ -54,14 +39,25 @@ export default function SideDrawer({ open, toggleDrawer }) {
             </Box>
             <Divider />
             <List>
-                {['Legal Advice', 'Legal Documents', 'Case Studies', 'Lawyers Directory', 'Legal Chat'].map((text, index) => (
+                {[
+                    { text: 'Legal Advice', path: '/legal-advice', icon: <GavelIcon /> },
+                    { text: 'Legal Documents', path: '/legal-documents', icon: <DocumentScannerIcon /> },
+                    { text: 'Case Studies', path: '/legal-case-studies', icon: <ListAltIcon /> },
+                    { text: 'Lawyers Directory', path: '/lawyers-directory', icon: <PeopleIcon /> },
+                    { text: 'Legal Chat', path: '/legal-chat', icon: <HelpIcon /> }
+                ].map(({ text, path, icon }) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton onClick={() => handleItemClick(text)}>
+                        <ListItemButton 
+                            onClick={() => handleItemClick(text, path)}
+                            sx={{
+                                backgroundColor: isActive(path) ? 'rgba(0, 123, 255, 0.1)' : 'transparent', // Highlight active tab
+                                '&:hover': {
+                                    backgroundColor: isActive(path) ? 'rgba(0, 123, 255, 0.2)' : 'rgba(0, 123, 255, 0.1)',
+                                }
+                            }}
+                        >
                             <ListItemIcon>
-                                {index === 0 ? <GavelIcon /> :
-                                    index === 1 ? <DocumentScannerIcon /> :
-                                        index === 2 ? <ListAltIcon /> :
-                                            index === 3 ? <PeopleIcon /> : index === 4 ? <HelpIcon /> : null}
+                                {icon}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -70,13 +66,23 @@ export default function SideDrawer({ open, toggleDrawer }) {
             </List>
             <Divider />
             <List>
-                {['Legal News', 'FAQ', 'Contact Us'].map((text, index) => (
+                {[
+                    { text: 'Legal News', path: '/legal-news', icon: <ArticleIcon /> },
+                    { text: 'FAQ', path: '/faq', icon: <HelpIcon /> },
+                    { text: 'Contact Us', path: '/contact', icon: <MailIcon /> }
+                ].map(({ text, path, icon }) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton onClick={() => handleItemClick(text)}>
+                        <ListItemButton 
+                            onClick={() => handleItemClick(text, path)}
+                            sx={{
+                                backgroundColor: isActive(path) ? 'rgba(0, 123, 255, 0.1)' : 'transparent',
+                                '&:hover': {
+                                    backgroundColor: isActive(path) ? 'rgba(0, 123, 255, 0.2)' : 'rgba(0, 123, 255, 0.1)',
+                                }
+                            }}
+                        >
                             <ListItemIcon>
-                                {index === 0 ? <ArticleIcon /> :
-                                    index === 1 ? <HelpIcon /> :
-                                        index === 2 ? <MailIcon /> : null}
+                                {icon}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>

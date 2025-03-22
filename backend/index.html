@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindi to English Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        #container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Hindi to English Translator</h1>
+        <input type="text" id="inputText" placeholder="Type in Hindi (Romanized)..." />
+        <button onclick="startTranslation()">Translate</button>
+        <button onclick="startSpeechRecognition()">🎤 Speak</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:5000/translate"; // Use localhost for testing
+
+        async function startTranslation() {
+            const text = document.getElementById("inputText").value;
+            if (!text) {
+                alert("Please enter some text.");
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                document.getElementById("result").innerText = 
+                    data.translation ? `Translation: ${data.translation}` : "Error: No translation found";
+                
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("result").innerText = `Error: ${error.message}`;
+            }
+        }
+
+        function startSpeechRecognition() {
+            if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+                alert("Speech Recognition is not supported in this browser.");
+                return;
+            }
+
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "hi-IN";
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById("inputText").value = transcript;
+            };
+
+            recognition.onspeechend = function() {
+                recognition.stop(); // Stop recognition when speech ends
+            };
+
+            recognition.onerror = function(event) {
+                alert("Speech recognition error: " + event.error);
+            };
+        }
+    </script>
+</body>
+</html>

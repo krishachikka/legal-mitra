@@ -14,7 +14,7 @@ const LawyerDetailsPage = () => {
         const fetchLawyerDetails = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:3000/api/v1/lawyers-directory/lawyer/${lawyerId}`);
+                const response = await axios.get(`http://localhost:3000/api/v1/lawyers-directory/lawyers/${lawyerId}`);
                 setLawyer(response.data);
                 setReviews(response.data.reviews || []); // Assuming reviews are stored as an array
                 setLoading(false);

@@ -15,10 +15,6 @@ router.get('/lawyers', getLawyers);
 router.get('/lawyers/:id', getLawyerById);
 
 // Route to handle the lawyer form submission with multiple files (image, certificate, idProof)
-router.post('/become-a-lawyer', upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'certificate', maxCount: 1 },
-    { name: 'idProof', maxCount: 1 }
-]), becomeALawyer);
+router.post('/become-a-lawyer',  becomeALawyer);
 
 export default router;

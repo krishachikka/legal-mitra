@@ -9,6 +9,7 @@ dotenv.config();
 // console.log('API Secret:', process.env.VITE_CLOUDINARY_API_SECRET);
 
 
+
 // Configure Cloudinary with environment variables
 cloudinary.config({
     cloud_name: process.env.VITE_CLOUDINARY_CLOUD_NAME,

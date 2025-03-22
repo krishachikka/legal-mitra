@@ -48,6 +48,90 @@
 			"typeName": "page"
 		},
 		{
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+			"id": "pointer:pointer",
+			"typeName": "pointer",
+			"x": 306.0741192853009,
+			"y": 280.7037602177372,
+			"lastActivityTimestamp": 1742218098755,
+			"meta": {}
+		},
+		{
+			"followingUserId": null,
+			"opacityForNextShape": 1,
+			"stylesForNextShape": {
+				"tldraw:geo": "rectangle",
+				"tldraw:font": "sans",
+				"tldraw:size": "s"
+			},
+			"brush": null,
+			"scribbles": [],
+			"cursor": {
+				"type": "move",
+				"rotation": 0
+			},
+			"isFocusMode": false,
+			"exportBackground": true,
+			"isDebugMode": false,
+			"isToolLocked": false,
+			"screenBounds": {
+				"x": 0,
+				"y": 0,
+				"w": 1232,
+				"h": 566
+			},
+			"insets": [
+				false,
+				false,
+				true,
+				false
+			],
+			"zoomBrush": null,
+			"isGridMode": false,
+			"isPenMode": false,
+			"chatMessage": "",
+			"isChatting": false,
+			"highlightedUserIds": [],
+			"isFocused": true,
+			"devicePixelRatio": 1.5,
+			"isCoarsePointer": false,
+			"isHoveringCanvas": true,
+			"openMenus": [],
+			"isChangingStyle": false,
+			"isReadonly": false,
+			"meta": {},
+			"duplicateProps": null,
+			"id": "instance:instance",
+			"currentPageId": "page:YMrNYoAg_Uocksjh8wWBc",
+			"typeName": "instance"
+		},
+		{
+			"editingShapeId": null,
+			"croppingShapeId": null,
+			"selectedShapeIds": [],
+			"hoveredShapeId": null,
+			"erasingShapeIds": [],
+			"hintingShapeIds": [],
+			"focusedGroupId": null,
+			"meta": {},
+			"id": "instance_page_state:page:page",
+			"pageId": "page:page",
+			"typeName": "instance_page_state"
+		},
+		{
+			"x": 0,
+			"y": 83.3333333333333,
+			"z": 1,
+			"meta": {},
+			"id": "camera:page:page",
+			"typeName": "camera"
+		},
+		{
+>>>>>>> 5a4efcb9 (added what features to add)
+=======
+>>>>>>> 71a839df (revamped the entire folder structure and now everything is fine)
 			"x": 241.33334350585938,
 			"y": 79.33334350585938,
 			"rotation": 0,
@@ -468,6 +552,35 @@
 			"typeName": "page"
 		},
 		{
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+			"x": 15.407407407407383,
+			"y": 111.14814814814812,
+			"z": 0.9,
+			"meta": {},
+			"id": "camera:page:YMrNYoAg_Uocksjh8wWBc",
+			"typeName": "camera"
+		},
+		{
+			"editingShapeId": null,
+			"croppingShapeId": null,
+			"selectedShapeIds": [
+				"shape:WXDjwxy2blpoHLrVXVP2p"
+			],
+			"hoveredShapeId": null,
+			"erasingShapeIds": [],
+			"hintingShapeIds": [],
+			"focusedGroupId": null,
+			"meta": {},
+			"id": "instance_page_state:page:YMrNYoAg_Uocksjh8wWBc",
+			"pageId": "page:YMrNYoAg_Uocksjh8wWBc",
+			"typeName": "instance_page_state"
+		},
+		{
+>>>>>>> 5a4efcb9 (added what features to add)
+=======
+>>>>>>> 71a839df (revamped the entire folder structure and now everything is fine)
 			"x": 199.33340454101562,
 			"y": 78.00003051757812,
 			"rotation": 0,
@@ -1046,6 +1159,10 @@
 				"terminal": "end"
 			},
 			"typeName": "binding"
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 71a839df (revamped the entire folder structure and now everything is fine)
 		},
 		{
 			"id": "pointer:pointer",
@@ -1692,6 +1809,11 @@
 				"terminal": "end"
 			},
 			"typeName": "binding"
+<<<<<<< HEAD
+=======
+>>>>>>> 5a4efcb9 (added what features to add)
+=======
+>>>>>>> 71a839df (revamped the entire folder structure and now everything is fine)
 		}
 	]
 }

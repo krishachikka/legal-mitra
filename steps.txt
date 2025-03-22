@@ -14,3 +14,27 @@ To run Python files with their connections:
 
 - if using SpeechTranslator.jsx start then run stt.py
     python stt.py
+
+
+
+    pip install python-multipart  
+    pip install -U langchain-community 
+    pip install faiss-cpu 
+
+fastapi
+uvicorn
+pydantic
+python-dotenv
+PyPDF2
+langchain
+langchain-google-genai
+faiss-cpu
+google-generativeai
+
+
+keyword_extraction:
+pip install Flask flask-cors keybert
+
+
+news.py:
+pip install beautifulsoup4 requests

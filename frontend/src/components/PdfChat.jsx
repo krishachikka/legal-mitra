@@ -7,11 +7,10 @@ const PdfChat = () => {
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [loading, setLoading] = useState(false);
-    const [pdfLoading, setPdfLoading] = useState(false); // For PDF upload loader
+    const [pdfLoading, setPdfLoading] = useState(false); // Correct duplicate state
     const [questionHistory, setQuestionHistory] = useState([]);
-    const [firstPdfUploaded, setFirstPdfUploaded] = useState(false); // Track if first PDF is uploaded
+    const [firstPdfUploaded, setFirstPdfUploaded] = useState(false);
     const [firstQuestionAsked, setFirstQuestionAsked] = useState(false);
-    const [warningVisible, setWarningVisible] = useState(false);
 
     const chatEndRef = useRef(null);
     const answerStartRef = useRef(null);
@@ -59,10 +58,7 @@ const PdfChat = () => {
             const updatedPdfs = [...uploadedPdfs, ...pdfFileNames];
             setUploadedPdfs(updatedPdfs);
             setFirstPdfUploaded(true); // Mark first PDF uploaded
-
-            // Save the updated PDFs to localStorage
             localStorage.setItem("uploadedPdfs", JSON.stringify(updatedPdfs));
-
             alert("PDFs processed successfully!");
         } catch (error) {
             console.error("Error uploading PDF:", error);
@@ -88,6 +84,8 @@ const PdfChat = () => {
                 },
             });
     
+
+
             // Add the question and answer to the history
             const updatedHistory = [...questionHistory, { question, answer: response.data.response }];
             setQuestionHistory(updatedHistory);
@@ -95,6 +93,7 @@ const PdfChat = () => {
             // Save the updated question history to localStorage
             localStorage.setItem("questionHistory", JSON.stringify(updatedHistory));
     
+
             setFirstQuestionAsked(true);
         } catch (error) {
             console.error("Error asking question:", error);
@@ -118,8 +117,6 @@ const PdfChat = () => {
         if (window.confirm("Are you sure you want to remove this PDF?")) {
             const updatedPdfs = uploadedPdfs.filter(name => name !== pdfName);
             setUploadedPdfs(updatedPdfs);
-
-            // Update the localStorage with the removed PDF
             localStorage.setItem("uploadedPdfs", JSON.stringify(updatedPdfs));
         }
     };
@@ -210,7 +207,6 @@ const PdfChat = () => {
                         </button>
                     )}
                 </div>
-
             </div>
 
             {/* Main Content Section */}
@@ -228,10 +224,7 @@ const PdfChat = () => {
 
                             {/* Answer Section (Left side) */}
                             <div className="flex justify-start mt-2">
-                                <div
-                                    className="bg-red-900/80 text-white p-3 rounded-3xl min-w-lg max-w-xl text-sm"
-                                    ref={answerStartRef}
-                                >
+                                <div className="bg-red-900/80 text-white p-3 rounded-3xl min-w-lg max-w-xl text-sm" ref={answerStartRef}>
                                     <strong>Ans: </strong>{history.answer}
                                 </div>
                             </div>

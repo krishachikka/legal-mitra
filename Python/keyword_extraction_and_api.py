@@ -1,12 +1,15 @@
+import warnings
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from keybert import KeyBERT
+
+# Suppress FutureWarning from transformers
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS to allow frontend requests
 
 kw_model = KeyBERT()  # Load KeyBERT model
-
 
 @app.route("/extract_keywords", methods=["POST"])
 def extract_keywords():

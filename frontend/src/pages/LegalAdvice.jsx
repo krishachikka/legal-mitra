@@ -34,9 +34,9 @@ const LegalAdvice = () => {
         console.error("Content is empty or invalid for summarization");
         return "No summary available."; // If content is empty, return this message
       }
-
+  
       console.log("Summarizing Content:", content);
-
+  
       // Requesting the Hugging Face API for summarization
       const response = await axios.post(
         "https://api-inference.huggingface.co/models/facebook/bart-large-cnn", // Ensure this URL is correct
@@ -102,9 +102,9 @@ const LegalAdvice = () => {
       // Handle formatting directly here
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-          title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
-          description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
-        }))
+            title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
+            description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
+          }))
         : [];
 
       setResults(formattedResults); // Set the formatted results

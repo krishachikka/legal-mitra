@@ -5,7 +5,7 @@ import LegalAdvice from './pages/LegalAdvice';
 import PdfChat from './components/PdfChat'; // Import PdfChat
 import Header from './components/Header';
 import SpeechTranslator from './pages/SpeechTranslator';
-import LegalNews from './pages/LegalNews';
+import LegalNews from './pages/LegaNews';
 import CaseStudies from './pages/CaseStudies';
 import FAQ from './pages/FAQ';
 import LandingPage from './pages/LandingPage';

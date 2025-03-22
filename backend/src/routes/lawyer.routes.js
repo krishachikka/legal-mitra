@@ -1,12 +1,24 @@
 import express from 'express';
-import { getLawyerById, getLawyers } from '../controllers/lawyer.controllers.js';
+import multer from 'multer';  // Multer for handling file uploads
+import { getLawyerById, getLawyers, becomeALawyer } from '../controllers/lawyer.controllers.js';
 
 const router = express.Router();
 
-// Get all lawyers with pagination
+// Multer setup for file upload (in-memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// Route to get all lawyers without pagination
 router.get('/lawyers', getLawyers);
 
-// Get a specific lawyer by ID
-router.get('/lawyer/:id', getLawyerById);
+// Route to get a specific lawyer by ID
+router.get('/lawyers/:id', getLawyerById);
+
+// Route to handle the lawyer form submission with multiple files (image, certificate, idProof)
+router.post('/become-a-lawyer', upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'certificate', maxCount: 1 },
+    { name: 'idProof', maxCount: 1 }
+]), becomeALawyer);
 
 export default router;

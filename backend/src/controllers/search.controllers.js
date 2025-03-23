@@ -1,7 +1,8 @@
 import CommonLaws from "../models/dataset_models/commonLaws.models.js";
 import WorkerLaws from "../models/dataset_models/workerLaws.models.js";
+import Firipc from "../models/dataset_models/firIPC.models.js"; // Import Firipc dataset model
 
-// Function to search and rank results based on keyword matches
+// Function to search and rank results based on keyword matches across all datasets
 const searchInAllDatasets = async (keywords) => {
   try {
     // Create search conditions for each keyword
@@ -9,15 +10,19 @@ const searchInAllDatasets = async (keywords) => {
       $or: [
         { title: { $regex: keyword, $options: "i" } },
         { description: { $regex: keyword, $options: "i" } },  // CommonLaws
-        { "documents.question": { $regex: keyword, $options: "i" } }, // workerlaws
-        { "documents.answer": { $regex: keyword, $options: "i" } }, // workerlaws
+        { "documents.question": { $regex: keyword, $options: "i" } }, // WorkerLaws
+        { "documents.answer": { $regex: keyword, $options: "i" } }, // WorkerLaws
+        { Offense: { $regex: keyword, $options: "i" } }, // Firipc
+        { Description: { $regex: keyword, $options: "i" } }, // Firipc
+        { Punishment: { $regex: keyword, $options: "i" } }, // Firipc
       ],
     }));
 
-    // Fetch results from the WorkerLaws and CommonLaws datasets
+    // Fetch results from the WorkerLaws, CommonLaws, and Firipc datasets
     const datasets = await Promise.all([
       CommonLaws.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'CommonLaws' }))),
       WorkerLaws.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'WorkerLaws' }))),
+      Firipc.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'Firipc' }))),
     ]);
 
     // Flatten all dataset results into a single array
@@ -46,12 +51,20 @@ const searchInAllDatasets = async (keywords) => {
           item.description?.toLowerCase().includes(kw.toLowerCase())  // Added for CommonLaws
         ).length;
 
-        const totalMatches = titleMatches + documentsMatches + descriptionMatches;
+        const offenseMatches = keywords.filter((kw) =>
+          item.Offense?.toLowerCase().includes(kw.toLowerCase())  // Firipc Offense matching
+        ).length;
+
+        const punishmentMatches = keywords.filter((kw) =>
+          item.Punishment?.toLowerCase().includes(kw.toLowerCase())  // Firipc Punishment matching
+        ).length;
+
+        const totalMatches = titleMatches + documentsMatches + descriptionMatches + offenseMatches + punishmentMatches;
         return { ...item, score: totalMatches };
       })
       .filter((item) => item.score > 0) // Only include items with matches
       .sort((a, b) => b.score - a.score) // Sort by score
-      .slice(0, 10); // Limit to the top 10 results
+      .slice(0, 30); // Limit to the top 10 results
 
     return scoredResults;
   } catch (error) {
@@ -75,11 +88,25 @@ const search = async (req, res) => {
     const results = await searchInAllDatasets(parsedKeywords);
 
     // Format the results, including dataset info and content
-    const formattedResults = results.map((item) => ({
-      title: item.Title || item.title, // Title can be from either dataset
-      description: item.description || item.documents.map(doc => `${doc.question}: ${doc.answer}`).join("\n"), // Handle description formatting for both
-      dataset: item.dataset || "Unknown Dataset", // Add dataset info
-    }));
+    const formattedResults = results.map((item) => {
+      if (item.dataset === 'CommonLaws' || item.dataset === 'WorkerLaws') {
+        return {
+          title: item.Title || item.title, // Title can be from either dataset
+          description: item.description || item.documents.map(doc => `${doc.question}: ${doc.answer}`).join("\n"), // Handle description formatting for both
+          dataset: item.dataset || "Unknown Dataset", // Add dataset info
+        };
+      } else if (item.dataset === 'Firipc') {
+        return {
+          title: item.Offense, // Firipc - Offense as the title
+          description: item.Description, // Firipc - description
+          punishment: item.Punishment, // Firipc - punishment
+          dataset: item.dataset || "Unknown Dataset", // Add dataset info
+          url: item.URL, // Firipc URL if available
+        };
+      } else {
+        return {}; // Return an empty object if dataset is unknown
+      }
+    });
 
     // Send the formatted results back to the frontend
     res.json(formattedResults);

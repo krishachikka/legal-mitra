@@ -28,7 +28,7 @@ const LegalAdvice = () => {
     }
   };
 
-  // Function to fetch legal advice data
+  // Function to fetch legal advice data from Firipc dataset
   const fetchLegalAdvice = async (query) => {
     setLoading(true);
     setSummarizedContent(""); // Reset the summary content before a new query
@@ -37,7 +37,7 @@ const LegalAdvice = () => {
       // Extract keywords from the search query
       const keywords = await fetchKeywords(query);
 
-      // Fetch legal data using the keywords
+      // Fetch legal data from Firipc dataset using the extracted keywords
       const response = await fetch(
         `${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/search/search?keywords=${JSON.stringify(keywords)}`
       );
@@ -49,14 +49,18 @@ const LegalAdvice = () => {
       const data = await response.json();
       console.log("Search Results Data:", data);
 
-      // Handle formatting directly here
+      // Handle formatting directly here for Firipc data
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-            title: item.title || "UNKNOWN",
-            description: item.description || "NO DESCRIPTION",
-            dataset: item.dataset || "Unknown Dataset", // Add dataset info here
+            title: item.title || "UNKNOWN", // Use offense as title
+            description: item.description || "NO DESCRIPTION", // Use description
+            punishment: item.punishment || "NO PUNISHMENT", // Use punishment
+            url: item.url || "No URL", // Use URL if available
+            dataset: item.dataset || "Firipc Dataset", // Add dataset info here
           }))
         : [];
+
+      console.log(formattedResults);
 
       setResults(formattedResults); // Set the formatted results
 
@@ -110,6 +114,14 @@ const LegalAdvice = () => {
                   {item.description}
                 </p>
                 <p className="text-gray-500 text-sm">Source: {item.dataset}</p>
+                {item.punishment !== "NO PUNISHMENT" && (
+                  <p className="text-gray-500 text-sm">Punishment: {item.punishment}</p>
+                )}
+                {item.url !== "No URL" && (
+                  <p className="text-blue-500 text-sm">
+                    <a href={item.url} target="_blank" rel="noopener noreferrer">Link</a>
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -126,4 +138,3 @@ const LegalAdvice = () => {
 };
 
 export default LegalAdvice;
-

@@ -2,6 +2,7 @@ import CommonLaws from "../models/dataset_models/commonLaws.models.js";
 import WorkerLaws from "../models/dataset_models/workerLaws.models.js";
 import Firipc from "../models/dataset_models/firIPC.models.js";
 import IndianConstitution from "../models/dataset_models/indianConstitution.models.js";
+import LegalQNA from "../models/dataset_models/quesAndAns.models.js"; // Corrected model import
 
 // Function to search and rank results based on keyword matches across all datasets
 const searchInAllDatasets = async (keywords) => {
@@ -10,22 +11,25 @@ const searchInAllDatasets = async (keywords) => {
     const searchConditions = keywords.map((keyword) => ({
       $or: [
         { title: { $regex: keyword, $options: "i" } },
-        { description: { $regex: keyword, $options: "i" } },  // CommonLaws
+        { description: { $regex: keyword, $options: "i" } }, // CommonLaws
         { "documents.question": { $regex: keyword, $options: "i" } }, // WorkerLaws
         { "documents.answer": { $regex: keyword, $options: "i" } }, // WorkerLaws
         { Offense: { $regex: keyword, $options: "i" } }, // Firipc
         { Description: { $regex: keyword, $options: "i" } }, // Firipc
         { Punishment: { $regex: keyword, $options: "i" } }, // Firipc
         { Articles: { $regex: keyword, $options: "i" } }, // Indian Constitution (Articles)
+        { question: { $regex: keyword, $options: "i" } }, // LegalQNA - question matching
+        { answer: { $regex: keyword, $options: "i" } }, // LegalQNA - answer matching
       ],
     }));
 
-    // Fetch results from the WorkerLaws, CommonLaws, Firipc, and Indian Constitution datasets
+    // Fetch results from all datasets, including LegalQNA
     const datasets = await Promise.all([
       CommonLaws.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'CommonLaws' }))),
       WorkerLaws.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'WorkerLaws' }))),
       Firipc.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'Firipc' }))),
-      IndianConstitution.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'IndianConstitution' }))), // New dataset
+      IndianConstitution.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'IndianConstitution' }))),
+      LegalQNA.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'LegalQNA' }))), // Fetch LegalQNA data
     ]);
 
     // Flatten all dataset results into a single array
@@ -66,7 +70,15 @@ const searchInAllDatasets = async (keywords) => {
           item.Articles?.toLowerCase().includes(kw.toLowerCase())  // Indian Constitution Articles matching
         ).length;
 
-        const totalMatches = titleMatches + documentsMatches + descriptionMatches + offenseMatches + punishmentMatches + articlesMatches;
+        const questionMatches = keywords.filter((kw) =>
+          item.question?.toLowerCase().includes(kw.toLowerCase())  // LegalQNA Question matching
+        ).length;
+
+        const answerMatches = keywords.filter((kw) =>
+          item.answer?.toLowerCase().includes(kw.toLowerCase())  // LegalQNA Answer matching
+        ).length;
+
+        const totalMatches = titleMatches + documentsMatches + descriptionMatches + offenseMatches + punishmentMatches + articlesMatches + questionMatches + answerMatches;
         return { ...item, score: totalMatches };
       })
       .filter((item) => item.score > 0) // Only include items with matches
@@ -116,6 +128,12 @@ const search = async (req, res) => {
         return {
           title: `Article ${articleNumber}`,
           description: item.Articles, // Full article text
+          dataset: item.dataset || "Unknown Dataset",
+        };
+      } else if (item.dataset === 'LegalQNA') {
+        return {
+          title: item.question, // LegalQNA - directly use the question as the title
+          description: item.answer, // Use the answer as the description
           dataset: item.dataset || "Unknown Dataset",
         };
       } else {

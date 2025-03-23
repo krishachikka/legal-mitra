@@ -41,9 +41,26 @@ export const getLawyerById = async (req, res) => {
     }
 };
 
-// Controller for lawyer application (Become a Lawyer)
+// Upload file to Cloudinary
+const uploadFileToCloudinary = (file, folder) => {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+            { folder },
+            (error, result) => {
+                if (error) {
+                    reject(error);  // Reject the promise if upload fails
+                } else {
+                    console.log('File uploaded successfully:', result);  // Log the result for verification
+                    resolve(result.secure_url);  // Return the file URL
+                }
+            }
+        ).end(file.buffer);
+    });
+};
+
+// Controller for handling the lawyer registration process
 export const becomeALawyer = async (req, res) => {
-    const { name, mobile_no, email, experience, location, total_cases, top_cases } = req.body;
+    const { name, mobile_no, email, experience, location, total_cases, top_cases, ratings = 0 } = req.body;
 
     try {
         // Validate input fields
@@ -84,64 +101,24 @@ export const becomeALawyer = async (req, res) => {
             return res.status(400).json({ message: 'ID Proof must be a PDF file.' });
         }
 
-        // Initialize file URLs
-        let imageUrl = null, certificateUrl = null, idProofUrl = null;
-
         // Upload all files to Cloudinary asynchronously
-        const uploadImage = new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream({
-                folder: 'lawyer_images'
-            }, (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    imageUrl = result.secure_url;
-                    resolve(result);
-                }
-            }).end(imageFile.buffer);
-        });
-
-        const uploadCertificate = new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream({
-                folder: 'lawyer_certificates'
-            }, (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    certificateUrl = result.secure_url;
-                    resolve(result);
-                }
-            }).end(certificateFile.buffer);
-        });
-
-        const uploadIdProof = new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream({
-                folder: 'lawyer_id_proof'
-            }, (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    idProofUrl = result.secure_url;
-                    resolve(result);
-                }
-            }).end(idProofFile.buffer);
-        });
-
-        // Wait for all uploads to finish before proceeding
-        await Promise.all([uploadImage, uploadCertificate, uploadIdProof]);
+        const imageUrl = await uploadFileToCloudinary(imageFile, 'lawyer_images');
+        const certificateUrl = await uploadFileToCloudinary(certificateFile, 'lawyer_certificates');
+        const idProofUrl = await uploadFileToCloudinary(idProofFile, 'lawyer_id_proof');
 
         // Create a new lawyer record in the database
         const newLawyer = new Lawyer({
             name,
             mobile_no,
             email,
-            experience,
-            location,
-            total_cases, // Include total cases solved
-            top_cases,   // Include top cases
+            ratings,      // Store the ratings
             image: imageUrl, // Image URL from Cloudinary
             certificate: certificateUrl, // Certificate URL from Cloudinary
             idProof: idProofUrl, // ID Proof URL from Cloudinary
+            experience,
+            location,
+            top_cases,    // Include top cases
+            total_cases,  // Include total cases solved
         });
 
         await newLawyer.save();

@@ -1,62 +1,60 @@
-import CaseJudgements from "../models/dataset_models/caseJugdements.models.js";
-import CommonLaws from "../models/dataset_models/commonLaws.models.js";
-import FirIpcLaws from "../models/dataset_models/firIPC.models.js";
-import IndianConstitution from "../models/dataset_models/indianConstitution.models.js";
-import QuesAndAns from "../models/dataset_models/quesAndAns.models.js";
 import WorkerLaws from "../models/dataset_models/workerLaws.models.js";
 
 // Function to search and rank results based on keyword matches
 const searchInAllDatasets = async (keywords) => {
   try {
+    // Create search conditions for each keyword
     const searchConditions = keywords.map((keyword) => ({
       $or: [
         { title: { $regex: keyword, $options: "i" } },
-        { content: { $regex: keyword, $options: "i" } },
+        { "documents.question": { $regex: keyword, $options: "i" } },
+        { "documents.answer": { $regex: keyword, $options: "i" } },
       ],
     }));
 
-    // Fetch results from all datasets in parallel
+    // Fetch results from the WorkerLaws dataset
     const datasets = await Promise.all([
-      // CaseJudgements.find({ $or: searchConditions }),
-      CommonLaws.find({ $or: searchConditions }),
-      // FirIpcLaws.find({ $or: searchConditions }),
-      // IndianConstitution.find({ $or: searchConditions }),
-      // QuesAndAns.find({ $or: searchConditions }),
-      // WorkerLaws.find({ $or: searchConditions }),
+      WorkerLaws.find({ $or: searchConditions }),  // Only fetching WorkerLaws now
     ]);
 
-    // Flatten all results into a single array
+    // Flatten all dataset results into a single array
     let allResults = datasets.flat();
 
-    // Rank results by counting keyword matches
+    // Scoring the results based on the number of keyword matches
     const scoredResults = allResults
-      .map((item) => {
-        const titleMatches = keywords.filter((kw) =>
-          item.title?.toLowerCase().includes(kw.toLowerCase())
+    .map((item) => {
+      const titleMatches = keywords.filter((kw) =>
+        item.Title?.toLowerCase().includes(kw.toLowerCase()) // Use 'Title' with uppercase "T"
+      ).length;
+  
+      const documentsMatches = item.documents.reduce((acc, doc) => {
+        const questionMatches = keywords.filter((kw) =>
+          doc.question?.toLowerCase().includes(kw.toLowerCase())
         ).length;
-
-        const contentMatches = keywords.filter((kw) =>
-          item.content?.toLowerCase().includes(kw.toLowerCase())
+  
+        const answerMatches = keywords.filter((kw) =>
+          doc.answer?.toLowerCase().includes(kw.toLowerCase())
         ).length;
-
-        const totalMatches = titleMatches + contentMatches;
-        return { ...item.toObject(), score: totalMatches };
-      })
-      .filter((item) => item.score > 0) // Remove results with zero matches
-      .sort((a, b) => b.score - a.score) // Sort by highest keyword match
-      .slice(0, 10); // Limit to top 10 results
-
-    return scoredResults;
-
+  
+        return acc + questionMatches + answerMatches;
+      }, 0);
+  
+      const totalMatches = titleMatches + documentsMatches;
+      return { ...item.toObject(), score: totalMatches };
+    })
+    .filter((item) => item.score > 0) // Only include items with matches
+    .sort((a, b) => b.score - a.score) // Sort by score
+    .slice(0, 10); // Limit to the top 10 results
   
 
+    return scoredResults;
   } catch (error) {
     console.error("Error searching datasets:", error);
     throw new Error("Error searching datasets");
   }
 };
 
-// In the backend search controller
+// Backend controller for search
 const search = async (req, res) => {
   const { keywords } = req.query;
 
@@ -65,19 +63,21 @@ const search = async (req, res) => {
   }
 
   try {
+    // Parse keywords from query string
     const parsedKeywords = JSON.parse(keywords);
+
+    // Get search results from all datasets
     const results = await searchInAllDatasets(parsedKeywords);
 
-
-    // If description is available, map it to content
+    // Format the results, including dataset info and content
     const formattedResults = results.map((item) => ({
       ...item,
-      content: item.description, // Make sure content is available for summarization
+      content: item.description || item.documents.map(doc => doc.answer).join("\n"), // Default to the answer if description is missing
+      dataset: "WorkerLaws", // Manually add the dataset name
     }));
 
-    res.json(formattedResults); // Send the formatted results to frontend
-
-
+    // Send the formatted results back to the frontend
+    res.json(formattedResults);
   } catch (error) {
     console.error("Error during search:", error);
     res.status(500).json({ message: "Error during search" });

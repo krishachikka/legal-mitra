@@ -34,9 +34,9 @@ const LegalAdvice = () => {
         console.error("Content is empty or invalid for summarization");
         return "No summary available."; // If content is empty, return this message
       }
-  
+
       console.log("Summarizing Content:", content);
-  
+
       // Requesting the Hugging Face API for summarization
       const response = await axios.post(
         "https://api-inference.huggingface.co/models/facebook/bart-large-cnn", // Ensure this URL is correct
@@ -102,8 +102,11 @@ const LegalAdvice = () => {
       // Handle formatting directly here
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-            title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
-            description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
+            title: item?.Title || "UNKNOWN",
+            description: item?.documents
+              .map((doc) => `${doc.question}: ${doc.answer}`) // Combine question and answer
+              .join("\n") || "NO DESCRIPTION",
+            dataset: item?.dataset || "Unknown Dataset", // Add dataset info here
           }))
         : [];
 
@@ -153,7 +156,12 @@ const LegalAdvice = () => {
                 className="p-5 border border-gray-300 rounded-xl bg-white shadow-md transition duration-300 hover:shadow-lg"
               >
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-gray-700 leading-relaxed">{item.description}</p>
+
+                {/* Clipping the description to 4 lines */}
+                <p className="text-gray-700 leading-relaxed description-line-clamp">
+                  {item.description}
+                </p>
+                <p className="text-gray-500 text-sm">Source: {item.dataset}</p>
               </div>
             ))}
           </div>
@@ -169,4 +177,4 @@ const LegalAdvice = () => {
   );
 };
 
-export default LegalAdvice;   
+export default LegalAdvice;

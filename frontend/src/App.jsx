@@ -13,7 +13,7 @@ import Translator from './Translator';
 import LawyersLandingPage from './pages/Lawyers_Directory/LawyersLandingPage';
 import LawyerDetailsPage from './pages/Lawyers_Directory/LawyerDetailsPage';
 import Summarizer from './pages/Summarizer';
-import LegalNews from './pages/LegaNews';
+// import LegalNews from './pages/LegaNews';
 import UserForm from './pages/UserForm'; // Import UserForm
 
 function App() {

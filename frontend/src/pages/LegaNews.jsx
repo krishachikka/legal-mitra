@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FiBell } from 'react-icons/fi'; // Bell Icon for "Recent Updates"
-import { FaRegNewspaper } from 'react-icons/fa'; // News Icon for individual news
+import { AiOutlineSearch } from 'react-icons/ai'; // Search Icon
 import { AiOutlineCalendar } from 'react-icons/ai'; // Calendar Icon
 
 const LegalNews = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Fetch news from Flask API
@@ -21,6 +22,12 @@ const LegalNews = () => {
         setLoading(false);
       });
   }, []);
+
+  // Filter news based on search query
+  const filteredNews = news.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.summary.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -38,43 +45,70 @@ const LegalNews = () => {
     );
   }
 
-  // Function to truncate the summary text to 2-3 lines
-  const truncateSummary = (summary) => {
-    const maxLength = 150; // Adjust the max length for summary truncation
-    if (summary.length > maxLength) {
-      return summary.substring(0, maxLength) + '...';
-    }
-    return summary;
-  };
-
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-100">
-      {/* Title with Bell Icon */}
-      <div className="flex items-center justify-center mb-12 space-x-3">
-        <FiBell className="text-yellow-500 text-3xl" /> {/* Recent Updates Bell Icon in Yellow */}
-        <h1 className="text-3xl font-semibold text-gray-800">Recent Legal News Updates</h1>
+    <div className="container mx-auto px-4 py-8 bg-gradient-to-r from-blue-50 via-green-50 to-blue-100">
+      {/* Header and Search Bar */}
+      <div className="flex justify-between items-center mb-12">
+        <div className="flex items-center space-x-3">
+          <FiBell className="text-yellow-500 text-xl transition-transform hover:scale-110" />
+          <h1 className="text-2xl font-extrabold text-[#A55B4B] font-poppins tracking-wide leading-tight">
+            Recent Legal News Updates
+          </h1>
+        </div>
+
+        {/* Search Bar */}
+        <div className="flex items-center bg-white rounded-lg shadow-md p-2 w-1/3">
+          <AiOutlineSearch className="text-gray-400 mr-2" />
+          <input
+            type="text"
+            placeholder="Search news..."
+            className="w-full p-2 text-sm text-gray-700 focus:outline-none"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
-      {news.length === 0 ? (
+      {/* News Cards */}
+      {filteredNews.length === 0 ? (
         <p className="text-center text-gray-500">No news available at the moment. Please check back later.</p>
       ) : (
-        <div className="space-y-8">
-          {news.map((item, index) => (
-            <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden border-t-4 border-red-600">
-              {/* Circular Icon for News */}
-              <div className="flex-shrink-0 flex items-center justify-center bg-red-600 w-16 h-16 rounded-full mr-6">
-                <FaRegNewspaper className="text-white text-2xl" /> {/* Red News Icon */}
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredNews.map((item, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-all">
+              {/* Image */}
+              <div className="relative">
+                {item.image && (
+                  <img src={item.image} alt={item.title} className="w-full h-64 object-cover" />
+                )}
+                {/* Overlay */}
+                <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity"></div>
+                <div className="absolute bottom-4 left-4 text-white text-lg font-semibold group-hover:opacity-100 opacity-0 transition-opacity">
+                  <p>New</p>
+                </div>
               </div>
 
               {/* News Content */}
-              <div className="flex-grow p-6">
-                <h2 className="text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+              <div className="p-6 space-y-4">
+                <h2 className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors ease-in-out duration-300">
                   <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
                 </h2>
-                <p className="text-gray-600 mt-4 text-sm">{truncateSummary(item.summary)}</p>
-                <div className="flex items-center mt-4">
-                  <AiOutlineCalendar className="text-gray-400 text-xs mr-2" />
-                  <p className="text-gray-400 text-xs">{new Date(item.published).toLocaleDateString()}</p>
+                {/* Truncated summary */}
+                <p className="text-gray-600 text-sm leading-relaxed"
+                   style={{
+                     display: '-webkit-box',
+                     WebkitBoxOrient: 'vertical',
+                     WebkitLineClamp: 3,  // Limit to 3 lines
+                     overflow: 'hidden',
+                     textOverflow: 'ellipsis'
+                   }}
+                >
+                  {item.summary}
+                </p>
+
+                <div className="flex items-center space-x-2 text-gray-500 text-xs">
+                  <AiOutlineCalendar className="text-gray-400" />
+                  <p>{new Date(item.published).toLocaleDateString()}</p>
                 </div>
               </div>
             </div>

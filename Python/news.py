@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 import feedparser
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -38,7 +40,27 @@ def fetch_rss_feed():
                         news_item['image'] = enclosure['url']
                         break  # Get the first image found
 
-            # If no image found, you can leave it as None or use a default image
+            # If no image found in the RSS, try scraping the article page
+            if not news_item['image']:
+                try:
+                    response = requests.get(entry.link)
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # Look for Open Graph image (og:image)
+                    og_image_tag = soup.find('meta', property='og:image')
+                    if og_image_tag:
+                        news_item['image'] = og_image_tag['content']
+                    
+                    # If no Open Graph image, look for a generic <img> tag
+                    if not news_item['image']:
+                        img_tag = soup.find('img')
+                        if img_tag:
+                            news_item['image'] = img_tag['src']
+
+                except Exception as e:
+                    print(f"Error while scraping the article for image: {e}")
+            
+            # If still no image, set a placeholder image
             if not news_item['image']:
                 news_item['image'] = 'https://via.placeholder.com/600x200?text=Legal+News'
 

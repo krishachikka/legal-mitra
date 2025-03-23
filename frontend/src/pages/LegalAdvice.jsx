@@ -28,53 +28,6 @@ const LegalAdvice = () => {
     }
   };
 
-  const summarizeContent = async (content) => {
-    try {
-      if (!content || content.trim() === "") {
-        console.error("Content is empty or invalid for summarization");
-        return "No summary available."; // If content is empty, return this message
-      }
-
-      console.log("Summarizing Content:", content);
-
-      // Requesting the Hugging Face API for summarization
-      const response = await axios.post(
-        "https://api-inference.huggingface.co/models/facebook/bart-large-cnn", // Ensure this URL is correct
-        {
-          inputs: content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Ensure the key is valid
-          },
-        }
-      );
-
-      // Check if the response has summary_text
-      if (response.data && response.data[0] && response.data[0].summary_text) {
-        const summary = response.data[0].summary_text;
-        console.log("Summarized Text from API:", summary);
-        return summary;
-      } else {
-        throw new Error("Invalid response from the summarization API.");
-      }
-    } catch (error) {
-      console.error("Summarization error:", error);
-
-      // If the error is from Hugging Face, show a better message
-      if (error.response) {
-        if (error.response.status === 500) {
-          return "Server error: Please try again later.";
-        } else if (error.response.status === 401) {
-          return "Unauthorized: Please check your API key.";
-        }
-      }
-
-      // Return a general error message
-      return "Error summarizing content.";
-    }
-  };
-
   // Function to fetch legal advice data
   const fetchLegalAdvice = async (query) => {
     setLoading(true);
@@ -96,17 +49,12 @@ const LegalAdvice = () => {
       const data = await response.json();
       console.log("Search Results Data:", data);
 
-      // display all fetched data
-      console.log("Raw formed data:", data);
-
       // Handle formatting directly here
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-            title: item?.Title || "UNKNOWN",
-            description: item?.documents
-              .map((doc) => `${doc.question}: ${doc.answer}`) // Combine question and answer
-              .join("\n") || "NO DESCRIPTION",
-            dataset: item?.dataset || "Unknown Dataset", // Add dataset info here
+            title: item.title || "UNKNOWN",
+            description: item.description || "NO DESCRIPTION",
+            dataset: item.dataset || "Unknown Dataset", // Add dataset info here
           }))
         : [];
 
@@ -178,3 +126,4 @@ const LegalAdvice = () => {
 };
 
 export default LegalAdvice;
+

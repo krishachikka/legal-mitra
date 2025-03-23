@@ -6,7 +6,7 @@ import { CircularProgress } from "@mui/material";
 const LegalAdvice = () => {
   const [results, setResults] = useState([]); // Store search results
   const [summarizedContent, setSummarizedContent] = useState(""); // Store the summarized content
-  const [loading, setLoading] = useState(false); // Track loading state
+  const [loading, setLoading] = useState(false); 
 
   // Function to extract keywords from the query
   const fetchKeywords = async (query) => {
@@ -53,10 +53,10 @@ const LegalAdvice = () => {
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
             title: item.title || "UNKNOWN", // Use offense as title
-            description: item.description || "NO DESCRIPTION", // Use description
-            punishment: item.punishment || "NO PUNISHMENT", // Use punishment
+            description: item.description || "NO DESCRIPTION", 
+            punishment: item.punishment || "NO PUNISHMENT", 
             url: item.url || "No URL", // Use URL if available
-            dataset: item.dataset || "Firipc Dataset", // Add dataset info here
+            dataset: item.dataset || "Firipc Dataset", 
           }))
         : [];
 

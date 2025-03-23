@@ -1,6 +1,7 @@
 import CommonLaws from "../models/dataset_models/commonLaws.models.js";
 import WorkerLaws from "../models/dataset_models/workerLaws.models.js";
-import Firipc from "../models/dataset_models/firIPC.models.js"; // Import Firipc dataset model
+import Firipc from "../models/dataset_models/firIPC.models.js";
+import IndianConstitution from "../models/dataset_models/indianConstitution.models.js";
 
 // Function to search and rank results based on keyword matches across all datasets
 const searchInAllDatasets = async (keywords) => {
@@ -15,14 +16,16 @@ const searchInAllDatasets = async (keywords) => {
         { Offense: { $regex: keyword, $options: "i" } }, // Firipc
         { Description: { $regex: keyword, $options: "i" } }, // Firipc
         { Punishment: { $regex: keyword, $options: "i" } }, // Firipc
+        { Articles: { $regex: keyword, $options: "i" } }, // Indian Constitution (Articles)
       ],
     }));
 
-    // Fetch results from the WorkerLaws, CommonLaws, and Firipc datasets
+    // Fetch results from the WorkerLaws, CommonLaws, Firipc, and Indian Constitution datasets
     const datasets = await Promise.all([
       CommonLaws.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'CommonLaws' }))),
       WorkerLaws.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'WorkerLaws' }))),
       Firipc.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'Firipc' }))),
+      IndianConstitution.find({ $or: searchConditions }).then(results => results.map(item => ({ ...item.toObject(), dataset: 'IndianConstitution' }))), // New dataset
     ]);
 
     // Flatten all dataset results into a single array
@@ -32,7 +35,7 @@ const searchInAllDatasets = async (keywords) => {
     const scoredResults = allResults
       .map((item) => {
         const titleMatches = keywords.filter((kw) =>
-          item.Title?.toLowerCase().includes(kw.toLowerCase()) // Use 'Title' with uppercase "T"
+          item.Title?.toLowerCase().includes(kw.toLowerCase())
         ).length;
 
         const documentsMatches = item.documents ? item.documents.reduce((acc, doc) => {
@@ -59,12 +62,16 @@ const searchInAllDatasets = async (keywords) => {
           item.Punishment?.toLowerCase().includes(kw.toLowerCase())  // Firipc Punishment matching
         ).length;
 
-        const totalMatches = titleMatches + documentsMatches + descriptionMatches + offenseMatches + punishmentMatches;
+        const articlesMatches = keywords.filter((kw) =>
+          item.Articles?.toLowerCase().includes(kw.toLowerCase())  // Indian Constitution Articles matching
+        ).length;
+
+        const totalMatches = titleMatches + documentsMatches + descriptionMatches + offenseMatches + punishmentMatches + articlesMatches;
         return { ...item, score: totalMatches };
       })
       .filter((item) => item.score > 0) // Only include items with matches
       .sort((a, b) => b.score - a.score) // Sort by score
-      .slice(0, 30); // Limit to the top 10 results
+      .slice(0, 30); // Limit to the top 30 results
 
     return scoredResults;
   } catch (error) {
@@ -93,15 +100,23 @@ const search = async (req, res) => {
         return {
           title: item.Title || item.title, // Title can be from either dataset
           description: item.description || item.documents.map(doc => `${doc.question}: ${doc.answer}`).join("\n"), // Handle description formatting for both
-          dataset: item.dataset || "Unknown Dataset", // Add dataset info
+          dataset: item.dataset || "Unknown Dataset",
         };
       } else if (item.dataset === 'Firipc') {
         return {
           title: item.Offense, // Firipc - Offense as the title
-          description: item.Description, // Firipc - description
-          punishment: item.Punishment, // Firipc - punishment
-          dataset: item.dataset || "Unknown Dataset", // Add dataset info
-          url: item.URL, // Firipc URL if available
+          description: item.Description, 
+          punishment: item.Punishment, 
+          dataset: item.dataset || "Unknown Dataset", 
+          url: item.URL, 
+        };
+      } else if (item.dataset === 'IndianConstitution') {
+        // Extract the article number from the Articles field
+        const articleNumber = item.Articles.split(".")[0].trim();
+        return {
+          title: `Article ${articleNumber}`,
+          description: item.Articles, // Full article text
+          dataset: item.dataset || "Unknown Dataset",
         };
       } else {
         return {}; // Return an empty object if dataset is unknown

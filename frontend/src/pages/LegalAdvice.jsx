@@ -6,7 +6,7 @@ import { CircularProgress } from "@mui/material";
 const LegalAdvice = () => {
   const [results, setResults] = useState([]); // Store search results
   const [summarizedContent, setSummarizedContent] = useState(""); // Store the summarized content
-  const [loading, setLoading] = useState(false); // Track loading state
+  const [loading, setLoading] = useState(false); 
 
   // Function to extract keywords from the query
   const fetchKeywords = async (query) => {
@@ -28,54 +28,7 @@ const LegalAdvice = () => {
     }
   };
 
-  const summarizeContent = async (content) => {
-    try {
-      if (!content || content.trim() === "") {
-        console.error("Content is empty or invalid for summarization");
-        return "No summary available."; // If content is empty, return this message
-      }
-  
-      console.log("Summarizing Content:", content);
-  
-      // Requesting the Hugging Face API for summarization
-      const response = await axios.post(
-        "https://api-inference.huggingface.co/models/facebook/bart-large-cnn", // Ensure this URL is correct
-        {
-          inputs: content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Ensure the key is valid
-          },
-        }
-      );
-
-      // Check if the response has summary_text
-      if (response.data && response.data[0] && response.data[0].summary_text) {
-        const summary = response.data[0].summary_text;
-        console.log("Summarized Text from API:", summary);
-        return summary;
-      } else {
-        throw new Error("Invalid response from the summarization API.");
-      }
-    } catch (error) {
-      console.error("Summarization error:", error);
-
-      // If the error is from Hugging Face, show a better message
-      if (error.response) {
-        if (error.response.status === 500) {
-          return "Server error: Please try again later.";
-        } else if (error.response.status === 401) {
-          return "Unauthorized: Please check your API key.";
-        }
-      }
-
-      // Return a general error message
-      return "Error summarizing content.";
-    }
-  };
-
-  // Function to fetch legal advice data
+  // Function to fetch legal advice data from Firipc dataset
   const fetchLegalAdvice = async (query) => {
     setLoading(true);
     setSummarizedContent(""); // Reset the summary content before a new query
@@ -84,7 +37,7 @@ const LegalAdvice = () => {
       // Extract keywords from the search query
       const keywords = await fetchKeywords(query);
 
-      // Fetch legal data using the keywords
+      // Fetch legal data from Firipc dataset using the extracted keywords
       const response = await fetch(
         `${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/search/search?keywords=${JSON.stringify(keywords)}`
       );
@@ -96,16 +49,18 @@ const LegalAdvice = () => {
       const data = await response.json();
       console.log("Search Results Data:", data);
 
-      // display all fetched data
-      console.log("Raw formed data:", data);
-
-      // Handle formatting directly here
+      // Handle formatting directly here for Firipc data
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-            title: item?.title ? item.title.toUpperCase() : "UNKNOWN",
-            description: item?.description ? item.description.toUpperCase() : "NO DESCRIPTION",
+            title: item.title || "UNKNOWN", // Use offense as title
+            description: item.description || "NO DESCRIPTION", 
+            punishment: item.punishment || "NO PUNISHMENT", 
+            url: item.url || "No URL", // Use URL if available
+            dataset: item.dataset || "Firipc Dataset", 
           }))
         : [];
+
+      console.log(formattedResults);
 
       setResults(formattedResults); // Set the formatted results
 
@@ -153,7 +108,20 @@ const LegalAdvice = () => {
                 className="p-5 border border-gray-300 rounded-xl bg-white shadow-md transition duration-300 hover:shadow-lg"
               >
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-gray-700 leading-relaxed">{item.description}</p>
+
+                {/* Clipping the description to 4 lines */}
+                <p className="text-gray-700 leading-relaxed description-line-clamp">
+                  {item.description}
+                </p>
+                <p className="text-gray-500 text-sm">Source: {item.dataset}</p>
+                {item.punishment !== "NO PUNISHMENT" && (
+                  <p className="text-gray-500 text-sm">Punishment: {item.punishment}</p>
+                )}
+                {item.url !== "No URL" && (
+                  <p className="text-blue-500 text-sm">
+                    <a href={item.url} target="_blank" rel="noopener noreferrer">Link</a>
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -169,4 +137,4 @@ const LegalAdvice = () => {
   );
 };
 
-export default LegalAdvice;   
+export default LegalAdvice;

@@ -12,6 +12,7 @@ CORS(app, origins=["http://localhost:5173"])
 # RSS feed URL
 rss_url = "https://www.barandbench.com/feed"  # Change this to any RSS feed URL you prefer
 
+
 def fetch_rss_feed():
     feed = feedparser.parse(rss_url)
     news_items = []
@@ -27,11 +28,11 @@ def fetch_rss_feed():
                 'content': None  # Adding content field for detailed article content
             }
 
-            # Handle image extraction (media or scraping)
-            if 'media_content' in entry:
+            # Try to get the image from 'media_content' (common for RSS feeds with media)
+            if "media_content" in entry:
                 media = entry.media_content[0]
-                if 'url' in media:
-                    news_item['image'] = media['url']
+                if "url" in media:
+                    news_item["image"] = media["url"]
 
             if not news_item['image'] and 'enclosures' in entry:
                 for enclosure in entry.enclosures:
@@ -57,29 +58,33 @@ def fetch_rss_feed():
                 try:
                     response = requests.get(entry.link)
                     soup = BeautifulSoup(response.content, 'html.parser')
-                    
+
                     # Example: Try to extract main content, based on the website's structure
-                    content_tag = soup.find('div', class_='article-body')  # You may need to adjust this for your RSS feed's structure
-                    
+                    content_tag = soup.find('div', class_='article-body')  # Adjust for the website structure
                     if content_tag:
                         # Extract and clean text
                         news_item['content'] = content_tag.get_text().strip()
-                    
+
                     # If no specific article body found, try scraping other parts
                     if not news_item['content']:
-                        content_tag = soup.find('div', class_='content')  # This is just another example
+                        content_tag = soup.find('div', class_='content')  # Example alternative structure
                         if content_tag:
                             news_item['content'] = content_tag.get_text().strip()
 
                 except Exception as e:
                     print(f"Error while scraping detailed content: {e}")
 
+            # If no image found, you can leave it as None or use a default image
+            if not news_item["image"]:
+                news_item["image"] = "https://via.placeholder.com/600x200?text=Legal+News"
+
             news_items.append(news_item)
 
     return news_items
 
+
 # Define the API endpoint for fetching news
-@app.route('/api/news', methods=['GET'])
+@app.route("/api/news", methods=["GET"])
 def news():
     try:
         # Fetch and return the RSS feed data
@@ -88,7 +93,11 @@ def news():
     except Exception as e:
         # Log the error for debugging
         print(f"Error: {e}")
-        return jsonify({'error': 'Failed to fetch news'}), 500  # Return 500 if something goes wrong
+        return (
+            jsonify({"error": "Failed to fetch news"}),
+            500,
+        )  # Return 500 if something goes wrong
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)

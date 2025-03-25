@@ -13,8 +13,8 @@ import Translator from './Translator';
 import LawyersLandingPage from './pages/Lawyers_Directory/LawyersLandingPage';
 import LawyerDetailsPage from './pages/Lawyers_Directory/LawyerDetailsPage';
 import Summarizer from './pages/Summarizer';
-// import LegalNews from './pages/LegaNews';
 import UserForm from './pages/UserForm'; // Import UserForm
+import LawyersForm from './pages/Lawyers_Directory/LawyersForm';
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -38,7 +38,7 @@ function App() {
 
           {/* Lawyers Directory */}
           <Route path='/lawyers-directory' element={<LawyersLandingPage />} />
-          <Route path="/lawyer-details/:lawyerId" element={<LawyerDetailsPage />} />
+          <Route path="/lawyer-directory/:lawyerId" element={<LawyerDetailsPage />} />
           <Route path="/summarize" element={<Summarizer />} />
 
 
@@ -47,7 +47,7 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
 
           {/* Add UserForm route */}
-          <Route path="/user-form" element={<UserForm />} /> {/* New route for UserForm */}
+          <Route path="/lawyers-form" element={<LawyersForm />} /> {/* New route for UserForm */}
 
           {/* Fallback route for 404 */}
           <Route path="*" element={<div>Page Not Found</div>} />

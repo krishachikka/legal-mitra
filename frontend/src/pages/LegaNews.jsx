@@ -46,9 +46,9 @@ const LegalNews = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-gradient-to-r from-blue-50 via-green-50 to-blue-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-50 via-green-50 to-blue-100">
       {/* Header and Search Bar */}
-      <div className="flex justify-between items-center mb-12">
+      <div className="flex justify-between items-center mb-12 p-4">
         <div className="flex items-center space-x-3">
           <FiBell className="text-yellow-500 text-xl transition-transform hover:scale-110" />
           <h1 className="text-2xl font-extrabold text-[#A55B4B] font-poppins tracking-wide leading-tight">
@@ -70,9 +70,9 @@ const LegalNews = () => {
       </div>
 
       {/* Layout for Left and Right Content */}
-      <div className="flex space-x-8">
+      <div className="flex flex-1 space-x-8 px-4 pb-8">
         {/* Left side with Video/Image and Content Below */}
-        <div className="w-2/3">
+        <div className="w-2/3 flex flex-col space-y-8">
           <div className="relative">
             {filteredNews.length > 0 && filteredNews[0].image && (
               <img src={filteredNews[0].image} alt={filteredNews[0].title} className="w-full h-96 object-cover rounded-lg" />
@@ -84,7 +84,7 @@ const LegalNews = () => {
           </div>
           {/* Below the image/video - Title, Summary, and Other Info */}
           {filteredNews.length > 0 && (
-            <div className="bg-white p-6 rounded-lg shadow-xl mt-6">
+            <div className="bg-white p-6 rounded-lg shadow-xl">
               <h2 className="text-3xl font-bold text-gray-800">{filteredNews[0].title}</h2>
               <p className="text-gray-600 text-sm mt-4">{filteredNews[0].summary}</p>
               <div className="flex items-center space-x-2 text-gray-500 text-xs mt-4">
@@ -95,6 +95,32 @@ const LegalNews = () => {
               <button className="text-blue-500 hover:text-blue-700 mt-4">Read More</button>
             </div>
           )}
+
+          {/* Additional news at the bottom left to fill space (increase to 6 items) */}
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold text-gray-800">More Recent News</h3>
+            <ul className="mt-4 space-y-4">
+              {/* Increase the number of news items to be displayed (from 3 to 6 or more) */}
+              {filteredNews.slice(1, 7).map((item, index) => (
+                <li key={index} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all flex space-x-4">
+                  {/* Image for the additional news item */}
+                  {item.image && (
+                    <img src={item.image} alt={item.title} className="w-20 h-20 object-cover rounded-lg" />
+                  )}
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold text-gray-800">
+                      <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
+                    </h4>
+                    <p className="text-sm text-gray-600">{item.summary}</p>
+                    <div className="flex items-center space-x-2 text-gray-500 text-xs mt-2">
+                      <AiOutlineCalendar className="text-gray-400" />
+                      <p>{new Date(item.published).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Right side with Related News (with images) */}
@@ -117,6 +143,11 @@ const LegalNews = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Footer (if needed for additional content at the bottom) */}
+      <div className="bg-gray-800 text-white p-4 mt-8">
+        <p className="text-center">© 2025 Legal News, All Rights Reserved</p>
       </div>
     </div>
   );

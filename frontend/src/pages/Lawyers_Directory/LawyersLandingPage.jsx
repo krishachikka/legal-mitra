@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import LawyerForm from './LawyerForm';  // Updated import
 
 const LawyersLandingPage = () => {
   const [lawyers, setLawyers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +13,7 @@ const LawyersLandingPage = () => {
       try {
         setLoading(true);
         const response = await axios.get('http://localhost:3000/api/v1/lawyers-directory/lawyers');
-        const fetchedLawyers = Array.isArray(response.data) ? response.data : [];
+        const fetchedLawyers = Array.isArray(response.data.data) ? response.data.data : [];
         setLawyers(fetchedLawyers);
         setLoading(false);
       } catch (err) {
@@ -28,11 +26,11 @@ const LawyersLandingPage = () => {
   }, []);
 
   const handleConnectClick = (lawyerId) => {
-    navigate(`/lawyer-details/${lawyerId}`);
+    navigate(`/lawyer-directory/${lawyerId}`);
   };
 
-  const handleModalToggle = () => {
-    setShowModal(!showModal);
+  const handleJoinLawyerClick = () => {
+    navigate('/lawyers-form');
   };
 
   if (loading) {
@@ -51,12 +49,13 @@ const LawyersLandingPage = () => {
     <div className="relative flex flex-col min-h-screen bg-[#fbfaf8] font-[Public Sans], sans-serif">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-[#f3ece8] px-10 py-8">
+        <div className="flex items-center gap-4 text-[#1b130e]"></div>
         <div className="flex gap-4">
           <button
-            onClick={handleModalToggle}
+            onClick={handleJoinLawyerClick}
             className="flex items-center justify-center px-4 py-3 rounded-xl bg-[#e36c1c] text-[#fbfaf8] text-sm font-bold"
           >
-            Become a Lawyer
+            Join LegalMitra as a Lawyer
           </button>
         </div>
       </header>
@@ -81,16 +80,20 @@ const LawyersLandingPage = () => {
             {lawyers.map((lawyer) => (
               <div key={lawyer._id} className="flex items-center justify-between bg-[#fbfaf8] p-4 rounded-lg shadow-lg">
                 <div className="flex items-center gap-4">
+                  {/* Profile Picture */}
                   <div
                     className="w-14 h-14 bg-cover rounded-full"
-                    style={{ backgroundImage: `url(${lawyer.image})` }}
+                    style={{ backgroundImage: `url(${lawyer.profilePhoto})` }}
                   ></div>
+
+                  {/* Lawyer Info */}
                   <div>
                     <h4 className="text-xl font-semibold">{lawyer.name}</h4>
-                    <p className="text-sm text-[#9b9b9b]">{lawyer.experience} years of experience</p>
-                    <p className="text-sm text-[#9b9b9b]">{lawyer.location}</p>
+                    <p className="text-sm text-[#9b9b9b]">{lawyer.email}</p>
                   </div>
                 </div>
+
+                {/* Connect Button */}
                 <button
                   onClick={() => handleConnectClick(lawyer._id)}
                   className="px-6 py-2 bg-[#e36c1c] text-white rounded-full font-semibold"
@@ -102,12 +105,6 @@ const LawyersLandingPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Lawyer Form Modal */}
-      <LawyerForm
-        showModal={showModal}
-        handleModalToggle={handleModalToggle}
-      />
     </div>
   );
 };

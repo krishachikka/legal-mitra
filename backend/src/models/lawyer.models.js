@@ -1,25 +1,32 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from "mongoose";
 
-const lawyerSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  mobile_no: { type: String, required: true },
-  email: { type: String, required: true },
-  ratings: { type: Number, default: 0 },
-  image: { type: String, default: null },
-  certificate: { type: String, default: null },
-  idProof: { type: String, default: null },
-  experience: { type: Number, required: true },
-  location: { type: String, required: true },
-  top_cases: [{ case_name: String, rating: Number }],
-  total_cases: { type: Number, default: 0 },
+const lawyerSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  contactNo: {
+    type: String,
+    required: true,
+  },
+  noOfCasesSolved: {
+    type: Number,
+    required: true,
+  },
+  educationCertificate: {
+    type: String,  // URL of the uploaded PDF
+    required: true,
+  },
+  profilePhoto: {
+    type: String,  // URL of the uploaded image
+    required: true,
+  },
 });
 
-const Lawyer = mongoose.model('Lawyer', lawyerSchema);
-
-// Save a new lawyer
-const saveLawyer = async (data) => {
-  const lawyer = new Lawyer(data);
-  await lawyer.save();
-};
-
+const Lawyer = mongoose.model('Lawyers_directory', lawyerSchema);
 export default Lawyer;

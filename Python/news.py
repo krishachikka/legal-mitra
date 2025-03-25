@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 import feedparser
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -8,24 +10,22 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
 
 # RSS feed URL
-rss_url = (
-    "https://www.barandbench.com/feed"  # Change this to any RSS feed URL you prefer
-)
+rss_url = "https://www.barandbench.com/feed"  # Change this to any RSS feed URL you prefer
 
 
-# Function to fetch and parse RSS feed
 def fetch_rss_feed():
     feed = feedparser.parse(rss_url)
     news_items = []
 
     if len(feed.entries) > 0:
-        for entry in feed.entries[:5]:  # Get the first 5 entries
+        for entry in feed.entries[:10]:  # Fetch 10 entries
             news_item = {
-                "title": entry.title,
-                "link": entry.link,
-                "summary": entry.summary,
-                "published": entry.published,
-                "image": None,  # Placeholder for image
+                'title': entry.title,
+                'link': entry.link,
+                'summary': entry.summary,
+                'published': entry.published,
+                'image': None,
+                'content': None  # Adding content field for detailed article content
             }
 
             # Try to get the image from 'media_content' (common for RSS feeds with media)
@@ -34,18 +34,49 @@ def fetch_rss_feed():
                 if "url" in media:
                     news_item["image"] = media["url"]
 
-            # Check if image is in 'enclosures' (common for media RSS feeds)
-            if not news_item["image"] and "enclosures" in entry:
+            if not news_item['image'] and 'enclosures' in entry:
                 for enclosure in entry.enclosures:
-                    if enclosure.get("type", "").startswith("image/"):
-                        news_item["image"] = enclosure["url"]
-                        break  # Get the first image found
+                    if enclosure.get('type', '').startswith('image/'):
+                        news_item['image'] = enclosure['url']
+                        break
+
+            if not news_item['image']:
+                try:
+                    response = requests.get(entry.link)
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    og_image_tag = soup.find('meta', property='og:image')
+                    if og_image_tag:
+                        news_item['image'] = og_image_tag['content']
+                except Exception as e:
+                    print(f"Error while scraping the article for image: {e}")
+
+            if not news_item['image']:
+                news_item['image'] = 'https://via.placeholder.com/600x200?text=Legal+News'
+
+            # Fetching detailed content from the article
+            if not news_item['content']:
+                try:
+                    response = requests.get(entry.link)
+                    soup = BeautifulSoup(response.content, 'html.parser')
+
+                    # Example: Try to extract main content, based on the website's structure
+                    content_tag = soup.find('div', class_='article-body')  # Adjust for the website structure
+                    if content_tag:
+                        # Extract and clean text
+                        news_item['content'] = content_tag.get_text().strip()
+
+                    # If no specific article body found, try scraping other parts
+                    if not news_item['content']:
+                        content_tag = soup.find('div', class_='content')  # Example alternative structure
+                        if content_tag:
+                            news_item['content'] = content_tag.get_text().strip()
+
+                except Exception as e:
+                    print(f"Error while scraping detailed content: {e}")
 
             # If no image found, you can leave it as None or use a default image
             if not news_item["image"]:
-                news_item["image"] = (
-                    "https://via.placeholder.com/600x200?text=Legal+News"
-                )
+                news_item["image"] = "https://via.placeholder.com/600x200?text=Legal+News"
 
             news_items.append(news_item)
 

@@ -69,44 +69,47 @@ const LegalNews = () => {
         </div>
       </div>
 
-      {/* News Cards */}
-      {filteredNews.length === 0 ? (
-        <p className="text-center text-gray-500">No news available at the moment. Please check back later.</p>
-      ) : (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredNews.map((item, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-all">
-              {/* Image */}
-              <div className="relative">
-                {item.image && (
-                  <img src={item.image} alt={item.title} className="w-full h-64 object-cover" />
-                )}
-                {/* Overlay */}
-                <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity"></div>
-                <div className="absolute bottom-4 left-4 text-white text-lg font-semibold group-hover:opacity-100 opacity-0 transition-opacity">
-                  <p>New</p>
-                </div>
+      {/* Layout for Left and Right Content */}
+      <div className="flex space-x-8">
+        {/* Left side with Video/Image and Content Below */}
+        <div className="w-2/3">
+          <div className="relative">
+            {filteredNews.length > 0 && filteredNews[0].image && (
+              <img src={filteredNews[0].image} alt={filteredNews[0].title} className="w-full h-96 object-cover rounded-lg" />
+            )}
+            <div className="absolute top-0 left-0 w-full h-full bg-black opacity-30"></div>
+            <div className="absolute bottom-4 left-4 text-white text-lg font-semibold">
+              <p>{filteredNews.length > 0 && filteredNews[0].title}</p>
+            </div>
+          </div>
+          {/* Below the image/video - Title, Summary, and Other Info */}
+          {filteredNews.length > 0 && (
+            <div className="bg-white p-6 rounded-lg shadow-xl mt-6">
+              <h2 className="text-3xl font-bold text-gray-800">{filteredNews[0].title}</h2>
+              <p className="text-gray-600 text-sm mt-4">{filteredNews[0].summary}</p>
+              <div className="flex items-center space-x-2 text-gray-500 text-xs mt-4">
+                <AiOutlineCalendar className="text-gray-400" />
+                <p>{new Date(filteredNews[0].published).toLocaleDateString()}</p>
               </div>
+              {/* Add any "More" or extra content here */}
+              <button className="text-blue-500 hover:text-blue-700 mt-4">Read More</button>
+            </div>
+          )}
+        </div>
 
-              {/* News Content */}
-              <div className="p-6 space-y-4">
-                <h2 className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors ease-in-out duration-300">
+        {/* Right side with Related News (with images) */}
+        <div className="w-1/3">
+          <h2 className="text-xl font-bold text-gray-800 mb-6">Related News</h2>
+          {filteredNews.map((item, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-xl mb-6 p-4 hover:shadow-2xl transition-all flex space-x-4">
+              {/* Image for the related news item */}
+              <img src={item.image} alt={item.title} className="w-20 h-20 object-cover rounded-lg" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-800">
                   <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
-                </h2>
-                {/* Truncated summary */}
-                <p className="text-gray-600 text-sm leading-relaxed"
-                   style={{
-                     display: '-webkit-box',
-                     WebkitBoxOrient: 'vertical',
-                     WebkitLineClamp: 3,  // Limit to 3 lines
-                     overflow: 'hidden',
-                     textOverflow: 'ellipsis'
-                   }}
-                >
-                  {item.summary}
-                </p>
-
-                <div className="flex items-center space-x-2 text-gray-500 text-xs">
+                </h3>
+                <p className="text-sm text-gray-600">{item.summary}</p>
+                <div className="flex items-center space-x-2 text-gray-500 text-xs mt-2">
                   <AiOutlineCalendar className="text-gray-400" />
                   <p>{new Date(item.published).toLocaleDateString()}</p>
                 </div>
@@ -114,7 +117,7 @@ const LegalNews = () => {
             </div>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };

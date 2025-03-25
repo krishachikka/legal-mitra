@@ -12,57 +12,67 @@ CORS(app, origins=["http://localhost:5173"])
 # RSS feed URL
 rss_url = "https://www.barandbench.com/feed"  # Change this to any RSS feed URL you prefer
 
-# Function to fetch and parse RSS feed
 def fetch_rss_feed():
     feed = feedparser.parse(rss_url)
     news_items = []
 
     if len(feed.entries) > 0:
-        for entry in feed.entries[:5]:  # Get the first 5 entries
+        for entry in feed.entries[:10]:  # Fetch 10 entries
             news_item = {
                 'title': entry.title,
                 'link': entry.link,
                 'summary': entry.summary,
                 'published': entry.published,
-                'image': None  # Placeholder for image
+                'image': None,
+                'content': None  # Adding content field for detailed article content
             }
 
-            # Try to get the image from 'media_content' (common for RSS feeds with media)
+            # Handle image extraction (media or scraping)
             if 'media_content' in entry:
                 media = entry.media_content[0]
                 if 'url' in media:
                     news_item['image'] = media['url']
 
-            # Check if image is in 'enclosures' (common for media RSS feeds)
             if not news_item['image'] and 'enclosures' in entry:
                 for enclosure in entry.enclosures:
                     if enclosure.get('type', '').startswith('image/'):
                         news_item['image'] = enclosure['url']
-                        break  # Get the first image found
+                        break
 
-            # If no image found in the RSS, try scraping the article page
             if not news_item['image']:
                 try:
                     response = requests.get(entry.link)
                     soup = BeautifulSoup(response.content, 'html.parser')
-                    
-                    # Look for Open Graph image (og:image)
                     og_image_tag = soup.find('meta', property='og:image')
                     if og_image_tag:
                         news_item['image'] = og_image_tag['content']
-                    
-                    # If no Open Graph image, look for a generic <img> tag
-                    if not news_item['image']:
-                        img_tag = soup.find('img')
-                        if img_tag:
-                            news_item['image'] = img_tag['src']
-
                 except Exception as e:
                     print(f"Error while scraping the article for image: {e}")
-            
-            # If still no image, set a placeholder image
+
             if not news_item['image']:
                 news_item['image'] = 'https://via.placeholder.com/600x200?text=Legal+News'
+
+            # Fetching detailed content from the article
+            if not news_item['content']:
+                try:
+                    response = requests.get(entry.link)
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # Example: Try to extract main content, based on the website's structure
+                    content_tag = soup.find('div', class_='article-body')  # You may need to adjust this for your RSS feed's structure
+                    
+                    if content_tag:
+                        # Extract and clean text
+                        news_item['content'] = content_tag.get_text().strip()
+                    
+                    # If no specific article body found, try scraping other parts
+                    if not news_item['content']:
+                        content_tag = soup.find('div', class_='content')  # This is just another example
+                        if content_tag:
+                            news_item['content'] = content_tag.get_text().strip()
+
+                except Exception as e:
+                    print(f"Error while scraping detailed content: {e}")
 
             news_items.append(news_item)
 

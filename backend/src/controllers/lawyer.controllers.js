@@ -1,131 +1,114 @@
-import mongoose from 'mongoose';
-import Lawyer from '../models/lawyer.models.js';
-import cloudinary from '../../config/cloudinary.js';
-import validator from 'validator';  // For validation
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import cloudinary from "../../utils/cloudinary.js";  // Assuming cloudinary is configured
+import Lawyer from "../models/lawyer.models.js";
 
-// Controller to get all lawyers without pagination
-export const getLawyers = async (req, res) => {
-    try {
-        const lawyers = await Lawyer.find();
+// Fetch all lawyers from the database
+const getLawyers = asyncHandler(async (req, res) => {
+  try {
+    const lawyers = await Lawyer.find();  // Fetch all lawyers from the database
 
-        if (lawyers.length === 0) {
-            return res.status(404).json({ message: 'No Lawyers found.' });
-        }
-
-        return res.status(200).json(lawyers);
-    } catch (error) {
-        console.error('Error fetching Lawyers:', error.message);
-        return res.status(500).json({ message: 'Server error, unable to fetch Lawyers.' });
-    }
-};
-
-// Controller to get a specific lawyer by ID
-export const getLawyerById = async (req, res) => {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid Lawyer ID' });
-    }
-
-    try {
-        const lawyer = await Lawyer.findById(id);
-
-        if (!lawyer) {
-            return res.status(404).json({ message: 'Lawyer not found.' });
-        }
-
-        return res.status(200).json(lawyer);
-    } catch (error) {
-        console.error('Error fetching Lawyer:', error.message);
-        return res.status(500).json({ message: 'Server error, unable to fetch Lawyer.' });
-    }
-};
-
-// Upload file to Cloudinary
-const uploadFileToCloudinary = (file, folder) => {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        { folder },
-        (error, result) => {
-          if (error) {
-            reject(error);  // Reject the promise if upload fails
-          } else {
-            console.log('File uploaded successfully:', result);  // Log the result for verification
-            resolve(result.secure_url);  // Return the file URL
-          }
-        }
-      ).end(file.buffer);
-    });
-  };
-  
-  
-  export const becomeALawyer = async (req, res) => {
-    const { name, mobile_no, email, experience, location,  top_cases } = req.body;
-
-    try {
-      // Validate input fields
-      if (!name || !mobile_no || !email || !experience || !location  || !top_cases) {
-        return res.status(400).json({ message: 'All fields are required: name, mobile_no, email, experience, location,  top_cases.' });
-      }
-
-      // Validate email and mobile number format
-      if (!validator.isEmail(email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
-      }
-
-      if (!validator.isMobilePhone(mobile_no, 'any', { strictMode: false })) {
-        return res.status(400).json({ message: 'Invalid mobile number' });
-      }
-
-      // Check if all required files are present in the request
-      if (!req.files || !req.files.image || !req.files.certificate || !req.files.idProof) {
-        return res.status(400).json({ message: 'All files are required: image, certificate, idProof.' });
-      }
-
-      // Validate file types
-      const imageFile = req.files.image[0];
-      const certificateFile = req.files.certificate[0];
-      const idProofFile = req.files.idProof[0];
-
-      // Validate image format (JPEG, PNG)
-      if (!imageFile.mimetype.match(/image\/(jpeg|png)/)) {
-        return res.status(400).json({ message: 'Image must be in JPEG or PNG format.' });
-      }
-
-      // Validate PDF format for certificate and ID proof
-      if (certificateFile.mimetype !== 'application/pdf') {
-        return res.status(400).json({ message: 'Certificate must be a PDF file.' });
-      }
-
-      if (idProofFile.mimetype !== 'application/pdf') {
-        return res.status(400).json({ message: 'ID Proof must be a PDF file.' });
-      }
-
-      // Upload all files to Cloudinary asynchronously
-      const imageUrl = await uploadFileToCloudinary(imageFile, 'lawyer_images');
-      const certificateUrl = await uploadFileToCloudinary(certificateFile, 'lawyer_certificates');
-      const idProofUrl = await uploadFileToCloudinary(idProofFile, 'lawyer_id_proof');
-
-      // Create a new lawyer record in the database
-      const newLawyer = new Lawyer({
-        name,
-        mobile_no,
-        email,
-        experience,
-        location,
-        // total_cases,  // Include total cases solved
-        top_cases,    // Include top cases
-        // ratings,      // Store the ratings
-        image: imageUrl, // Image URL from Cloudinary
-        certificate: certificateUrl, // Certificate URL from Cloudinary
-        idProof: idProofUrl, // ID Proof URL from Cloudinary
+    if (!lawyers || lawyers.length === 0) {
+      return res.status(404).json({
+        message: "No lawyers found.",
       });
-
-      await newLawyer.save();
-
-      res.status(201).json({ message: 'Lawyer application submitted successfully', lawyer: newLawyer });
-    } catch (error) {
-      console.error('Error submitting lawyer application:', error.message);
-      return res.status(500).json({ message: 'Server error, unable to submit application.' });
     }
-};
+
+    return res.status(200).json({
+      message: "Lawyers fetched successfully",
+      data: lawyers,
+    });
+  } catch (error) {
+    console.error("Error fetching lawyers:", error);
+    return res.status(500).json({
+      message: "Something went wrong while fetching lawyers.",
+      error: error.message,
+    });
+  }
+});
+
+
+
+
+
+// Handle the lawyer form submission and file upload
+const uploadLawyerDetails = asyncHandler(async (req, res) => {
+  try {
+    if (!req.files || req.files.length < 2) {
+      return res.status(400).json({
+        message: "Please upload both education certificate (PDF) and profile photo (Image).",
+      });
+    }
+
+    const [educationCertificate, profilePhoto] = req.files;
+
+    // Upload files to Cloudinary
+    const educationCertResult = await cloudinary.uploader.upload(educationCertificate.path, {
+      folder: "lawyers/educationCertificates",
+    });
+
+    const profilePhotoResult = await cloudinary.uploader.upload(profilePhoto.path, {
+      folder: "lawyers/profilePhotos",
+    });
+
+    // Extract other form data
+    const { name, email, contactNo, noOfCasesSolved, location } = req.body;  // Added location
+
+    // Create a new lawyer record
+    const newLawyer = new Lawyer({
+      name,
+      email,
+      contactNo,
+      noOfCasesSolved,
+      location,  // Saving location data
+      educationCertificate: educationCertResult.secure_url,  // Store URL of the PDF
+      profilePhoto: profilePhotoResult.secure_url,  // Store URL of the image
+    });
+
+    await newLawyer.save();
+
+    return res.status(200).json({
+      message: "Lawyer details uploaded successfully!",
+      data: {
+        name: newLawyer.name,
+        profilePhoto: newLawyer.profilePhoto,
+        educationCertificate: newLawyer.educationCertificate,
+        location: newLawyer.location,  // Returning location data
+      },
+    });
+  } catch (error) {
+    console.error("Error in uploading lawyer details:", error);
+    return res.status(500).json({
+      message: "Something went wrong while uploading lawyer details.",
+      error: error.message,
+    });
+  }
+});
+
+
+// Fetch a lawyer by ID
+const getLawyerById = asyncHandler(async (req, res) => {
+  try {
+    const { lawyerId } = req.params;  // Get the lawyerId from request parameters
+
+    const lawyer = await Lawyer.findById(lawyerId);  // Find the lawyer by ID
+
+    if (!lawyer) {
+      return res.status(404).json({
+        message: "Lawyer not found.",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Lawyer fetched successfully",
+      data: lawyer,
+    });
+  } catch (error) {
+    console.error("Error fetching lawyer:", error);
+    return res.status(500).json({
+      message: "Something went wrong while fetching the lawyer.",
+      error: error.message,
+    });
+  }
+});
+
+export { uploadLawyerDetails, getLawyers, getLawyerById };

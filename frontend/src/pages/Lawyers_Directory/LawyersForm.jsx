@@ -1,0 +1,181 @@
+import React, { useState } from "react";
+import axios from "axios";
+import { useDropzone } from "react-dropzone";
+
+const LawyersForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contactNo, setContactNo] = useState("");
+  const [noOfCasesSolved, setNoOfCasesSolved] = useState("");
+  const [location, setLocation] = useState(""); // Added location state
+  const [educationCertificate, setEducationCertificate] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadedUrls, setUploadedUrls] = useState([]);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length === 1) {
+        if (acceptedFiles[0].type.startsWith("image/")) {
+          setProfilePhoto(acceptedFiles[0]);
+        } else {
+          setEducationCertificate(acceptedFiles[0]);
+        }
+      }
+    },
+    multiple: false,
+    accept: "image/*,application/pdf", // Accept both image and PDF
+  });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!name || !email || !contactNo || !noOfCasesSolved || !location || !educationCertificate || !profilePhoto) {
+      setUploadMessage("Please fill in all fields and upload the required files.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("contactNo", contactNo);
+    formData.append("noOfCasesSolved", noOfCasesSolved);
+    formData.append("location", location); // Adding location to formData
+    formData.append("files", educationCertificate);
+    formData.append("files", profilePhoto);
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/v1/lawyers-directory/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.data && response.data.data) {
+        setUploadedUrls([response.data.data.profilePhoto, response.data.data.educationCertificate]);
+        setUploadMessage("Lawyer details uploaded successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+      setUploadMessage("Something went wrong while uploading the details.");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fbfaf8] flex items-center justify-center">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-8">
+        <h2 className="text-[#1b130e] text-3xl font-bold mb-6">Lawyer Details Upload</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none"
+              placeholder="Enter your full name"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none"
+              placeholder="Enter your email address"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Contact No</label>
+            <input
+              type="text"
+              value={contactNo}
+              onChange={(e) => setContactNo(e.target.value)}
+              required
+              className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none"
+              placeholder="Enter your contact number"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Number of Cases Solved</label>
+            <input
+              type="number"
+              value={noOfCasesSolved}
+              onChange={(e) => setNoOfCasesSolved(e.target.value)}
+              required
+              className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none"
+              placeholder="Enter the number of cases you've solved"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Location</label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+              className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none"
+              placeholder="Enter your location"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Education Certificate</label>
+            <div
+              {...getRootProps({
+                className: "w-full h-14 bg-[#f3ece8] border border-[#966c4f] rounded-xl cursor-pointer text-center flex items-center justify-center",
+              })}
+            >
+              <input {...getInputProps()} />
+              <p className="text-[#966c4f] text-sm">Drag & Drop or Click to Upload Education Certificate (PDF only)</p>
+            </div>
+            {educationCertificate && <p className="mt-2 text-sm text-[#1b130e]">{educationCertificate.name}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#1b130e] font-medium mb-2">Profile Photo</label>
+            <div
+              {...getRootProps({
+                className: "w-full h-14 bg-[#f3ece8] border border-[#966c4f] rounded-xl cursor-pointer text-center flex items-center justify-center",
+              })}
+            >
+              <input {...getInputProps()} />
+              <p className="text-[#966c4f] text-sm">Drag & Drop or Click to Upload Profile Photo (Image only)</p>
+            </div>
+            {profilePhoto && <p className="mt-2 text-sm text-[#1b130e]">{profilePhoto.name}</p>}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-[#e36c1c] text-white text-sm font-semibold rounded-xl hover:bg-[#d05b19] focus:outline-none focus:ring-2 focus:ring-[#e36c1c] focus:ring-offset-2"
+          >
+            Upload Lawyer Details
+          </button>
+        </form>
+
+        {uploadMessage && <p className="mt-4 text-sm text-center text-[#966c4f]">{uploadMessage}</p>}
+
+        {uploadedUrls.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-[#1b130e] text-lg font-semibold mb-2">Uploaded Files:</h3>
+            <p>
+              Profile Photo: <a href={uploadedUrls[0]} target="_blank" rel="noopener noreferrer" className="text-[#e36c1c] hover:text-[#d05b19]">View</a>
+            </p>
+            <p>
+              Education Certificate: <a href={uploadedUrls[1]} target="_blank" rel="noopener noreferrer" className="text-[#e36c1c] hover:text-[#d05b19]">View</a>
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default LawyersForm;

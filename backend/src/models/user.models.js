@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
   location: { type: String, required: true },
   totalCases: { type: Number, required: true },
   topCases: [topCaseSchema],
+  image: { type: String },   // URL of image
+  certificate: { type: String }, // URL of certificate
+  idProof: { type: String }, // URL of ID proof
 });
 
 const User = mongoose.model('User', userSchema);

@@ -3,8 +3,9 @@ import User from '../models/user.models.js';  // Using import instead of require
 // Create a new user
 export const createUser = async (req, res) => {
   try {
-    const { name, mobileNo, email, experience, location, totalCases, topCases } = req.body;
+    const { name, mobileNo, email, experience, location, totalCases, topCases, image, certificate, idProof } = req.body;
 
+    // Ensure these URLs are being passed correctly
     const newUser = new User({
       name,
       mobileNo,
@@ -13,6 +14,9 @@ export const createUser = async (req, res) => {
       location,
       totalCases,
       topCases,
+      image,        // This should be a URL from Cloudinary
+      certificate,  // This should be a URL from Cloudinary
+      idProof,      // This should be a URL from Cloudinary
     });
 
     await newUser.save();
@@ -21,6 +25,7 @@ export const createUser = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 // Get all users (optional, for testing)
 export const getUsers = async (req, res) => {

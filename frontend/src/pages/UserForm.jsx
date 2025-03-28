@@ -10,6 +10,9 @@ const UserForm = () => {
     location: '',
     totalCases: '',
     topCases: [{ caseName: '', rating: '' }],
+    image: null,
+    certificate: null,
+    idProof: null,
   });
 
   const handleInputChange = (e) => {
@@ -39,11 +42,50 @@ const UserForm = () => {
     setFormData({ ...formData, topCases: updatedTopCases });
   };
 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] });
+  };
+
+  const uploadFileToCloudinary = async (file, folder) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'my files'); // Replace with your Cloudinary upload preset
+    formData.append('folder', folder);
+
+    try {
+      const response = await axios.post(
+        'https://api.cloudinary.com/v1_1/dlm5kk4l1/image/upload', // Replace with your Cloudinary cloud name
+        formData
+      );
+      const fileUrl = response.data.secure_url; // Return the secure URL of the uploaded file
+      alert(`${folder} uploaded successfully: ${fileUrl}`); // Alert with file URL
+      return fileUrl;
+    } catch (error) {
+      throw new Error(`Error uploading file to Cloudinary: ${folder}`);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Upload the files to Cloudinary and get the URLs
     try {
-      const response = await axios.post('http://localhost:3000/api/users', formData);
+      const imageUrl = formData.image ? await uploadFileToCloudinary(formData.image, 'user_images') : null;
+      const certificateUrl = formData.certificate ? await uploadFileToCloudinary(formData.certificate, 'user_certificates') : null;
+      const idProofUrl = formData.idProof ? await uploadFileToCloudinary(formData.idProof, 'user_id_proof') : null;
+
+      // Include the URLs in the form data
+      const data = { ...formData, imageUrl, certificateUrl, idProofUrl };
+
+      // Make the API request to submit the data
+      const response = await axios.post('http://localhost:3000/api/users', data);
       console.log('User created:', response.data);
+
+      // Show alert after successful submission
+      alert('User created successfully!');
+
+      // Reset the form after submission
       setFormData({
         name: '',
         mobileNo: '',
@@ -52,9 +94,13 @@ const UserForm = () => {
         location: '',
         totalCases: '',
         topCases: [{ caseName: '', rating: '' }],
+        image: null,
+        certificate: null,
+        idProof: null,
       });
     } catch (err) {
       console.error('Error creating user:', err);
+      alert('Error creating user. Please try again.');
     }
   };
 
@@ -146,6 +192,45 @@ const UserForm = () => {
           />
         </div>
 
+        {/* File Upload Fields */}
+        <div>
+          <div>
+            <label htmlFor="image" className="block text-lg font-medium text-gray-700">Profile Image</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleFileChange}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+              accept="image/*"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="certificate" className="block text-lg font-medium text-gray-700">Certificate (PDF)</label>
+            <input
+              type="file"
+              id="certificate"
+              name="certificate"
+              onChange={handleFileChange}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+              accept="application/pdf"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="idProof" className="block text-lg font-medium text-gray-700">ID Proof (PDF)</label>
+            <input
+              type="file"
+              id="idProof"
+              name="idProof"
+              onChange={handleFileChange}
+              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+              accept="application/pdf"
+            />
+          </div>
+        </div>
+
         {/* Top Cases Section */}
         <div>
           <label className="block text-lg font-medium text-gray-700">Top Cases</label>
@@ -157,7 +242,7 @@ const UserForm = () => {
                 value={caseData.caseName}
                 onChange={(e) => handleTopCaseChange(index, e)}
                 placeholder="Case Name"
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 mt-2 border border-gray-300 rounded-md"
               />
               <input
                 type="number"
@@ -165,7 +250,7 @@ const UserForm = () => {
                 value={caseData.rating}
                 onChange={(e) => handleTopCaseChange(index, e)}
                 placeholder="Rating"
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 mt-2 border border-gray-300 rounded-md"
               />
               <button
                 type="button"

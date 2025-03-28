@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import LawyerForm from './LawyerForm';  // Updated import
 
 const LawyersLandingPage = () => {
   const [lawyers, setLawyers] = useState([]);
+  const [filteredLawyers, setFilteredLawyers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(''); // New state for search query
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,8 +15,9 @@ const LawyersLandingPage = () => {
       try {
         setLoading(true);
         const response = await axios.get('http://localhost:3000/api/v1/lawyers-directory/lawyers');
-        const fetchedLawyers = Array.isArray(response.data) ? response.data : [];
+        const fetchedLawyers = Array.isArray(response.data.data) ? response.data.data : [];
         setLawyers(fetchedLawyers);
+        setFilteredLawyers(fetchedLawyers); // Set all lawyers initially
         setLoading(false);
       } catch (err) {
         setError('Error fetching data');
@@ -27,12 +28,31 @@ const LawyersLandingPage = () => {
     fetchLawyers();
   }, []);
 
+  useEffect(() => {
+    // Filter lawyers based on search query (location)
+    if (searchQuery === '') {
+      setFilteredLawyers(lawyers); // Show all lawyers when search query is empty
+    } else {
+      setFilteredLawyers(
+        lawyers.filter((lawyer) => {
+          // Ensure location is a string before calling toLowerCase()
+          const location = lawyer.location ? lawyer.location.toLowerCase() : '';
+          return location.includes(searchQuery.toLowerCase());
+        })
+      );
+    }
+  }, [searchQuery, lawyers]);
+
   const handleConnectClick = (lawyerId) => {
-    navigate(`/lawyer-details/${lawyerId}`);
+    navigate(`/lawyer-directory/${lawyerId}`);
   };
 
-  const handleModalToggle = () => {
-    setShowModal(!showModal);
+  const handleJoinLawyerClick = () => {
+    navigate('/lawyers-form');
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value); // Update search query on input change
   };
 
   if (loading) {
@@ -51,12 +71,13 @@ const LawyersLandingPage = () => {
     <div className="relative flex flex-col min-h-screen bg-[#fbfaf8] font-[Public Sans], sans-serif">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-[#f3ece8] px-10 py-8">
+        <div className="flex items-center gap-4 text-[#1b130e]"></div>
         <div className="flex gap-4">
           <button
-            onClick={handleModalToggle}
+            onClick={handleJoinLawyerClick}
             className="flex items-center justify-center px-4 py-3 rounded-xl bg-[#e36c1c] text-[#fbfaf8] text-sm font-bold"
           >
-            Become a Lawyer
+            Join LegalMitra as a Lawyer
           </button>
         </div>
       </header>
@@ -70,7 +91,9 @@ const LawyersLandingPage = () => {
           <div className="flex gap-4 mb-4">
             <input
               type="text"
-              placeholder="What type of lawyer do you need?"
+              placeholder="Search by location..."
+              value={searchQuery} // Bind search query value
+              onChange={handleSearchChange} // Handle search input change
               className="w-full h-14 p-4 rounded-xl bg-[#f3ece8] text-[#1b130e] placeholder-[#966c4f] border-none"
             />
           </div>
@@ -78,36 +101,39 @@ const LawyersLandingPage = () => {
           {/* Featured Lawyers */}
           <h3 className="text-lg font-bold text-[#1b130e] mb-4">Featured Lawyers</h3>
           <div className="space-y-4">
-            {lawyers.map((lawyer) => (
-              <div key={lawyer._id} className="flex items-center justify-between bg-[#fbfaf8] p-4 rounded-lg shadow-lg">
-                <div className="flex items-center gap-4">
-                  <div
-                    className="w-14 h-14 bg-cover rounded-full"
-                    style={{ backgroundImage: `url(${lawyer.image})` }}
-                  ></div>
-                  <div>
-                    <h4 className="text-xl font-semibold">{lawyer.name}</h4>
-                    <p className="text-sm text-[#9b9b9b]">{lawyer.experience} years of experience</p>
-                    <p className="text-sm text-[#9b9b9b]">{lawyer.location}</p>
+            {filteredLawyers.length > 0 ? (
+              filteredLawyers.map((lawyer) => (
+                <div key={lawyer._id} className="flex items-center justify-between bg-[#fbfaf8] p-4 rounded-lg shadow-lg">
+                  <div className="flex items-center gap-4">
+                    {/* Profile Picture */}
+                    <div
+                      className="w-14 h-14 bg-cover rounded-full"
+                      style={{ backgroundImage: `url(${lawyer.profilePhoto})` }}
+                    ></div>
+
+                    {/* Lawyer Info */}
+                    <div>
+                      <h4 className="text-xl font-semibold">{lawyer.name}</h4>
+                      <p className="text-sm text-[#9b9b9b]">{lawyer.email}</p>
+                      <p className="text-sm text-[#1b130e]">{lawyer.location}</p> {/* Display location */}
+                    </div>
                   </div>
+
+                  {/* Connect Button */}
+                  <button
+                    onClick={() => handleConnectClick(lawyer._id)}
+                    className="px-6 py-2 bg-[#e36c1c] text-white rounded-full font-semibold"
+                  >
+                    Connect
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleConnectClick(lawyer._id)}
-                  className="px-6 py-2 bg-[#e36c1c] text-white rounded-full font-semibold"
-                >
-                  Connect
-                </button>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No lawyers found for this location</p>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Lawyer Form Modal */}
-      <LawyerForm
-        showModal={showModal}
-        handleModalToggle={handleModalToggle}
-      />
     </div>
   );
 };

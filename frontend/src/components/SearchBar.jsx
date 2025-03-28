@@ -68,7 +68,7 @@ const SearchBar = ({ onSearch }) => {
   // Handle form submission to request translation
   const handleTranslate = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/translate", {
+      const response = await axios.post("http://localhost:5003/translate", {
         text: query,
         target_lang: "en",  // Always translate to English
         source_lang: selectedLang

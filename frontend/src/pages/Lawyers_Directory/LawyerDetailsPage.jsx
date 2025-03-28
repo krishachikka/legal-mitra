@@ -37,10 +37,10 @@ const LawyerDetailsPage = () => {
     }
 
     return (
-        <div className="px-10 py-5">
+        <div className="px-10 py-5 bg-[#fbfaf8]">
             {lawyer ? (
-                <div className="max-w-[960px] mx-auto">
-                    <div className="flex items-center gap-8">
+                <div className="max-w-[960px] mx-auto bg-white p-6 rounded-xl shadow-md">
+                    <div className="flex items-center gap-8 mb-6">
                         {/* Profile Picture */}
                         <div
                             className="w-32 h-32 bg-cover rounded-full"
@@ -49,16 +49,79 @@ const LawyerDetailsPage = () => {
 
                         {/* Lawyer Info */}
                         <div>
-                            <h1 className="text-3xl font-bold">{lawyer.name}</h1>
+                            <h1 className="text-4xl font-bold text-[#1b130e]">{lawyer.name}</h1>
                             <p className="text-sm text-[#9b9b9b]">{lawyer.email}</p>
-                            <p className="mt-2">{lawyer.bio}</p>
-                            <p className="mt-2">{lawyer.experience} years of experience</p>
-                            <p className="mt-2">{lawyer.location}</p>
+                            <p className="mt-2 text-[#1b130e] text-sm">{lawyer.contactNo}</p>
+                            <p className="mt-2 text-[#1b130e] text-sm">{lawyer.location}</p>
+                            <p className="mt-2 text-[#966c4f] text-sm font-semibold">{lawyer.experience} years of experience</p>
+                            <p className="mt-4">{lawyer.bio}</p>
                         </div>
                     </div>
 
-                    {/* Additional Lawyer Information (if needed) */}
-                    {/* e.g. list of cases handled, etc. */}
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold text-[#1b130e]">Additional Information</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Number of Cases Solved</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.noOfCasesSolved}</p>
+                            </div>
+
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Education</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.education}</p>
+                            </div>
+
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Specialty</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.specialty}</p>
+                            </div>
+
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Languages Spoken</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.languages}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Documents Section */}
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold text-[#1b130e]">Documents</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Profile Photo</h3>
+                                <a
+                                    href={lawyer.profilePhoto}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
+                                >
+                                    View Profile Photo
+                                </a>
+                            </div>
+
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Education Certificate</h3>
+                                <a
+                                    href={lawyer.educationCertificate}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
+                                >
+                                    View Education Certificate
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Contact Section */}
+                    <div className="mt-8 flex justify-end">
+                        <button
+                            className="bg-[#e36c1c] text-white px-6 py-2 rounded-xl font-semibold"
+                            onClick={() => window.location.href = `mailto:${lawyer.email}`}
+                        >
+                            Contact Lawyer
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <div>No lawyer found</div>

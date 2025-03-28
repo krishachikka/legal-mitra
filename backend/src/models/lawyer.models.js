@@ -18,6 +18,10 @@ const lawyerSchema = new Schema({
     type: Number,
     required: true,
   },
+  location: { // Added location field
+    type: String,
+    required: true,
+  },
   educationCertificate: {
     type: String,  // URL of the uploaded PDF
     required: true,

@@ -18,7 +18,7 @@ const lawyerSchema = new Schema({
     type: Number,
     required: true,
   },
-  location: { // Added location field
+  location: {
     type: String,
     required: true,
   },
@@ -30,6 +30,34 @@ const lawyerSchema = new Schema({
     type: String,  // URL of the uploaded image
     required: true,
   },
+  specialization: {
+    type: String,
+    required: true,  // Added specialization field
+  },
+  yearsOfExperience: {
+    type: Number,
+    required: true,  // Added yearsOfExperience field
+  },
+  description: {
+    type: String,
+    required: true,  // Added description field
+  },
+  availability: {
+    type: String,
+    required: true,  // Added availability field
+  },
+  bio: {
+    type: String,
+    required: true,  // Added bio field
+  },
+  languageSpoken: {
+    type: String,
+    required: true,  // Added languageSpoken field
+  },
+  education: {
+    type: String,
+    required: true,  // Added education field
+  }
 });
 
 const Lawyer = mongoose.model('Lawyers_directory', lawyerSchema);

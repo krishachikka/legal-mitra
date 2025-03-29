@@ -51,7 +51,20 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
     });
 
     // Extract other form data
-    const { name, email, contactNo, noOfCasesSolved, location } = req.body;  // Added location
+    const {
+      name,
+      email,
+      contactNo,
+      noOfCasesSolved,
+      location,
+      specialization,
+      yearsOfExperience,
+      description,
+      availability,
+      bio,
+      languageSpoken,
+      education,
+    } = req.body;
 
     // Create a new lawyer record
     const newLawyer = new Lawyer({
@@ -59,7 +72,14 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
       email,
       contactNo,
       noOfCasesSolved,
-      location,  // Saving location data
+      location,
+      specialization,
+      yearsOfExperience,
+      description,
+      availability,
+      bio,
+      languageSpoken,
+      education,
       educationCertificate: educationCertResult.secure_url,  // Store URL of the PDF
       profilePhoto: profilePhotoResult.secure_url,  // Store URL of the image
     });
@@ -72,7 +92,14 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
         name: newLawyer.name,
         profilePhoto: newLawyer.profilePhoto,
         educationCertificate: newLawyer.educationCertificate,
-        location: newLawyer.location,  // Returning location data
+        location: newLawyer.location,
+        specialization: newLawyer.specialization,
+        yearsOfExperience: newLawyer.yearsOfExperience,
+        description: newLawyer.description,
+        availability: newLawyer.availability,
+        bio: newLawyer.bio,
+        languageSpoken: newLawyer.languageSpoken,
+        education: newLawyer.education,
       },
     });
   } catch (error) {
@@ -83,7 +110,6 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
     });
   }
 });
-
 
 // Fetch a lawyer by ID
 const getLawyerById = asyncHandler(async (req, res) => {

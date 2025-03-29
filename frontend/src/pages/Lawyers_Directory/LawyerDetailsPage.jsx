@@ -43,24 +43,44 @@ const LawyerDetailsPage = () => {
                     <div className="flex items-center gap-8 mb-6">
                         {/* Profile Picture */}
                         <div
-                            className="w-32 h-32 bg-cover rounded-full"
-                            style={{ backgroundImage: `url(${lawyer.profilePhoto})` }}
+                            className="w-48 h-48 bg-cover rounded-full border-4 border-white"
+                            style={{
+                                backgroundImage: `url(${lawyer.profilePhoto})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                            }}
                         ></div>
 
                         {/* Lawyer Info */}
-                        <div>
+                        <div className="flex flex-col justify-between">
                             <h1 className="text-4xl font-bold text-[#1b130e]">{lawyer.name}</h1>
                             <p className="text-sm text-[#9b9b9b]">{lawyer.email}</p>
                             <p className="mt-2 text-[#1b130e] text-sm">{lawyer.contactNo}</p>
                             <p className="mt-2 text-[#1b130e] text-sm">{lawyer.location}</p>
-                            <p className="mt-2 text-[#966c4f] text-sm font-semibold">{lawyer.experience} years of experience</p>
+                            <p className="mt-2 text-[#966c4f] text-sm font-semibold">{lawyer.yearsOfExperience} years of experience</p>
                             <p className="mt-4">{lawyer.bio}</p>
                         </div>
                     </div>
 
+                    {/* Additional Information */}
                     <div className="mt-8">
                         <h2 className="text-2xl font-bold text-[#1b130e]">Additional Information</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Specialization</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.specialization}</p>
+                            </div>
+
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Availability</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.availability}</p>
+                            </div>
+
+                            <div className="bg-[#f3ece8] p-4 rounded-xl">
+                                <h3 className="text-lg font-semibold text-[#1b130e]">Language Spoken</h3>
+                                <p className="text-sm text-[#1b130e]">{lawyer.languageSpoken}</p>
+                            </div>
+
                             <div className="bg-[#f3ece8] p-4 rounded-xl">
                                 <h3 className="text-lg font-semibold text-[#1b130e]">Number of Cases Solved</h3>
                                 <p className="text-sm text-[#1b130e]">{lawyer.noOfCasesSolved}</p>
@@ -69,16 +89,6 @@ const LawyerDetailsPage = () => {
                             <div className="bg-[#f3ece8] p-4 rounded-xl">
                                 <h3 className="text-lg font-semibold text-[#1b130e]">Education</h3>
                                 <p className="text-sm text-[#1b130e]">{lawyer.education}</p>
-                            </div>
-
-                            <div className="bg-[#f3ece8] p-4 rounded-xl">
-                                <h3 className="text-lg font-semibold text-[#1b130e]">Specialty</h3>
-                                <p className="text-sm text-[#1b130e]">{lawyer.specialty}</p>
-                            </div>
-
-                            <div className="bg-[#f3ece8] p-4 rounded-xl">
-                                <h3 className="text-lg font-semibold text-[#1b130e]">Languages Spoken</h3>
-                                <p className="text-sm text-[#1b130e]">{lawyer.languages}</p>
                             </div>
                         </div>
                     </div>

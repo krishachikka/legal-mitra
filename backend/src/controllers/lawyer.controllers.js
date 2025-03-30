@@ -29,6 +29,7 @@ const getLawyers = asyncHandler(async (req, res) => {
 
 
 
+
 // Handle the lawyer form submission and file upload
 const uploadLawyerDetails = asyncHandler(async (req, res) => {
   try {
@@ -50,7 +51,20 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
     });
 
     // Extract other form data
-    const { name, email, contactNo, noOfCasesSolved } = req.body;
+    const {
+      name,
+      email,
+      contactNo,
+      noOfCasesSolved,
+      location,
+      specialization,
+      yearsOfExperience,
+      description,
+      availability,
+      bio,
+      languageSpoken,
+      education,
+    } = req.body;
 
     // Create a new lawyer record
     const newLawyer = new Lawyer({
@@ -58,6 +72,14 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
       email,
       contactNo,
       noOfCasesSolved,
+      location,
+      specialization,
+      yearsOfExperience,
+      description,
+      availability,
+      bio,
+      languageSpoken,
+      education,
       educationCertificate: educationCertResult.secure_url,  // Store URL of the PDF
       profilePhoto: profilePhotoResult.secure_url,  // Store URL of the image
     });
@@ -70,6 +92,14 @@ const uploadLawyerDetails = asyncHandler(async (req, res) => {
         name: newLawyer.name,
         profilePhoto: newLawyer.profilePhoto,
         educationCertificate: newLawyer.educationCertificate,
+        location: newLawyer.location,
+        specialization: newLawyer.specialization,
+        yearsOfExperience: newLawyer.yearsOfExperience,
+        description: newLawyer.description,
+        availability: newLawyer.availability,
+        bio: newLawyer.bio,
+        languageSpoken: newLawyer.languageSpoken,
+        education: newLawyer.education,
       },
     });
   } catch (error) {
@@ -108,4 +138,3 @@ const getLawyerById = asyncHandler(async (req, res) => {
 });
 
 export { uploadLawyerDetails, getLawyers, getLawyerById };
-

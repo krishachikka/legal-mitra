@@ -1,40 +1,19 @@
-To run frontend and backend folder
+Steps for Translation Logic
 
-- npm i
-- npm run dev
+/summarize
+- take a random article and summarize its content
+- it is a standalone file and uses hugging face to summarize
 
+/legal-advice
+- it has a search bar which has a translate button, that translates the typed text in desired language (should be done in backend)
+- also we get the response of all the related articles from all the collections
+- for running this run the frontend, python keyword_extraction_and_api.py , translate_to_english_query.py
 
-To run Python files with their connections:
-
-- if using PdfChat.jsx then run pdf_chat_rag.py using 
-    uvicorn pdf_chat_rag:app --reload
-
-- if using LegalAdvice.jsx start frontend and backend both and run keyword_extraction_and_api.py
-    python keyword_extraction_and_api
-
-- if using SpeechTranslator.jsx start then run stt.py
-    python stt.py
-
+chat_component.py
+- here we are targeting the vector_embeddings folder and getting responses 
+- this is what we have to convert to react component for getting the answer as response
+- to run this we go to python venv and - streamlit run chat_component.py
 
 
-    pip install python-multipart  
-    pip install -U langchain-community 
-    pip install faiss-cpu 
-
-fastapi
-uvicorn
-pydantic
-python-dotenv
-PyPDF2
-langchain
-langchain-google-genai
-faiss-cpu
-google-generativeai
-
-
-keyword_extraction:
-pip install Flask flask-cors keybert
-
-
-news.py:
-pip install beautifulsoup4 requests
+# the flow
+- search in legal-advice -> chat_component.py response as answer -> summarize for summarizing the response and showing on legal-advice back

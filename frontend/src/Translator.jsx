@@ -34,7 +34,7 @@ const Translator = () => {
 
     return (
         <div className="max-w-xl mx-auto mt-10 p-5 border rounded-lg shadow-md bg-white">
-            <h1 className="text-2xl font-bold text-center mb-4">Text Translator</h1>
+            {/* <h1 className="text-2xl font-bold text-center mb-4">Text Translator</h1>
 
             <div className="mb-4">
                 <label htmlFor="language" className="block text-sm font-medium text-gray-700">Select Language</label>
@@ -47,9 +47,9 @@ const Translator = () => {
                     <option value="hi">Hindi</option>
                     <option value="mr">Marathi</option>
                 </select>
-            </div>
+            </div> */}
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
                 <input
                     type="text"
                     value={text}
@@ -57,14 +57,14 @@ const Translator = () => {
                     placeholder="Enter text to translate"
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
-            </div>
+            </div> */}
 
-            <button
+            {/* <button
                 onClick={handleSubmit}
                 className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 mb-4"
             >
                 Translate
-            </button>
+            </button> */}
 
             {translatedText && (
                 <div className="mt-6 p-4 bg-gray-100 border rounded-md">

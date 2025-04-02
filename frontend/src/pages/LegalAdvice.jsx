@@ -157,12 +157,7 @@ const LegalAdvice = () => {
         <SearchBar onSearch={fetchLegalAdvice} />
       </div>
 
-      <div className="grid lg:grid-cols-2 grid-cols-1">
-        {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
-        <PDFresponse query={searchQuery} autoSubmit={false} setPdfResponse={setPdfResponse} />
-
-        <section>
-          {loading && (
+      {loading && (
             <div className="flex justify-center items-center mt-6">
               <CircularProgress color="red" />
             </div>
@@ -176,8 +171,15 @@ const LegalAdvice = () => {
             </div>
           )}
 
+      <div className="grid lg:grid-cols-2 grid-cols-1">
+        {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
+        <PDFresponse query={searchQuery} autoSubmit={false} setPdfResponse={setPdfResponse} />
+
+        <section>
+
+
           {/* Scrollable results section */}
-          <div className="mt-4 max-h-96 overflow-y-auto">
+          <div className="mt-4 max-h-150 overflow-y-auto">
             {results.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4">
                 {results.map((item, index) => (

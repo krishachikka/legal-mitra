@@ -86,7 +86,7 @@ function PDFresponse({ query, autoSubmit, setPdfResponse }) {
         {response && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">Response:</h3>
-            <div className="bg-red-100/50 p-4 rounded-xl border-2 border-slate-200 max-h-96 overflow-y-auto">
+            <div className="bg-red-100/50 p-4 rounded-xl border-2 border-slate-200 max-h-120 overflow-y-auto">
               <ReactMarkdown>
                 {response}
               </ReactMarkdown>

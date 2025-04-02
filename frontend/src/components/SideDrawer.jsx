@@ -15,6 +15,7 @@ import PeopleIcon from '@mui/icons-material/People'; // for Lawyers Directory
 import ArticleIcon from '@mui/icons-material/Article'; // for Legal News
 import HelpIcon from '@mui/icons-material/Help'; // for FAQ
 import MailIcon from '@mui/icons-material/Mail'; // for Contact Us
+import logo from '../../public/assets/legalmitra_black.png';
 
 export default function SideDrawer({ open, toggleDrawer }) {
     const navigate = useNavigate(); // Initialize useNavigate
@@ -33,10 +34,11 @@ export default function SideDrawer({ open, toggleDrawer }) {
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation" >
-            {/* Logo */}
-            <Box sx={{ padding: 2, textAlign: 'center' }}>
+            <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
+                <img src={logo} className="w-8 h-8 mr-2" alt="LegalMitra Logo" />
                 <h2>LegalMitra</h2>
             </Box>
+
             <Divider />
             <List>
                 {[
@@ -47,7 +49,7 @@ export default function SideDrawer({ open, toggleDrawer }) {
                     { text: 'Legal Chat', path: '/legal-chat', icon: <HelpIcon /> }
                 ].map(({ text, path, icon }) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton 
+                        <ListItemButton
                             onClick={() => handleItemClick(text, path)}
                             sx={{
                                 backgroundColor: isActive(path) ? 'rgba(0, 123, 255, 0.1)' : 'transparent', // Highlight active tab
@@ -72,7 +74,7 @@ export default function SideDrawer({ open, toggleDrawer }) {
                     { text: 'Contact Us', path: '/contact', icon: <MailIcon /> }
                 ].map(({ text, path, icon }) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton 
+                        <ListItemButton
                             onClick={() => handleItemClick(text, path)}
                             sx={{
                                 backgroundColor: isActive(path) ? 'rgba(0, 123, 255, 0.1)' : 'transparent',

@@ -7,7 +7,7 @@ import PDFresponse from "../components/response";
 const LegalAdvice = () => {
   const [results, setResults] = useState([]); // Store search results
   const [summarizedContent, setSummarizedContent] = useState(""); // Store the summarized content
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // State to hold the query
 
   // Function to extract keywords from the query
@@ -55,12 +55,12 @@ const LegalAdvice = () => {
       // Handle formatting directly here for Firipc data
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-            title: item.title || "UNKNOWN", // Use offense as title
-            description: item.description || "NO DESCRIPTION", 
-            punishment: item.punishment || "NO PUNISHMENT", 
-            url: item.url || "No URL", // Use URL if available
-            dataset: item.dataset || "Firipc Dataset", 
-          }))
+          title: item.title || "UNKNOWN", // Use offense as title
+          description: item.description || "NO DESCRIPTION",
+          punishment: item.punishment || "NO PUNISHMENT",
+          url: item.url || "No URL", // Use URL if available
+          dataset: item.dataset || "Firipc Dataset",
+        }))
         : [];
 
       console.log(formattedResults);
@@ -90,7 +90,7 @@ const LegalAdvice = () => {
       <div className="grid lg:grid-cols-2 grid-cols-1">
 
         {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
-        <PDFresponse query={searchQuery} autoSubmit={false} /> 
+        <PDFresponse query={searchQuery} autoSubmit={true} />
 
         <section>
           {loading && (

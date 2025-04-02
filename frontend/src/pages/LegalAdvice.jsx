@@ -7,10 +7,11 @@ import PDFresponse from "../components/response";
 const LegalAdvice = () => {
   const [results, setResults] = useState([]); // Store search results
   const [summarizedContent, setSummarizedContent] = useState(""); // Store the summarized content
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // State to hold the query
+  const [pdfResponse, setPdfResponse] = useState(""); // State to hold the response from PDFresponse
 
-  // Function to extract keywords from the query
+  // Function to fetch keywords from the query
   const fetchKeywords = async (query) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_PYTHON_BACKEND_URL_001}/extract_keywords`, {
@@ -27,6 +28,68 @@ const LegalAdvice = () => {
     } catch (error) {
       console.error("Keyword extraction error:", error);
       return []; // Return an empty array if error occurs
+    }
+  };
+
+  // Function to summarize text
+  const summarizeText = async (text) => {
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Function to chunk long texts into smaller pieces
+    const chunkText = (text, maxLength = 1024) => {
+      const words = text.split(' ');
+      const chunks = [];
+      let currentChunk = '';
+
+      words.forEach(word => {
+        if ((currentChunk + ' ' + word).length > maxLength) {
+          chunks.push(currentChunk);
+          currentChunk = word;
+        } else {
+          currentChunk += ' ' + word;
+        }
+      });
+
+      if (currentChunk) chunks.push(currentChunk);
+      return chunks;
+    };
+
+    const textChunks = chunkText(text);
+
+    let allSummaries = [];
+
+    try {
+      for (let chunk of textChunks) {
+        await delay(2000); // Adjust delay if necessary
+
+        const response = await axios.post(
+          "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+          { inputs: chunk },
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Your Hugging Face API key
+            },
+          }
+        );
+
+        if (response.data && response.data[0] && response.data[0].summary_text) {
+          allSummaries.push(response.data[0].summary_text); // Append summary to the array
+        }
+      }
+
+      // Combine all summaries and ensure that it’s within 4 lines (or approx. 4 lines worth of text)
+      let combinedSummary = allSummaries.join(" ");
+
+      // Limit the summary to 4 lines by keeping the first 4 sentences or 4 lines worth of text
+      const lines = combinedSummary.split("."); // Split by periods to break into sentences
+      const limitedSummary = lines.slice(0, 8).join(".") + "."; // Keep only the first 4 sentences
+
+      // Update state with the final trimmed summary
+      setSummarizedContent(limitedSummary);
+
+    } catch (err) {
+      console.error("Error during summarization:", err);
+      setSummarizedContent("Error summarizing the text.");
     }
   };
 
@@ -67,10 +130,17 @@ const LegalAdvice = () => {
 
       setResults(formattedResults); // Set the formatted results
 
-      // Now, let's summarize the content
+      // Prepare content for summarization
       const contentToSummarize = formattedResults.map((item) => item.description).join("\n");
-      const summary = await summarizeContent(contentToSummarize);
-      setSummarizedContent(summary); // Update the summarized content
+
+      // Add the PDFresponse content to the content to summarize
+      const combinedContent = contentToSummarize + "\n" + pdfResponse;
+
+      console.log("Content to summarize (includes PDF response):", combinedContent);
+
+      // Call the summarizeText function to get the summarized content
+      await summarizeText(combinedContent);
+
     } catch (error) {
       console.error("Error fetching legal advice:", error);
       setSummarizedContent("Error fetching legal advice."); // Set error message if fetching fails
@@ -88,29 +158,28 @@ const LegalAdvice = () => {
       </div>
 
       <div className="grid lg:grid-cols-2 grid-cols-1">
-
         {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
-        <PDFresponse query={searchQuery} autoSubmit={false} /> 
+        <PDFresponse query={searchQuery} autoSubmit={false} setPdfResponse={setPdfResponse} />
 
         <section>
           {loading && (
             <div className="flex justify-center items-center mt-6">
-              <CircularProgress color="primary" />
+              <CircularProgress color="red" />
             </div>
           )}
 
-          {/* Displaying the summary */}
+          {/* Automatically Summarize when content is fetched */}
           {summarizedContent && !loading && (
             <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-2">Summary:</h2>
-              <p className="text-gray-700 leading-relaxed">{summarizedContent}</p>
+              <p>{summarizedContent}</p>
             </div>
           )}
 
           {/* Scrollable results section */}
           <div className="mt-4 max-h-96 overflow-y-auto">
             {results.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4">
                 {results.map((item, index) => (
                   <div
                     key={index}

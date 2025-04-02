@@ -1,10 +1,29 @@
-import React from 'react';
-import landingpage1 from '/assets/legalmitra_landingpage1.jpeg';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onAuthStateChangedListener } from '../utils/auth'; // Assuming you have this utility
+import landingpage1 from '/assets/legalmitra_landingpage1.jpeg';
 
 const LandingPage = () => {
-
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    // Listen for authentication state changes
+    useEffect(() => {
+        const unsubscribe = onAuthStateChangedListener((user) => {
+            setUser(user);
+        });
+        return () => unsubscribe(); // Cleanup the listener when component unmounts
+    }, []);
+
+    const handleButtonClick = () => {
+        if (user) {
+            // If user is logged in, navigate to /legal-advice
+            navigate('/legal-advice');
+        } else {
+            // If user is not logged in, navigate to /login
+            navigate('/login');
+        }
+    };
 
     return (
         <div className="bg-gray-900 text-white">
@@ -17,7 +36,7 @@ const LandingPage = () => {
                         Our legal experts are here to help you protect your rights with personalized advice and guidance throughout your legal journey.
                     </p>
                     <button
-                        onClick={() => navigate('/legal-chat')}
+                        onClick={handleButtonClick}
                         className="px-10 py-4 bg-yellow-100 text-black font-semibold rounded-4xl shadow-lg hover:bg-yellow-400 transform transition-all duration-300 ease-in-out hover:scale-105"
                     >
                         Get Started Today

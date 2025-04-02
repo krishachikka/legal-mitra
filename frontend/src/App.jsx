@@ -15,6 +15,7 @@ import LawyerDetailsPage from './pages/Lawyers_Directory/LawyerDetailsPage';
 import Summarizer from './pages/Summarizer';
 import UserForm from './pages/UserForm'; // Import UserForm
 import LawyersForm from './pages/Lawyers_Directory/LawyersForm';
+import PDFresponse from './components/response'
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -40,6 +41,8 @@ function App() {
           <Route path='/lawyers-directory' element={<LawyersLandingPage />} />
           <Route path="/lawyer-directory/:lawyerId" element={<LawyerDetailsPage />} />
           <Route path="/summarize" element={<Summarizer />} />
+
+          <Route path="/response" element={<PDFresponse />} />
 
 
           {/* Not so important features */}

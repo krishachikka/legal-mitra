@@ -5,8 +5,9 @@ import logo from '../../public/assets/legalmitra_white.png';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import { logout } from '../utils/auth';
 
-const Header = ({ setHeaderHeight }) => {
+const Header = ({ setHeaderHeight, user }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const headerRef = useRef(null); // Ref for header element
@@ -24,6 +25,15 @@ const Header = ({ setHeaderHeight }) => {
   const handleNavigation = (path) => {
     navigate(path);
     setOpen(false); // Close the drawer when navigating
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // Call your logout function (should clear the auth state)
+      navigate('/login'); // Redirect to login page after logout
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   return (
@@ -68,6 +78,16 @@ const Header = ({ setHeaderHeight }) => {
             </button>
           </div>
         </nav>
+
+        {/* Conditionally render logout button */}
+        {user && (
+          <button
+            onClick={handleLogout}
+            className="ml-6 bg-white text-red-900 py-2 px-4 rounded-3xl hover:bg-gray-200 transition ease-in-out duration-300"
+          >
+            Logout
+          </button>
+        )}
       </div>
 
       <SideDrawer open={open} toggleDrawer={toggleDrawer} />

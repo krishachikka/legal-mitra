@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
+import PDFresponse from "../components/response";
 
 const LegalAdvice = () => {
   const [results, setResults] = useState([]); // Store search results
   const [summarizedContent, setSummarizedContent] = useState(""); // Store the summarized content
   const [loading, setLoading] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState(""); // State to hold the query
 
   // Function to extract keywords from the query
   const fetchKeywords = async (query) => {
@@ -32,6 +34,7 @@ const LegalAdvice = () => {
   const fetchLegalAdvice = async (query) => {
     setLoading(true);
     setSummarizedContent(""); // Reset the summary content before a new query
+    setSearchQuery(query); // Update the search query
 
     try {
       // Extract keywords from the search query
@@ -84,54 +87,62 @@ const LegalAdvice = () => {
         <SearchBar onSearch={fetchLegalAdvice} />
       </div>
 
-      {loading && (
-        <div className="flex justify-center items-center mt-6">
-          <CircularProgress color="primary" />
-        </div>
-      )}
+      <div className="grid lg:grid-cols-2 grid-cols-1">
 
-      {/* Displaying the summary */}
-      {summarizedContent && !loading && (
-        <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Summary:</h2>
-          <p className="text-gray-700 leading-relaxed">{summarizedContent}</p>
-        </div>
-      )}
+        {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
+        <PDFresponse query={searchQuery} autoSubmit={false} /> 
 
-      {/* Displaying results */}
-      <div className="mt-4">
-        {results.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {results.map((item, index) => (
-              <div
-                key={index}
-                className="p-5 border border-gray-300 rounded-xl bg-white shadow-md transition duration-300 hover:shadow-lg"
-              >
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h2>
+        <section>
+          {loading && (
+            <div className="flex justify-center items-center mt-6">
+              <CircularProgress color="primary" />
+            </div>
+          )}
 
-                {/* Clipping the description to 4 lines */}
-                <p className="text-gray-700 leading-relaxed description-line-clamp">
-                  {item.description}
-                </p>
-                <p className="text-gray-500 text-sm">Source: {item.dataset}</p>
-                {item.punishment !== "NO PUNISHMENT" && (
-                  <p className="text-gray-500 text-sm">Punishment: {item.punishment}</p>
-                )}
-                {item.url !== "No URL" && (
-                  <p className="text-blue-500 text-sm">
-                    <a href={item.url} target="_blank" rel="noopener noreferrer">Link</a>
-                  </p>
-                )}
+          {/* Displaying the summary */}
+          {summarizedContent && !loading && (
+            <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Summary:</h2>
+              <p className="text-gray-700 leading-relaxed">{summarizedContent}</p>
+            </div>
+          )}
+
+          {/* Scrollable results section */}
+          <div className="mt-4 max-h-96 overflow-y-auto">
+            {results.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+                {results.map((item, index) => (
+                  <div
+                    key={index}
+                    className="p-4 border border-gray-300 rounded-xl bg-red-100/50 shadow-md transition duration-300 hover:shadow-lg"
+                  >
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h2>
+
+                    {/* Clipping the description to 4 lines */}
+                    <p className="text-gray-700 leading-relaxed description-line-clamp">
+                      {item.description}
+                    </p>
+                    <p className="text-gray-500 text-sm">Source: {item.dataset}</p>
+                    {item.punishment !== "NO PUNISHMENT" && (
+                      <p className="text-gray-500 text-sm">Punishment: {item.punishment}</p>
+                    )}
+                    {item.url !== "No URL" && (
+                      <p className="text-blue-500 text-sm">
+                        <a href={item.url} target="_blank" rel="noopener noreferrer">Link</a>
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              !loading && (
+                <p className="text-gray-500 text-center text-lg mt-6">
+                  No results found. Try searching with different keywords.
+                </p>
+              )
+            )}
           </div>
-        ) : (
-          !loading && (
-            <p className="text-gray-500 text-center text-lg mt-6">
-              No results found. Try searching with different keywords.
-            </p>
-          )
-        )}
+        </section>
       </div>
     </div>
   );

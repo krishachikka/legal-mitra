@@ -68,7 +68,7 @@ const SearchBar = ({ onSearch }) => {
   // Handle form submission to request translation
   const handleTranslate = async () => {
     try {
-      const response = await axios.post("http://localhost:5003/translate", {
+      const response = await axios.post("http://localhost:5173/translate", {
         text: query,
         target_lang: "en",  // Always translate to English
         source_lang: selectedLang
@@ -81,17 +81,17 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div className="relative flex items-center w-full max-w-lg mx-auto bg-white/80 backdrop-blur-md shadow-lg rounded-full p-1 transition-all duration-300 hover:shadow-xl">
+    <div className="relative flex items-center w-full max-w-2xl mx-auto bg-white/80 backdrop-blur-md shadow-md shadow-red-300/50 rounded-full p-1 transition-all duration-300 hover:shadow-lg">
       {/* Language selection dropdown */}
       <div className="mr-2">
         <select
           value={selectedLang}
           onChange={handleLangChange}
-          className="p-2 border border-gray-300 rounded-md shadow-sm"
+          className="p-2 border border-gray-300 rounded-3xl shadow-sm"
         >
-          <option value="en">English</option>
-          <option value="hi">Hindi</option>
-          <option value="mr">Marathi</option>
+          <option className="bg-red-200/50 hover:bg-red-900" value="en">English</option>
+          <option className="bg-red-200/50 hover:bg-red-900" value="hi">Hindi</option>
+          <option className="bg-red-200/50 hover:bg-red-900" value="mr">Marathi</option>
         </select>
       </div>
 
@@ -129,17 +129,17 @@ const SearchBar = ({ onSearch }) => {
       {/* Translate Button */}
       <button
         onClick={handleTranslate}
-        className="p-2 text-blue-600 hover:text-blue-800 transition cursor-pointer ml-2"
+        className="p-2 text-red-800 hover:text-red-950 transition cursor-pointer ml-2 font-bold"
       >
         Translate
       </button>
 
       {/* If translation is available, display it */}
-      {/* {translatedText && (
+      {translatedText && (
         <div className="mt-4 p-2 bg-gray-100 rounded-md">
           <strong>Translated Text:</strong> {translatedText}
         </div>
-      )} */}
+      )}
     </div>
   );
 };

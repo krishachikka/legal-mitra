@@ -130,7 +130,7 @@ const PdfChat = () => {
     return (
         <div className="flex h-screen max-h-screen bg-gray-100">
             {/* Left Sidebar for PDF Queue and Question History */}
-            <div className="w-1/4 bg-white p-6 border-r border-gray-300">
+            <div className="w-1/4 bg-gradient-to-t from-red-200 via-white to-gray-400 p-6 border-r border-gray-300">
                 {/* PDF Queue Section */}
                 <h3 className="text-2xl font-semibold mb-4">Uploaded PDFs</h3>
                 <ul className="space-y-2 bg-gray-200 p-2 rounded-xl">
@@ -251,10 +251,10 @@ const PdfChat = () => {
                         <button
                             onClick={askQuestion}
                             disabled={loading}
-                            className="mx-2 bg-yellow-600 text-white py-2 px-6 rounded-3xl hover:bg-yellow-700 disabled:bg-gray-300 transform hover:scale-110 transition duration-300 ease-in-out"
+                            className="mx-2 bg-red-800 text-white py-2 px-6 rounded-3xl hover:bg-red-900 disabled:bg-gray-300 transform hover:scale-110 transition duration-300 ease-in-out"
                         >
                             {loading ? (
-                                <div className="w-6 h-6 border-t-4 border-yellow-600 border-solid rounded-full animate-spin"></div>
+                                <div className="w-6 h-6 border-t-4 border-red-900 border-solid rounded-full animate-spin"></div>
                             ) : (
                                 "Ask"
                             )}

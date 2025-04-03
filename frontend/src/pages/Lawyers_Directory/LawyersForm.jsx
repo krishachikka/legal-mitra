@@ -88,12 +88,12 @@ const LawyersForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fbfaf8] flex items-center justify-center">
-      <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl p-8">
-        <h2 className="text-[#1b130e] text-3xl font-bold mb-6 text-center">Lawyer Details Upload</h2>
+    <div className="min-h-screen bg-gradient-to-t from-red-900/90 to-gray-200 shadow-lg flex items-center justify-center">
+      <div className="w-full max-w-5xl  bg-red-50/80 backdrop-blur-sm bg-red-50/80 rounded-xl shadow-2xl p-8 mt-12">
+        <h2 className="text-black text-3xl font-bold mb-6 text-center">Lawyer Details Upload</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column */}
-          <div className="space-y-6 p-4 bg-[#f9f7f2] border border-[#966c4f] rounded-xl shadow-lg">
+          <div className="space-y-6 p-4 bg-red-950/10 rounded-xl shadow-lg">
             <div>
               <label className="block text-sm text-[#1b130e] font-medium mb-2">Name</label>
               <input
@@ -101,7 +101,7 @@ const LawyersForm = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your full name"
               />
             </div>
@@ -113,7 +113,7 @@ const LawyersForm = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your email address"
               />
             </div>
@@ -125,7 +125,7 @@ const LawyersForm = () => {
                 value={contactNo}
                 onChange={(e) => setContactNo(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your contact number"
               />
             </div>
@@ -137,7 +137,7 @@ const LawyersForm = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your location"
               />
             </div>
@@ -149,7 +149,7 @@ const LawyersForm = () => {
                 value={specialization}
                 onChange={(e) => setSpecialization(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your area of specialization"
               />
             </div>
@@ -161,14 +161,14 @@ const LawyersForm = () => {
                 value={yearsOfExperience}
                 onChange={(e) => setYearsOfExperience(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your years of experience"
               />
             </div>
           </div>
 
           {/* Right Column */}
-          <div className="space-y-6 p-4 bg-[#f9f7f2] border border-[#966c4f] rounded-xl shadow-lg">
+          <div className="space-y-6 p-4 bg-red-950/10 rounded-xl shadow-lg">
             <div>
               <label className="block text-sm text-[#1b130e] font-medium mb-2">Number of Cases Solved</label>
               <input
@@ -176,7 +176,7 @@ const LawyersForm = () => {
                 value={noOfCasesSolved}
                 onChange={(e) => setNoOfCasesSolved(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter number of cases solved"
               />
             </div>
@@ -187,7 +187,7 @@ const LawyersForm = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
-                className="w-full h-32 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-32 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Write a brief description of yourself"
               />
             </div>
@@ -199,7 +199,7 @@ const LawyersForm = () => {
                 value={availability}
                 onChange={(e) => setAvailability(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your availability (e.g., Full-time, Part-time)"
               />
             </div>
@@ -210,7 +210,7 @@ const LawyersForm = () => {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 required
-                className="w-full h-32 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-32 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Write a short bio"
               />
             </div>
@@ -222,7 +222,7 @@ const LawyersForm = () => {
                 value={languageSpoken}
                 onChange={(e) => setLanguageSpoken(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter languages spoken"
               />
             </div>
@@ -234,7 +234,7 @@ const LawyersForm = () => {
                 value={education}
                 onChange={(e) => setEducation(e.target.value)}
                 required
-                className="w-full h-14 px-4 bg-[#f3ece8] border border-[#966c4f] rounded-2xl focus:ring-2 focus:ring-[#e36c1c] text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
+                className="w-full h-14 px-4 bg-[#f3ece8]  rounded-2xl focus:ring-2 focus:ring-red-900 text-[#1b130e] placeholder-[#966c4f] focus:outline-none shadow-lg"
                 placeholder="Enter your education qualification"
               />
             </div>
@@ -243,7 +243,7 @@ const LawyersForm = () => {
               <label className="block text-sm text-[#1b130e] font-medium mb-2">Education Certificate (PDF)</label>
               <div
                 {...getRootProps({
-                  className: "w-full h-14 bg-[#f3ece8] border border-[#966c4f] rounded-2xl cursor-pointer text-center flex items-center justify-center",
+                  className: "w-full h-14 bg-[#f3ece8]  rounded-2xl cursor-pointer text-center flex items-center justify-center",
                 })}
               >
                 <input {...getInputProps()} />
@@ -256,7 +256,7 @@ const LawyersForm = () => {
               <label className="block text-sm text-[#1b130e] font-medium mb-2">Profile Photo (Image)</label>
               <div
                 {...getRootProps({
-                  className: "w-full h-14 bg-[#f3ece8] border border-[#966c4f] rounded-2xl cursor-pointer text-center flex items-center justify-center",
+                  className: "w-full h-14 bg-[#f3ece8]  rounded-2xl cursor-pointer text-center flex items-center justify-center",
                 })}
               >
                 <input {...getInputProps()} />
@@ -269,7 +269,7 @@ const LawyersForm = () => {
           <div className="w-full py-4">
             <button
               type="submit"
-              className="w-full py-3 bg-[#e36c1c] text-white text-sm font-semibold rounded-2xl hover:bg-[#d05b19] focus:outline-none focus:ring-2 focus:ring-[#e36c1c] focus:ring-offset-2 shadow-lg"
+              className="w-full py-3 bg-red-800 text-white text-sm font-semibold rounded-3xl hover:bg-red-900 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-900 focus:ring-offset-2 shadow-lg"
             >
               Upload Lawyer Details
             </button>

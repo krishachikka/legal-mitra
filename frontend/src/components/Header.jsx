@@ -90,7 +90,7 @@ const Header = ({ setHeaderHeight, user }) => {
         )}
       </div>
 
-      <SideDrawer open={open} toggleDrawer={toggleDrawer} />
+      <SideDrawer open={open} toggleDrawer={toggleDrawer}/>
     </header>
   );
 };

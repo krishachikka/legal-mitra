@@ -44,13 +44,13 @@ const CaseStudies = () => {
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="container mx-auto p-6 bg-gradient-to-t from-red-900 via-white to-gray-400">
             <h1 className="text-3xl font-bold mb-6 text-center">Past Case Judgements</h1>
 
             {/* Card Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {judgements.map((judgement) => (
-                    <div key={judgement._id} className="bg-white border-2 border-red-900 shadow-lg shadow-red-950 rounded-3xl p-6">
+                    <div key={judgement._id} className="bg-red-50 shadow-lg shadow-red-950 rounded-3xl p-6">
                         <h2 className="text-xl font-semibold text-red-800">{judgement.case_no}</h2>
                         <p className="mt-2 text-gray-700">
                             <strong>Diary No:</strong> {judgement.diary_no}
@@ -69,7 +69,7 @@ const CaseStudies = () => {
                                 href={judgement.temp_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block px-4 py-2 bg-red-900 text-white rounded-3xl hover:bg-blue-600"
+                                className="inline-block px-4 py-2 bg-red-900 text-white rounded-3xl hover:bg-red-800 hover:scale-105 transition-all ease-in-out duration-100"
                             >
                                 Download
                             </a>
@@ -79,11 +79,11 @@ const CaseStudies = () => {
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-8 text-white font-bold">
                 <button
                     onClick={() => handlePageChange(page - 1)}
                     disabled={page === 1}
-                    className="px-4 py-2 bg-red-900/60 text-black rounded-l-3xl hover:bg-red-800 disabled:opacity-30"
+                    className="px-4 py-2 bg-red-200/60 text-black rounded-l-3xl hover:bg-red-300 disabled:opacity-30"
                 >
                     Previous
                 </button>
@@ -93,7 +93,7 @@ const CaseStudies = () => {
                 <button
                     onClick={() => handlePageChange(page + 1)}
                     disabled={page === totalPages}
-                    className="px-4 py-2 bg-red-900/60 text-black rounded-r-3xl hover:bg-red-800 disabled:opacity-30"
+                    className="px-4 py-2 bg-red-200/60 text-black rounded-r-3xl hover:bg-red-300 disabled:opacity-30"
                 >
                     Next
                 </button>

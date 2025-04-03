@@ -33,7 +33,7 @@ export default function SideDrawer({ open, toggleDrawer }) {
     const isActive = (path) => location.pathname === path;
 
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" >
+        <Box sx={{ width: 250 }} role="presentation" className='bg-red-100/60 h-full'>
             <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
                 <img src={logo} className="w-8 h-8 mr-2" alt="LegalMitra Logo" />
                 <h2>LegalMitra</h2>
@@ -95,7 +95,7 @@ export default function SideDrawer({ open, toggleDrawer }) {
     );
 
     return (
-        <Drawer open={open} onClose={toggleDrawer(false)}>
+        <Drawer open={open} onClose={toggleDrawer(false)} bg-yellow-100>
             {DrawerList}
         </Drawer>
     );

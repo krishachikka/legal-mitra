@@ -9,7 +9,7 @@ const LegalNews = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-
+ 
   useEffect(() => {
     // Fetch news from Flask API
     axios.get('http://localhost:5000/api/news')
@@ -46,18 +46,18 @@ const LegalNews = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-50 via-green-50 to-blue-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-red-900 via-white to-gray-900">
       {/* Header and Search Bar */}
       <div className="flex justify-between items-center mb-12 p-4">
         <div className="flex items-center space-x-3">
           <FiBell className="text-yellow-500 text-xl transition-transform hover:scale-110" />
-          <h1 className="text-2xl font-extrabold text-[#A55B4B] font-poppins tracking-wide leading-tight">
+          <h1 className="text-2xl font-extrabold text-red-100 font-poppins tracking-wide leading-tight">
             Recent Legal News Updates
           </h1>
         </div>
 
         {/* Search Bar */}
-        <div className="flex items-center bg-white rounded-lg shadow-md p-2 w-1/3">
+        <div className="flex items-center bg-white/80 font-bold rounded-3xl shadow-md p-2 w-1/3">
           <AiOutlineSearch className="text-gray-400 mr-2" />
           <input
             type="text"
@@ -92,7 +92,7 @@ const LegalNews = () => {
                 <p>{new Date(filteredNews[0].published).toLocaleDateString()}</p>
               </div>
               {/* Add any "More" or extra content here */}
-              <button className="text-blue-500 hover:text-blue-700 mt-4">Read More</button>
+              <button className="text-red-800 hover:text-red-700 mt-4 font-bold">Read More</button>
             </div>
           )}
 
@@ -125,7 +125,7 @@ const LegalNews = () => {
 
         {/* Right side with Related News (with images) */}
         <div className="w-1/3">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">Related News</h2>
+          <h2 className="text-xl font-bold text-red-100 mb-6">Related News</h2>
           {filteredNews.map((item, index) => (
             <div key={index} className="bg-white rounded-lg shadow-xl mb-6 p-4 hover:shadow-2xl transition-all flex space-x-4">
               {/* Image for the related news item */}

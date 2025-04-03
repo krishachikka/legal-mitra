@@ -179,17 +179,17 @@ const LegalAdvice = () => {
   };
 
   return (
-    <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gray-100">
+    <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gradient-to-r from-gray-300 to-red-100">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">Legal Advice</h1>
 
-      <div className="mb-6">
+      <div className="mb-2">
         <SearchBar onSearch={fetchLegalAdvice} selectedLang={selectedLang} />
       </div>
 
       {/* Language Dropdown */}
-      <div className="mb-6">
+      <div className="mb-2">
         <select
-          className="border border-gray-300 rounded-md p-2"
+          className="border border-gray-400 rounded-3xl p-2"
           value={selectedLang}
           onChange={(e) => setSelectedLang(e.target.value)}
         >
@@ -216,19 +216,19 @@ const LegalAdvice = () => {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-2 grid-cols-1">
+      <div className="grid lg:grid-cols-2 grid-cols-1 response">
         {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
         <PDFresponse query={searchQuery} autoSubmit={true} setPdfResponse={setPdfResponse} />
 
         <section>
-          <div className="mt-4 max-h-150 overflow-y-auto">
+          <div className="mt-4 backdrop-blur-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Related Articles:</h2>
             {results.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4 rounded-3xl max-h-150 overflow-y-auto">
                 {results.map((item, index) => (
                   <div
                     key={index}
-                    className="p-4 border border-gray-300 rounded-xl bg-red-100/50 shadow-md transition duration-300 hover:shadow-lg"
+                    className="bg-red-50 shadow-lg shadow-red-950 rounded-3xl p-6 transition duration-300 hover:shadow-lg"
                   >
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h2>
 
@@ -240,7 +240,7 @@ const LegalAdvice = () => {
                       <p className="text-gray-500 text-sm">Punishment: {item.punishment}</p>
                     )}
                     {item.url && item.url !== "No URL" && (
-                      <p className="text-blue-500 text-sm">
+                      <p className="text-red-900 font-bold text-sm">
                         <a href={item.url} target="_blank" rel="noopener noreferrer">Link</a>
                       </p>
                     )}

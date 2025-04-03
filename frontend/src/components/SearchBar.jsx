@@ -88,7 +88,7 @@ const SearchBar = ({ onSearch }) => {
         <select
           value={selectedLang}
           onChange={handleLangChange}
-          className="p-2 border border-gray-300 rounded-md shadow-sm"
+          className="p-2 border border-gray-300 rounded-3xl shadow-sm"
         >
           <option value="en">English</option>
           <option value="hi">Hindi</option>
@@ -133,7 +133,7 @@ const SearchBar = ({ onSearch }) => {
       {/* Translate Button */}
       <button
         onClick={handleTranslate}
-        className="p-2 text-blue-600 hover:text-blue-800 transition cursor-pointer ml-2"
+        className="p-2 text-red-800 hover:text-red-700 font-bold transition cursor-pointer ml-2"
       >
         Translate
       </button>

@@ -1,17 +1,28 @@
+/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi:ital@0;1&display=swap');
 
+/* Global Font for the entire app */
 #root {
   font-family: 'Poppins', Arial, Helvetica, sans-serif;
 }
 
+/* Example styling for card */
 .card {
   padding: 2em;
 }
 
-.read-the-docs {
-  color: #888;
+/* Style for response with specific font for Marathi/Hindi */
+.response {
+  font-family: 'Poppins', 'Tiro Devanagari Marathi', Arial, Helvetica, sans-serif;
 }
 
+/* Optional: If you want a specific font for Marathi or Hindi languages */
+.font-marathi {
+  font-family: 'Tiro Devanagari Marathi', serif;
+}
+
+/* Example of limiting text to 4 lines */
 .description-line-clamp {
   display: -webkit-box;
   -webkit-line-clamp: 4;  /* Limit to 4 lines */

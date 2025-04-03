@@ -16,36 +16,31 @@ const LegalAdvice = () => {
   // Function to fetch keywords from the query
   const fetchKeywords = async (query) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_PYTHON_BACKEND_URL_001}/extract_keywords`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+      const response = await axios.post("http://localhost:8000/extract_keywords", {
+        query,
       });
-
-      if (!response.ok) throw new Error("Failed to extract keywords");
-
-      const data = await response.json();
-      console.log("Extracted Keywords:", data.keywords);
-      return data.keywords;
+      // Log the extracted keywords
+      console.log("Extracted Keywords:", response.data.keywords);
+      return response.data.keywords || [];
     } catch (error) {
       console.error("Keyword extraction error:", error);
-      return []; // Return an empty array if error occurs
+      return [];
     }
   };
 
+  // Summarize text by chunking and using Hugging Face model for summarization
   const summarizeText = async (text) => {
-    // Function to chunk long texts into smaller pieces
     const chunkText = (text, maxLength = 1024) => {
-      const words = text.split(' ');
+      const words = text.split(" ");
       const chunks = [];
-      let currentChunk = '';
+      let currentChunk = "";
 
-      words.forEach(word => {
-        if ((currentChunk + ' ' + word).length > maxLength) {
+      words.forEach((word) => {
+        if ((currentChunk + " " + word).length > maxLength) {
           chunks.push(currentChunk);
           currentChunk = word;
         } else {
-          currentChunk += ' ' + word;
+          currentChunk += " " + word;
         }
       });
 
@@ -54,40 +49,33 @@ const LegalAdvice = () => {
     };
 
     const textChunks = chunkText(text);
-
-    // Limit to a maximum number of chunks (if desired, e.g., 5 chunks max)
-    const limitedChunks = textChunks.slice(0, 5); // You can change this value based on needs
+    const limitedChunks = textChunks.slice(0, 5);
 
     try {
-      // Use Promise.all to send requests in parallel
       const allSummaries = await Promise.all(
-        limitedChunks.map(chunk =>
+        limitedChunks.map((chunk) =>
           axios.post(
             "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
             { inputs: chunk },
             {
               headers: {
-                Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Your Hugging Face API key
+                Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`,
               },
             }
           )
         )
       );
 
-      // Collect all summaries from responses
-      const summaries = allSummaries.map(response => response.data[0].summary_text).filter(Boolean);
+      const summaries = allSummaries
+        .map((response) => response.data[0].summary_text)
+        .filter(Boolean);
 
-      // Combine all summaries and ensure that it’s within 4 lines (or approx. 4 lines worth of text)
-      let combinedSummary = summaries.join(" ");
+      const combinedSummary = summaries.join(" ");
+      const lines = combinedSummary.split(".");
+      const limitedSummary = lines.slice(0, 8).join(".") + ".";
 
-      // Limit the summary to 4 lines by keeping the first 4 sentences or 4 lines worth of text
-      const lines = combinedSummary.split("."); // Split by periods to break into sentences
-      const limitedSummary = lines.slice(0, 8).join(".") + "."; // Keep only the first 4 sentences
-
-      // Update state with the final trimmed summary
       setSummarizedContent(limitedSummary);
       translateSummary(limitedSummary); // Trigger translation after summarization
-
     } catch (err) {
       console.error("Error during summarization:", err);
       setSummarizedContent("Error summarizing the text.");
@@ -97,10 +85,10 @@ const LegalAdvice = () => {
   // Translate the summarized content based on selected language
   const translateSummary = async (text) => {
     try {
-      const response = await axios.post("http://localhost:5003/translate", {
+      const response = await axios.post("http://localhost:8000/translate", {
         text: text,
-        target_lang: selectedLang, // Translate based on the selected language
-        source_lang: "en" // Always translate from English
+        target_lang: selectedLang,
+        source_lang: "en", // Always translate from English
       });
       setTranslatedSummary(response.data.translated_text);
     } catch (error) {
@@ -108,7 +96,7 @@ const LegalAdvice = () => {
     }
   };
 
-  // Function to fetch legal advice data from Firipc dataset
+  // Function to fetch legal advice data
   const fetchLegalAdvice = async (query) => {
     setLoading(true);
     setSummarizedContent(""); // Reset the summary content before a new query
@@ -145,6 +133,17 @@ const LegalAdvice = () => {
 
       setResults(formattedResults); // Set the formatted results
 
+      // Prepare content for summarization
+      const contentToSummarize = formattedResults.map((item) => item.description).join("\n");
+
+      // Add the PDFresponse content to the content to summarize
+      const combinedContent = contentToSummarize + "\n" + pdfResponse;
+
+      console.log("Content to summarize (includes PDF response):", combinedContent);
+
+      // Call the summarizeText function to get the summarized content
+      await summarizeText(combinedContent);
+
     } catch (error) {
       console.error("Error fetching legal advice:", error);
       setSummarizedContent("Error fetching legal advice."); // Set error message if fetching fails
@@ -153,25 +152,38 @@ const LegalAdvice = () => {
     setLoading(false); // Set loading to false after fetch is done
   };
 
-  // Effect to trigger summarization only after both results and pdfResponse are set
+  // Effect to trigger summarization after both results and PDF response are available
   useEffect(() => {
     if (results.length > 0 && pdfResponse) {
-      // Combine descriptions from results and PDF response
       const contentToSummarize = results
         .map((item) => item.description)
         .join("\n");
       const combinedContent = contentToSummarize + "\n" + pdfResponse;
-      console.log("Content to summarize (includes PDF response):", combinedContent);
       summarizeText(combinedContent);
     }
-  }, [pdfResponse, results]); // Trigger summarization when pdfResponse or results change
+  }, [pdfResponse, results]);
+
+  // Handle PDF file upload
+  const handlePdfUpload = async (pdfFiles) => {
+    const formData = new FormData();
+    pdfFiles.forEach((file) => formData.append("pdf_files", file));
+
+    try {
+      const response = await axios.post("http://localhost:8000/upload_pdf/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log(response.data); // Handle PDF response if needed
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+    }
+  };
 
   return (
     <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gray-100">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">Legal Advice</h1>
 
       <div className="mb-6">
-        <SearchBar onSearch={fetchLegalAdvice} />
+        <SearchBar onSearch={fetchLegalAdvice} selectedLang={selectedLang} />
       </div>
 
       {/* Language Dropdown */}
@@ -184,6 +196,9 @@ const LegalAdvice = () => {
           <option value="en">English</option>
           <option value="hi">Hindi</option>
           <option value="mr">Marathi</option>
+          <option value="ta">Tamil</option>
+          <option value="te">Telugu</option>
+          <option value="pa">Punjabi</option>
         </select>
       </div>
 
@@ -196,7 +211,7 @@ const LegalAdvice = () => {
       {/* Only show translated summary */}
       {translatedSummary && !loading && (
         <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Translated Summary:</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Summarized Answer:</h2>
           <p>{translatedSummary}</p>
         </div>
       )}
@@ -206,8 +221,8 @@ const LegalAdvice = () => {
         <PDFresponse query={searchQuery} autoSubmit={true} setPdfResponse={setPdfResponse} />
 
         <section>
-          {/* Scrollable results section */}
           <div className="mt-4 max-h-150 overflow-y-auto">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Related Articles:</h2>
             {results.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4">
                 {results.map((item, index) => (
@@ -217,15 +232,14 @@ const LegalAdvice = () => {
                   >
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h2>
 
-                    {/* Clipping the description to 4 lines */}
                     <p className="text-gray-700 leading-relaxed description-line-clamp">
                       {item.description}
                     </p>
                     <p className="text-gray-500 text-sm">Source: {item.dataset}</p>
-                    {item.punishment !== "NO PUNISHMENT" && (
+                    {item.punishment && item.punishment !== "NO PUNISHMENT" && (
                       <p className="text-gray-500 text-sm">Punishment: {item.punishment}</p>
                     )}
-                    {item.url !== "No URL" && (
+                    {item.url && item.url !== "No URL" && (
                       <p className="text-blue-500 text-sm">
                         <a href={item.url} target="_blank" rel="noopener noreferrer">Link</a>
                       </p>
@@ -234,11 +248,7 @@ const LegalAdvice = () => {
                 ))}
               </div>
             ) : (
-              !loading && (
-                <p className="text-gray-500 text-center text-lg mt-6">
-                  No results found. Try searching with different keywords.
-                </p>
-              )
+              <p className="text-gray-500">No results found.</p>
             )}
           </div>
         </section>

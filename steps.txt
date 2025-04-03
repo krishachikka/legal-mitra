@@ -1,3 +1,40 @@
+### Steps to run
+
+- frontend - npm run dev
+- backend - npm run dev
+- python - uvicorn pdf_chat_rag:app --reload
+
+and you are done  :)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Steps for Translation Logic
 
 /summarize

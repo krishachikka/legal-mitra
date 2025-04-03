@@ -8,11 +8,12 @@ app = Flask(__name__)
 # Enable CORS for all domains (you can specify domains if you want to restrict it)
 CORS(app, origins=["http://localhost:5173"])  # Adjust this if needed for your frontend
 
+
 @app.route("/translate", methods=["POST"])
 def translate_text():
     # Get the input JSON data from the request
     data = request.get_json()
-    
+
     # Extract parameters from the incoming request
     text = data.get("text")
     target_lang = data.get("target_lang", "en")  # Default target language is English
@@ -38,8 +39,8 @@ def translate_text():
         # Return error message if something goes wrong
         return jsonify({"error": str(e)}), 500
 
+
 # Start the Flask app
 # Start the Flask app on port 5003
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
-

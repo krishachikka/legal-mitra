@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
@@ -10,6 +10,8 @@ const LegalAdvice = () => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // State to hold the query
   const [pdfResponse, setPdfResponse] = useState(""); // State to hold the response from PDFresponse
+  const [selectedLang, setSelectedLang] = useState("en"); // Language selection state
+  const [translatedSummary, setTranslatedSummary] = useState(""); // Store translated summary
 
   // Function to fetch keywords from the query
   const fetchKeywords = async (query) => {
@@ -31,10 +33,7 @@ const LegalAdvice = () => {
     }
   };
 
-  // Function to summarize text
   const summarizeText = async (text) => {
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
     // Function to chunk long texts into smaller pieces
     const chunkText = (text, maxLength = 1024) => {
       const words = text.split(' ');
@@ -56,29 +55,30 @@ const LegalAdvice = () => {
 
     const textChunks = chunkText(text);
 
-    let allSummaries = [];
+    // Limit to a maximum number of chunks (if desired, e.g., 5 chunks max)
+    const limitedChunks = textChunks.slice(0, 5); // You can change this value based on needs
 
     try {
-      for (let chunk of textChunks) {
-        await delay(2000); // Adjust delay if necessary
+      // Use Promise.all to send requests in parallel
+      const allSummaries = await Promise.all(
+        limitedChunks.map(chunk =>
+          axios.post(
+            "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+            { inputs: chunk },
+            {
+              headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Your Hugging Face API key
+              },
+            }
+          )
+        )
+      );
 
-        const response = await axios.post(
-          "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
-          { inputs: chunk },
-          {
-            headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Your Hugging Face API key
-            },
-          }
-        );
-
-        if (response.data && response.data[0] && response.data[0].summary_text) {
-          allSummaries.push(response.data[0].summary_text); // Append summary to the array
-        }
-      }
+      // Collect all summaries from responses
+      const summaries = allSummaries.map(response => response.data[0].summary_text).filter(Boolean);
 
       // Combine all summaries and ensure that it’s within 4 lines (or approx. 4 lines worth of text)
-      let combinedSummary = allSummaries.join(" ");
+      let combinedSummary = summaries.join(" ");
 
       // Limit the summary to 4 lines by keeping the first 4 sentences or 4 lines worth of text
       const lines = combinedSummary.split("."); // Split by periods to break into sentences
@@ -86,10 +86,25 @@ const LegalAdvice = () => {
 
       // Update state with the final trimmed summary
       setSummarizedContent(limitedSummary);
+      translateSummary(limitedSummary); // Trigger translation after summarization
 
     } catch (err) {
       console.error("Error during summarization:", err);
       setSummarizedContent("Error summarizing the text.");
+    }
+  };
+
+  // Translate the summarized content based on selected language
+  const translateSummary = async (text) => {
+    try {
+      const response = await axios.post("http://localhost:5003/translate", {
+        text: text,
+        target_lang: selectedLang, // Translate based on the selected language
+        source_lang: "en" // Always translate from English
+      });
+      setTranslatedSummary(response.data.translated_text);
+    } catch (error) {
+      console.error("Error translating summary:", error);
     }
   };
 
@@ -118,28 +133,17 @@ const LegalAdvice = () => {
       // Handle formatting directly here for Firipc data
       const formattedResults = Array.isArray(data)
         ? data.map((item) => ({
-            title: item.title || "UNKNOWN", // Use offense as title
-            description: item.description || "NO DESCRIPTION", 
-            punishment: item.punishment || "NO PUNISHMENT", 
-            url: item.url || "No URL", // Use URL if available
-            dataset: item.dataset || "Firipc Dataset", 
-          }))
+          title: item.title || "UNKNOWN", // Use offense as title
+          description: item.description || "NO DESCRIPTION",
+          punishment: item.punishment || "NO PUNISHMENT",
+          url: item.url || "No URL", // Use URL if available
+          dataset: item.dataset || "Firipc Dataset",
+        }))
         : [];
 
       console.log(formattedResults);
 
       setResults(formattedResults); // Set the formatted results
-
-      // Prepare content for summarization
-      const contentToSummarize = formattedResults.map((item) => item.description).join("\n");
-
-      // Add the PDFresponse content to the content to summarize
-      const combinedContent = contentToSummarize + "\n" + pdfResponse;
-
-      console.log("Content to summarize (includes PDF response):", combinedContent);
-
-      // Call the summarizeText function to get the summarized content
-      await summarizeText(combinedContent);
 
     } catch (error) {
       console.error("Error fetching legal advice:", error);
@@ -149,6 +153,19 @@ const LegalAdvice = () => {
     setLoading(false); // Set loading to false after fetch is done
   };
 
+  // Effect to trigger summarization only after both results and pdfResponse are set
+  useEffect(() => {
+    if (results.length > 0 && pdfResponse) {
+      // Combine descriptions from results and PDF response
+      const contentToSummarize = results
+        .map((item) => item.description)
+        .join("\n");
+      const combinedContent = contentToSummarize + "\n" + pdfResponse;
+      console.log("Content to summarize (includes PDF response):", combinedContent);
+      summarizeText(combinedContent);
+    }
+  }, [pdfResponse, results]); // Trigger summarization when pdfResponse or results change
+
   return (
     <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gray-100">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">Legal Advice</h1>
@@ -157,27 +174,38 @@ const LegalAdvice = () => {
         <SearchBar onSearch={fetchLegalAdvice} />
       </div>
 
-      {loading && (
-            <div className="flex justify-center items-center mt-6">
-              <CircularProgress color="red" />
-            </div>
-          )}
+      {/* Language Dropdown */}
+      <div className="mb-6">
+        <select
+          className="border border-gray-300 rounded-md p-2"
+          value={selectedLang}
+          onChange={(e) => setSelectedLang(e.target.value)}
+        >
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="mr">Marathi</option>
+        </select>
+      </div>
 
-          {/* Automatically Summarize when content is fetched */}
-          {summarizedContent && !loading && (
-            <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Summary:</h2>
-              <p>{summarizedContent}</p>
-            </div>
-          )}
+      {loading && (
+        <div className="flex justify-center items-center mt-6">
+          <CircularProgress color="red" />
+        </div>
+      )}
+
+      {/* Only show translated summary */}
+      {translatedSummary && !loading && (
+        <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Translated Summary:</h2>
+          <p>{translatedSummary}</p>
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-2 grid-cols-1">
         {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
-        <PDFresponse query={searchQuery} autoSubmit={false} setPdfResponse={setPdfResponse} />
+        <PDFresponse query={searchQuery} autoSubmit={true} setPdfResponse={setPdfResponse} />
 
         <section>
-
-
           {/* Scrollable results section */}
           <div className="mt-4 max-h-150 overflow-y-auto">
             {results.length > 0 ? (

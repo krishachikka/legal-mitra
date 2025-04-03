@@ -22,3 +22,16 @@ chat_component.py
 /response
 - here i made the component to get the chat_component functionality to frontend - pdf_response.py added the fastapi to it
 - for this run uvicorn pdf_response:app --reload under venv
+
+
+
+
+# Files
+rag_pdf_chat - uvicorn
+pdf_response - uvicorn
+keyword_extraction_and_api - python
+news - python
+translate_to_english_query- python
+
+
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
@@ -9,8 +9,11 @@ const LegalAdvice = () => {
   const [summarizedContent, setSummarizedContent] = useState(""); // Store the summarized content
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // State to hold the query
+  const [pdfResponse, setPdfResponse] = useState(""); // State to hold the response from PDFresponse
+  const [selectedLang, setSelectedLang] = useState("en"); // Language selection state
+  const [translatedSummary, setTranslatedSummary] = useState(""); // Store translated summary
 
-  // Function to extract keywords from the query
+  // Function to fetch keywords from the query
   const fetchKeywords = async (query) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_PYTHON_BACKEND_URL_001}/extract_keywords`, {
@@ -27,6 +30,81 @@ const LegalAdvice = () => {
     } catch (error) {
       console.error("Keyword extraction error:", error);
       return []; // Return an empty array if error occurs
+    }
+  };
+
+  const summarizeText = async (text) => {
+    // Function to chunk long texts into smaller pieces
+    const chunkText = (text, maxLength = 1024) => {
+      const words = text.split(' ');
+      const chunks = [];
+      let currentChunk = '';
+
+      words.forEach(word => {
+        if ((currentChunk + ' ' + word).length > maxLength) {
+          chunks.push(currentChunk);
+          currentChunk = word;
+        } else {
+          currentChunk += ' ' + word;
+        }
+      });
+
+      if (currentChunk) chunks.push(currentChunk);
+      return chunks;
+    };
+
+    const textChunks = chunkText(text);
+
+    // Limit to a maximum number of chunks (if desired, e.g., 5 chunks max)
+    const limitedChunks = textChunks.slice(0, 5); // You can change this value based on needs
+
+    try {
+      // Use Promise.all to send requests in parallel
+      const allSummaries = await Promise.all(
+        limitedChunks.map(chunk =>
+          axios.post(
+            "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+            { inputs: chunk },
+            {
+              headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_API_KEY}`, // Your Hugging Face API key
+              },
+            }
+          )
+        )
+      );
+
+      // Collect all summaries from responses
+      const summaries = allSummaries.map(response => response.data[0].summary_text).filter(Boolean);
+
+      // Combine all summaries and ensure that it’s within 4 lines (or approx. 4 lines worth of text)
+      let combinedSummary = summaries.join(" ");
+
+      // Limit the summary to 4 lines by keeping the first 4 sentences or 4 lines worth of text
+      const lines = combinedSummary.split("."); // Split by periods to break into sentences
+      const limitedSummary = lines.slice(0, 8).join(".") + "."; // Keep only the first 4 sentences
+
+      // Update state with the final trimmed summary
+      setSummarizedContent(limitedSummary);
+      translateSummary(limitedSummary); // Trigger translation after summarization
+
+    } catch (err) {
+      console.error("Error during summarization:", err);
+      setSummarizedContent("Error summarizing the text.");
+    }
+  };
+
+  // Translate the summarized content based on selected language
+  const translateSummary = async (text) => {
+    try {
+      const response = await axios.post("http://localhost:5003/translate", {
+        text: text,
+        target_lang: selectedLang, // Translate based on the selected language
+        source_lang: "en" // Always translate from English
+      });
+      setTranslatedSummary(response.data.translated_text);
+    } catch (error) {
+      console.error("Error translating summary:", error);
     }
   };
 
@@ -67,10 +145,6 @@ const LegalAdvice = () => {
 
       setResults(formattedResults); // Set the formatted results
 
-      // Now, let's summarize the content
-      const contentToSummarize = formattedResults.map((item) => item.description).join("\n");
-      const summary = await summarizeContent(contentToSummarize);
-      setSummarizedContent(summary); // Update the summarized content
     } catch (error) {
       console.error("Error fetching legal advice:", error);
       setSummarizedContent("Error fetching legal advice."); // Set error message if fetching fails
@@ -78,6 +152,19 @@ const LegalAdvice = () => {
 
     setLoading(false); // Set loading to false after fetch is done
   };
+
+  // Effect to trigger summarization only after both results and pdfResponse are set
+  useEffect(() => {
+    if (results.length > 0 && pdfResponse) {
+      // Combine descriptions from results and PDF response
+      const contentToSummarize = results
+        .map((item) => item.description)
+        .join("\n");
+      const combinedContent = contentToSummarize + "\n" + pdfResponse;
+      console.log("Content to summarize (includes PDF response):", combinedContent);
+      summarizeText(combinedContent);
+    }
+  }, [pdfResponse, results]); // Trigger summarization when pdfResponse or results change
 
   return (
     <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gray-100">
@@ -87,30 +174,42 @@ const LegalAdvice = () => {
         <SearchBar onSearch={fetchLegalAdvice} />
       </div>
 
-      <div className="grid lg:grid-cols-2 grid-cols-1">
+      {/* Language Dropdown */}
+      <div className="mb-6">
+        <select
+          className="border border-gray-300 rounded-md p-2"
+          value={selectedLang}
+          onChange={(e) => setSelectedLang(e.target.value)}
+        >
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="mr">Marathi</option>
+        </select>
+      </div>
 
+      {loading && (
+        <div className="flex justify-center items-center mt-6">
+          <CircularProgress color="red" />
+        </div>
+      )}
+
+      {/* Only show translated summary */}
+      {translatedSummary && !loading && (
+        <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Translated Summary:</h2>
+          <p>{translatedSummary}</p>
+        </div>
+      )}
+
+      <div className="grid lg:grid-cols-2 grid-cols-1">
         {/* Pass searchQuery and automatically trigger submit in PDFresponse */}
-        <PDFresponse query={searchQuery} autoSubmit={true} />
+        <PDFresponse query={searchQuery} autoSubmit={true} setPdfResponse={setPdfResponse} />
 
         <section>
-          {loading && (
-            <div className="flex justify-center items-center mt-6">
-              <CircularProgress color="primary" />
-            </div>
-          )}
-
-          {/* Displaying the summary */}
-          {summarizedContent && !loading && (
-            <div className="p-5 border border-gray-300 rounded-xl bg-white shadow-md mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Summary:</h2>
-              <p className="text-gray-700 leading-relaxed">{summarizedContent}</p>
-            </div>
-          )}
-
           {/* Scrollable results section */}
-          <div className="mt-4 max-h-96 overflow-y-auto">
+          <div className="mt-4 max-h-150 overflow-y-auto">
             {results.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-4">
                 {results.map((item, index) => (
                   <div
                     key={index}

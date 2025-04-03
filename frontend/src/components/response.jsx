@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
-function PDFresponse({ query, autoSubmit }) {
+function PDFresponse({ query, autoSubmit, setPdfResponse }) {
   const [question, setQuestion] = useState(query); // Set question from the query prop
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +39,10 @@ function PDFresponse({ query, autoSubmit }) {
       });
       console.log("Received response:", res.data);
       setResponse(res.data.response);
+
+      // Send response to LegalAdvice component
+      setPdfResponse(res.data.response);
+
     } catch (error) {
       console.error("Error:", error);
       setError(
@@ -52,8 +56,6 @@ function PDFresponse({ query, autoSubmit }) {
 
   return (
     <div className="container mx-auto p-2 max-w-4xl">
-      {/* <h1 className="text-2xl font-bold mb-6">Legal Mitra - Chat with PDF</h1> */}
-
       <div className="bg-gray-100 p-4 rounded-lg">
         <div className="mb-4">
           <input
@@ -84,7 +86,7 @@ function PDFresponse({ query, autoSubmit }) {
         {response && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">Response:</h3>
-            <div className="bg-red-100/50 p-4 rounded-xl border-2 border-slate-200 max-h-96 overflow-y-auto">
+            <div className="bg-red-100/50 p-4 rounded-xl border-2 border-slate-200 max-h-120 overflow-y-auto">
               <ReactMarkdown>
                 {response}
               </ReactMarkdown>

@@ -83,7 +83,7 @@ const searchInAllDatasets = async (keywords) => {
       })
       .filter((item) => item.score > 0) // Only include items with matches
       .sort((a, b) => b.score - a.score) // Sort by score
-      .slice(0, 30); // Limit to the top 30 results
+      .slice(0, 10); // Limit to the top 30 results
 
     return scoredResults;
   } catch (error) {
@@ -117,10 +117,10 @@ const search = async (req, res) => {
       } else if (item.dataset === 'Firipc') {
         return {
           title: item.Offense, // Firipc - Offense as the title
-          description: item.Description, 
-          punishment: item.Punishment, 
-          dataset: item.dataset || "Unknown Dataset", 
-          url: item.URL, 
+          description: item.Description,
+          punishment: item.Punishment,
+          dataset: item.dataset || "Unknown Dataset",
+          url: item.URL,
         };
       } else if (item.dataset === 'IndianConstitution') {
         // Extract the article number from the Articles field

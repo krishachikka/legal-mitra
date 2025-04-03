@@ -83,7 +83,7 @@ const searchInAllDatasets = async (keywords) => {
       })
       .filter((item) => item.score > 0) // Only include items with matches
       .sort((a, b) => b.score - a.score) // Sort by score
-      .slice(0, 10); // Limit to the top 30 results
+      .slice(0, 30); // Limit to the top 30 results
 
     return scoredResults;
   } catch (error) {

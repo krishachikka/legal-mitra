@@ -11,8 +11,8 @@ const LegalNews = () => {
   const [searchQuery, setSearchQuery] = useState('');
  
   useEffect(() => {
-    // Fetch news from Flask API
-    axios.get('http://localhost:5000/api/news')
+    // Fetch news from FastAPI backend (changed URL to match FastAPI's port)
+    axios.get('http://localhost:8000/api/news')  // Changed port to 8000 for FastAPI
       .then(response => {
         setNews(response.data);
         setLoading(false);

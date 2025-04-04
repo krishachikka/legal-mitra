@@ -139,11 +139,11 @@ const SearchBar = ({ onSearch }) => {
       </button>
 
       {/* If translation is available, display it */}
-      {translatedText && (
+      {/* {translatedText && (
         <div className="mt-4 p-2 bg-gray-100 rounded-md">
           <strong>Translated Text:</strong> {translatedText}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

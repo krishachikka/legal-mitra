@@ -72,9 +72,9 @@ const PdfChat = () => {
             alert("Please enter a question.");
             return;
         }
-    
+
         setLoading(true);
-    
+
         try {
             const response = await axios.post("http://localhost:8000/ask_question/", {
                 question: question,
@@ -83,16 +83,16 @@ const PdfChat = () => {
                     "Content-Type": "application/json",
                 },
             });
-    
+
 
 
             // Add the question and answer to the history
             const updatedHistory = [...questionHistory, { question, answer: response.data.response }];
             setQuestionHistory(updatedHistory);
-    
+
             // Save the updated question history to localStorage
             localStorage.setItem("questionHistory", JSON.stringify(updatedHistory));
-    
+
 
             setFirstQuestionAsked(true);
         } catch (error) {
@@ -101,10 +101,10 @@ const PdfChat = () => {
         } finally {
             setLoading(false);
         }
-    
+
         setQuestion("");
     };
-    
+
 
     const clearQuestionHistory = () => {
         if (window.confirm("Are you sure you want to clear all question history?")) {
@@ -234,8 +234,8 @@ const PdfChat = () => {
                 </div>
 
                 {/* Chat and PDF Interaction Section */}
-                <div className={`bg-white/30 backdrop-blur-2xl border-gray-700 border-4 p-6 rounded-3xl shadow-lg max-w-2xl w-full mx-auto ${firstQuestionAsked ? 'relative transform translate-y-1' : 'relative'}`}>
-                    <h2 className="text-3xl font-semibold text-center mb-6">Chat using PDF</h2>
+                <div className={`bg-white/30 backdrop-blur-2xl border-gray-700 border-4 p-6 rounded-3xl shadow-lg ma6x-w-2xl w-full mx-auto ${firstQuestionAsked ? 'relative transform translate-y-1' : 'relative'}`}>
+                    <h2 className="text-3xl font-semibold text-center mb-6">Chat with Documents</h2>
 
                     {/* Question Section */}
                     <div className="flex flex-row mx-auto justify-between items-center mt-6">

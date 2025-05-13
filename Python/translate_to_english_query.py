@@ -1,13 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from deep_translator import GoogleTranslator
+import os
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS for all domains (you can specify domains if you want to restrict it)
-CORS(app, origins=["http://localhost:5173"])  # Adjust this if needed for your frontend
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
 
+# Fetch VITE_FRONTEND_URL from environment variables
+frontend_url = os.getenv("VITE_FRONTEND_URL", "http://localhost:5173")  # Default to localhost if not set
+
+# Enable CORS for frontend URL specified in VITE_FRONTEND_URL environment variable
+CORS(app, origins=[frontend_url])
 
 @app.route("/translate", methods=["POST"])
 def translate_text():
@@ -39,8 +46,7 @@ def translate_text():
         # Return error message if something goes wrong
         return jsonify({"error": str(e)}), 500
 
-
 # Start the Flask app
-# Start the Flask app on port 5003
 if __name__ == "__main__":
+    # Start the Flask app on port 5003
     app.run(debug=True, port=5003)

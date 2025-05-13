@@ -69,7 +69,7 @@ const SearchBar = ({ onSearch }) => {
   const handleTranslate = async () => {
     try {
       // Change the URL to the FastAPI endpoint for translation
-      const response = await axios.post("http://localhost:8000/translate/", {
+      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate/`, {
         text: query,
         target_lang: "en",  // Always translate to English
         source_lang: selectedLang

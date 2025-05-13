@@ -49,7 +49,7 @@ const PdfChat = () => {
         }
 
         try {
-            await axios.post("http://localhost:8000/upload_pdf/", formData, {
+            await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/upload_pdf/`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -76,7 +76,7 @@ const PdfChat = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:8000/ask_question/", {
+            const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/ask_question/`, {
                 question: question,
             }, {
                 headers: {

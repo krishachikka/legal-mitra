@@ -12,7 +12,7 @@ const LawyerDetailsPage = () => {
         const fetchLawyerDetails = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:3000/api/v1/lawyers-directory/${lawyerId}`);  // Adjusted URL
+                const response = await axios.get(`${VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/${lawyerId}`);  // Adjusted URL
                 setLawyer(response.data.data);  // Assuming the response returns the lawyer's data in the 'data' field
                 setLoading(false);
             } catch (err) {

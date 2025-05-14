@@ -79,7 +79,7 @@ const UserForm = () => {
       const data = { ...formData, imageUrl, certificateUrl, idProofUrl };
 
       // Make the API request to submit the data
-      const response = await axios.post('http://localhost:3000/api/users', data);
+      const response = await axios.post(`${VITE_NODE_BACKEND_URL}/api/users`, data);
       console.log('User created:', response.data);
 
       // Show alert after successful submission

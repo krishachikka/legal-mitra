@@ -69,7 +69,7 @@ const SearchBar = ({ onSearch }) => {
   const handleTranslate = async () => {
     try {
       // Change the URL to the FastAPI endpoint for translation
-      const response = await axios.post("http://localhost:8000/translate/", {
+      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate/`, {
         text: query,
         target_lang: "en",  // Always translate to English
         source_lang: selectedLang
@@ -139,11 +139,11 @@ const SearchBar = ({ onSearch }) => {
       </button>
 
       {/* If translation is available, display it */}
-      {translatedText && (
+      {/* {translatedText && (
         <div className="mt-4 p-2 bg-gray-100 rounded-md">
           <strong>Translated Text:</strong> {translatedText}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

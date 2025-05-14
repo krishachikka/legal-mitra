@@ -21,7 +21,7 @@ const Translator = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3000/translate", {
+            const response = await axios.post(`${VITE_NODE_BACKEND_URL}/translate`, {
                 text: text,
                 target_lang: "en",  // We always want to translate to English
                 source_lang: selectedLang

@@ -14,7 +14,7 @@ const LawyersLandingPage = () => {
     const fetchLawyers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3000/api/v1/lawyers-directory/lawyers');
+        const response = await axios.get(`${VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/lawyers`);
         const fetchedLawyers = Array.isArray(response.data.data) ? response.data.data : [];
         setLawyers(fetchedLawyers);
         setFilteredLawyers(fetchedLawyers); // Set all lawyers initially

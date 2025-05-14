@@ -16,7 +16,7 @@ const LegalAdvice = () => {
   // Function to fetch keywords from the query
   const fetchKeywords = async (query) => {
     try {
-      const response = await axios.post("http://localhost:8000/extract_keywords", {
+      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/extract_keywords`, {
         query,
       });
       // Log the extracted keywords
@@ -85,7 +85,7 @@ const LegalAdvice = () => {
   // Translate the summarized content based on selected language
   const translateSummary = async (text) => {
     try {
-      const response = await axios.post("http://localhost:8000/translate", {
+      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate`, {
         text: text,
         target_lang: selectedLang,
         source_lang: "en", // Always translate from English
@@ -169,7 +169,7 @@ const LegalAdvice = () => {
     pdfFiles.forEach((file) => formData.append("pdf_files", file));
 
     try {
-      const response = await axios.post("http://localhost:8000/upload_pdf/", formData, {
+      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/upload_pdf/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.data); // Handle PDF response if needed

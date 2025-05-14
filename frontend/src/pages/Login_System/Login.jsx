@@ -35,7 +35,7 @@ function Login() {
 
       <div
         data-aos="flip-left"
-        data-aos-easing="ease-out-cubic"
+        data-aos-easing="ease-out-cubic" 
         data-aos-duration="1000"
         className="flex flex-row w-1/2 h-2/3 mx-auto bg-red-950/30 backdrop-blur-sm overflow-hidden rounded-3xl border border-red-200 text-white shadow-lg shadow-red-200"
       >

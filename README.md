@@ -1,4 +1,6 @@
 
+https://github.com/user-attachments/assets/e8d4e107-e774-4429-8592-5c7930888ab8
+
 <div align="center">
   <img src="https://img.icons8.com/color/96/law.png" width="80" />
   <h1>Legal Mitra 🤝⚖️</h1>
@@ -12,6 +14,10 @@
 **Legal Mitra** is an innovative web application designed to connect individuals in need of legal advice with qualified legal professionals. By bridging the gap between clients and lawyers, Legal Mitra serves as a digital legal companion—your "Mitra" for legal matters.
 
 > 💡 This project was developed as part of the Project and research-oriented requirement for the **Computer Science Engineering** program.
+
+## Demonstration
+
+https://github.com/user-attachments/assets/56c9f37f-dd83-47b7-927c-1ce8fef7c476
 
 ---
 

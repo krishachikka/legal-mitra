@@ -1,6 +1,3 @@
-
-https://github.com/user-attachments/assets/e8d4e107-e774-4429-8592-5c7930888ab8
-
 <div align="center">
   <img src="https://img.icons8.com/color/96/law.png" width="80" />
   <h1>Legal Mitra 🤝⚖️</h1>

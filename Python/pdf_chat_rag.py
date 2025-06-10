@@ -31,13 +31,18 @@ if not api_key:
 
 genai.configure(api_key=api_key)
 
+# Fetch VITE_FRONTEND_URL from environment variables
+frontend_url = os.getenv(
+    "VITE_FRONTEND_URL", "http://localhost:5173"
+)  # Default to localhost if not set
+
 # FastAPI app initialization
 app = FastAPI()
 
-# Allow CORS for frontend on localhost:5173
+# Allow CORS for frontend on the URL from VITE_FRONTEND_URL
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[frontend_url],  # Use the dynamic URL from environment variable
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,6 +55,7 @@ rss_url = (
 
 # Suppress FutureWarning from transformers
 warnings.filterwarnings("ignore", category=FutureWarning)
+
 # KeyBERT model initialization
 kw_model = KeyBERT()
 

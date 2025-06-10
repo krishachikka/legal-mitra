@@ -72,7 +72,7 @@ const LawyersForm = () => {
     formData.append("files", profilePhoto);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/lawyers-directory/upload", formData, {
+      const response = await axios.post(`${VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

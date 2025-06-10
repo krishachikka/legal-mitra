@@ -25,12 +25,12 @@ function PDFresponse({ query, autoSubmit, setPdfResponse }) {
   // Function to handle translation of response
   const translateResponse = async (responseText) => {
     try {
-      const res = await axios.post("http://localhost:8000/translate", {
+      const res = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate`, {
         text: responseText,
         target_lang: selectedLang,
         source_lang: "en", // Always translate from English
       });
-      
+
       // Remove "**" symbols from the translated text to prevent bold formatting
       const cleanedText = res.data.translated_text.replace(/\*\*/g, "");
       setTranslatedResponse(cleanedText);
@@ -54,11 +54,11 @@ function PDFresponse({ query, autoSubmit, setPdfResponse }) {
 
     try {
       console.log("Sending question:", finalQuestion);
-      const res = await axios.post("http://localhost:8000/ask-question/", {
+      const res = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/ask-question/`, {
         question: finalQuestion,
       });
       console.log("Received response:", res.data);
-      
+
       // Remove "**" symbols from the response to prevent bold formatting
       const cleanedResponse = res.data.response.replace(/\*\*/g, "");
       setResponse(cleanedResponse);

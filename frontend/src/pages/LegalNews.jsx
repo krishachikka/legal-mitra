@@ -9,10 +9,10 @@ const LegalNews = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
- 
+
   useEffect(() => {
     // Fetch news from FastAPI backend (changed URL to match FastAPI's port)
-    axios.get('http://localhost:8000/api/news')  // Changed port to 8000 for FastAPI
+    axios.get(`${VITE_PYTHON_BACKEND_URL_003}/api/news`)  // Changed port to 8000 for FastAPI
       .then(response => {
         setNews(response.data);
         setLoading(false);

@@ -4,20 +4,14 @@
   <p><strong>Bringing Legal Help to Your Fingertips</strong></p>
 </div>
 
-
-
 ## 📜 Project Overview
-
 **Legal Mitra** is an innovative web application designed to connect individuals in need of legal advice with qualified legal professionals. By bridging the gap between clients and lawyers, Legal Mitra serves as a digital legal companion—your "Mitra" for legal matters.
-
 > 💡 This project was developed as part of the Project and research-oriented requirement for the **Computer Science Engineering** program.
 
 ## Demonstration
-
 https://github.com/user-attachments/assets/56c9f37f-dd83-47b7-927c-1ce8fef7c476
 
 ---
-
 ## 🛠️ Tech Stack
 
 | Component         | Technology                  |
@@ -29,40 +23,38 @@ https://github.com/user-attachments/assets/56c9f37f-dd83-47b7-927c-1ce8fef7c476
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-✅ **Client Registration & Login**  
-✅ **Lawyer Registration & Login**  
-✅ **Admin Panel for Verification**  
-✅ **Case Filing & Tracking**  
-✅ **Secure Chat System**  
-✅ **Lawyer Approval Flow**  
-✅ **Profile Management for Users and Lawyers**
-
+**Client Registration & Login**  
+**Lawyer Registration & Login**  
+**Admin Panel for Verification**  
+**Case Filing & Tracking**  
+**Secure Chat System**  
+**Lawyer Approval Flow**  
+**Profile Management for Users and Lawyers**
 ---
 
-## 🔐 System Modules
+## System Modules
 
-### 👥 User Module
+### User Module
 - Register/Login as a Client or Lawyer
 - Update profile & change password
 - Submit queries or cases
 - View assigned lawyer details
 
-### ⚖️ Lawyer Module
+### Lawyer Module
 - Register/Login as a Legal Expert
 - View assigned cases
 - Respond via chat
 - Update profile info
 
-### 🛡️ Admin Module
+### Admin Module
 - Verify & approve lawyers
 - Manage users and lawyers
 - Monitor system activity
-
 ---
 
-## 🗃️ Database Design
+## Database Design
 
 The system uses database collections such as:
 - `users`
@@ -73,7 +65,7 @@ The system uses database collections such as:
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 <details>
 
@@ -87,43 +79,27 @@ The system uses database collections such as:
 
 ---
 
-## 💡 Future Enhancements
+## Future Enhancements
 
-- ✨ Video Conferencing with Lawyers
-- 📱 Mobile App Integration
-- 🌐 Multi-language Support
-- 📄 Legal Document Upload/Download
-- 🔍 Advanced Lawyer Search Filters
+- Video Conferencing with Lawyers
+- Mobile App Integration
+- Multi-language Support
+- Legal Document Upload/Download
+- Advanced Lawyer Search Filters
 
 ---
 
-## 🧠 Project Team
+## Project Team
 
-👨‍💻 **Developers:**
-- Yash Chetan Chavan
-- Krisha Prabhakar Chikka 
+**Developers:**
+- Krisha Prabhakar Chikka
+- Yash Chetan Chavan 
 - Anjali Ajaykumar Gupta
 
-🎓 **Guide:**  
+**Guide:**  
 - Prof. Dr. Megha Trivedi
-
 ---
 
-## 📄 License
-
+## License
 MIT License © 2025 – Legal Mitra Team
-
 ---
-
-## 🙌 Acknowledgments
-
-Thanks to our mentors, peers, and the open-source community for the tools and inspiration! 💙
-
----
-
-<div align="center">
-  <strong>Empowering Justice Through Technology</strong>
-  <br />
-  <em>— Legal Mitra</em>
-</div>
-```

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const PdfChat = () => {
@@ -14,6 +14,8 @@ const PdfChat = () => {
 
     const chatEndRef = useRef(null);
     const answerStartRef = useRef(null);
+
+    console.log(firstPdfUploaded)
 
     useEffect(() => {
         const savedHistory = JSON.parse(localStorage.getItem("questionHistory")) || [];
@@ -49,7 +51,7 @@ const PdfChat = () => {
         }
 
         try {
-            await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/upload_pdf/`, formData, {
+            await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/upload_pdf/`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -76,7 +78,7 @@ const PdfChat = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/ask_question/`, {
+            const response = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/ask_question/`, {
                 question: question,
             }, {
                 headers: {

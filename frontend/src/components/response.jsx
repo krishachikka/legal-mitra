@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
-import ReactMarkdown from "react-markdown";
 
 function PDFresponse({ query, autoSubmit, setPdfResponse }) {
   const [question, setQuestion] = useState(query); // Set question from the query prop
@@ -25,7 +25,7 @@ function PDFresponse({ query, autoSubmit, setPdfResponse }) {
   // Function to handle translation of response
   const translateResponse = async (responseText) => {
     try {
-      const res = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate`, {
+      const res = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/translate`, {
         text: responseText,
         target_lang: selectedLang,
         source_lang: "en", // Always translate from English
@@ -54,7 +54,7 @@ function PDFresponse({ query, autoSubmit, setPdfResponse }) {
 
     try {
       console.log("Sending question:", finalQuestion);
-      const res = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/ask-question/`, {
+      const res = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/ask-question/`, {
         question: finalQuestion,
       });
       console.log("Received response:", res.data);
@@ -147,5 +147,12 @@ function PDFresponse({ query, autoSubmit, setPdfResponse }) {
     </div>
   );
 }
+
+// PropTypes for validation
+PDFresponse.propTypes = {
+  query: PropTypes.string.isRequired, // The query string passed to the component
+  autoSubmit: PropTypes.bool.isRequired, // The boolean indicating auto-submit
+  setPdfResponse: PropTypes.func.isRequired, // The function to handle setting the PDF response
+};
 
 export default PDFresponse;

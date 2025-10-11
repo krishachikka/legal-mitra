@@ -1,9 +1,9 @@
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // Import the AOS CSS
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { login } from '../../utils/auth';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 import loginimg from '../../../public/assets/Josephine Tey.jpeg';
 
 function Login() {
@@ -35,7 +35,7 @@ function Login() {
 
       <div
         data-aos="flip-left"
-        data-aos-easing="ease-out-cubic" 
+        data-aos-easing="ease-out-cubic"
         data-aos-duration="1000"
         className="flex flex-row w-1/2 h-2/3 mx-auto bg-red-950/30 backdrop-blur-sm overflow-hidden rounded-3xl border border-red-200 text-white shadow-lg shadow-red-200"
       >
@@ -77,7 +77,7 @@ function Login() {
           {error && <p className="mt-4 text-center text-red-500">{error}</p>}
 
           <div className="mt-4 text-center">
-            <p className="text-sm">Don't have an account?</p>
+            <p className="text-sm">Dont have an account?</p>
             <Link
               to="/signup"
               className="text-red-300 hover:text-red-800 font-semibold"

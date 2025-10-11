@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChangedListener } from '../utils/auth'; // Assuming you have this utility
 import landingpage1 from '/assets/legalmitra_landingpage1.jpeg';
@@ -125,13 +125,13 @@ const LandingPage = () => {
                     <div className="flex justify-between space-x-8">
                         <div className="bg-red-100 p-8 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105">
                             <p className="text-lg text-gray-700 mb-4">
-                                "The team was fantastic! They helped me through a difficult legal situation with professionalism and care. Highly recommend!"
+                                The team was fantastic! They helped me through a difficult legal situation with professionalism and care. Highly recommend!
                             </p>
                             <p className="font-semibold text-gray-800">Sarah J.</p>
                         </div>
                         <div className="bg-red-100 p-8 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105">
                             <p className="text-lg text-gray-700 mb-4">
-                                "I couldn't have asked for a better legal team. They were knowledgeable, reliable, and always had my best interests at heart."
+                                I could not have asked for a better legal team. They were knowledgeable, reliable, and always had my best interests at heart.
                             </p>
                             <p className="font-semibold text-gray-800">David P.</p>
                         </div>
@@ -144,7 +144,7 @@ const LandingPage = () => {
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-4xl font-bold mb-6">Get In Touch</h2>
                     <p className="text-lg mb-6">
-                        Have questions or need help with a legal matter? Contact us today to schedule a consultation, and we'll be happy to assist.
+                        Have questions or need help with a legal matter? Contact us today to schedule a consultation, and we will be happy to assist.
                     </p>
                     <button className="px-10 py-3 bg-red-100 text-black font-semibold rounded-4xl shadow-lg hover:bg-red-200 transform transition-all duration-300 ease-in-out hover:scale-105">
                         Contact Us

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { signUp } from '../../utils/auth';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import signupimg from '../../../public/assets/signup.png';

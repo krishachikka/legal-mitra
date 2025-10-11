@@ -9,8 +9,7 @@ import os
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-import google.generativeai as genai
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
@@ -18,6 +17,7 @@ from langchain.prompts import PromptTemplate
 from deep_translator import GoogleTranslator
 import logging
 from keybert import KeyBERT
+import re
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -28,8 +28,6 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
     raise ValueError("GOOGLE_API_KEY environment variable not set")
-
-genai.configure(api_key=api_key)
 
 # Fetch VITE_FRONTEND_URL from environment variables
 frontend_url = os.getenv(
@@ -158,7 +156,8 @@ def get_pdf_text(pdf_docs):
     for pdf in pdf_docs:
         pdf_reader = PdfReader(pdf)
         for page in pdf_reader.pages:
-            text += page.extract_text()
+            if page.extract_text():
+                text += page.extract_text()
     return text
 
 
@@ -169,9 +168,11 @@ def get_text_chunks(text):
     return chunks
 
 
-# Function to generate vector store using embeddings
+# Function to generate vector store using HuggingFace embeddings
 def get_vector_store(text_chunks):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
 
@@ -179,19 +180,31 @@ def get_vector_store(text_chunks):
 # Function to create the conversational chain for Q&A
 def get_conversational_chain():
     prompt_template = """
-    Answer the question as detailed as possible from the provided context, make sure to provide all the details, if the answer is not in
-    provided context just say, "answer is not available in the context", don't provide the wrong answer\n\n
-    Context:\n {context}?\n
-    Question: \n{question}\n
+    Answer the question from the context below in **short, simple, and easy-to-understand points**. 
+    Use bullet points. 
+    If the answer is not in the context, say "Answer is not available in the context". 
+    Do not provide wrong information.
+
+    Context:
+    {context}
+
+    Question:
+    {question}
 
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
     prompt = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
+
+
+# Clean response text
+def clean_response(raw_text):
+    cleaned_response = re.sub(r"(?<!\S)\*+(?!\S)", "\n•", raw_text).strip()
+    return cleaned_response
 
 
 # Endpoint to upload PDF and process them
@@ -216,7 +229,9 @@ class QuestionRequest(BaseModel):
 @app.post("/ask_question/")
 async def ask_question(request: QuestionRequest):
     question = request.question  # Access question from request
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
 
     # Load the vector store
     new_db = FAISS.load_local(
@@ -230,7 +245,10 @@ async def ask_question(request: QuestionRequest):
     response = chain(
         {"input_documents": docs, "question": question}, return_only_outputs=True
     )
-    return {"response": response["output_text"]}
+
+    # Clean the response
+    cleaned_response = clean_response(response["output_text"])
+    return {"response": cleaned_response}
 
 
 # Create a Pydantic model for the input data
@@ -249,7 +267,9 @@ def user_input(user_question):
             logger.error(error_msg)
             raise FileNotFoundError(error_msg)
 
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
 
         # Load the vector store
         logger.info("Loading FAISS index from vector_embeddings directory")
@@ -282,8 +302,11 @@ def user_input(user_question):
             return_only_outputs=True,
         )
 
+        # Clean the response
+        cleaned_response = clean_response(response["output_text"])
+
         logger.info("Response generated successfully")
-        return response["output_text"]
+        return cleaned_response
 
     except Exception as e:
         logger.error(f"Error in user_input: {str(e)}", exc_info=True)

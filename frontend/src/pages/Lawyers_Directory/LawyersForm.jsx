@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
 
@@ -72,7 +72,7 @@ const LawyersForm = () => {
     formData.append("files", profilePhoto);
 
     try {
-      const response = await axios.post(`${VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/upload`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

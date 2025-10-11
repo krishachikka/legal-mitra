@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 const UserForm = () => {
@@ -62,7 +62,7 @@ const UserForm = () => {
       alert(`${folder} uploaded successfully: ${fileUrl}`); // Alert with file URL
       return fileUrl;
     } catch (error) {
-      throw new Error(`Error uploading file to Cloudinary: ${folder}`);
+      throw new Error(`Error uploading file to Cloudinary: ${folder}`, error);
     }
   };
 
@@ -79,7 +79,7 @@ const UserForm = () => {
       const data = { ...formData, imageUrl, certificateUrl, idProofUrl };
 
       // Make the API request to submit the data
-      const response = await axios.post(`${VITE_NODE_BACKEND_URL}/api/users`, data);
+      const response = await axios.post(`${import.meta.env.VITE_NODE_BACKEND_URL}/api/users`, data);
       console.log('User created:', response.data);
 
       // Show alert after successful submission

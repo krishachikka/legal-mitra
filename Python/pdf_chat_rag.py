@@ -385,3 +385,25 @@ async def extract_keywords(query: QueryRequest):
 @app.get("/")
 async def root():
     return {"status": "Legal Mitra API is running"}
+
+
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+
+    # Fetch PORT from environment (Render provides it automatically)
+    port = int(os.environ.get("PORT", 8000))  
+
+    # Optional: Fetch host from env or default to 0.0.0.0
+    host = os.environ.get("HOST", "0.0.0.0")
+
+    print(f"🚀 Starting Legal Mitra API server on {host}:{port} ...")
+
+    # Run FastAPI app
+    uvicorn.run(
+        "pdf_chat_rag:app",
+        host=host,
+        port=port,
+        reload=False
+    )

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const SpeechTranslator = () => {
@@ -40,7 +40,7 @@ const SpeechTranslator = () => {
             };
 
             speechRecognition.onerror = (event) => {
-                setError('An error occurred during speech recognition.');
+                setError('An error occurred during speech recognition.', event);
                 setIsListening(false);
             };
         }
@@ -73,7 +73,7 @@ const SpeechTranslator = () => {
             });
             setTranslatedText(response.data.translated_text);
         } catch (error) {
-            setError('Error while translating the text.');
+            setError('Error while translating the text.', error);
         }
     };
 

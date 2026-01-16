@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 import logo from '../../public/assets/legalmitra_white.png';
@@ -90,9 +91,15 @@ const Header = ({ setHeaderHeight, user }) => {
         )}
       </div>
 
-      <SideDrawer open={open} toggleDrawer={toggleDrawer}/>
+      <SideDrawer open={open} toggleDrawer={toggleDrawer} />
     </header>
   );
+};
+
+// PropTypes for validation
+Header.propTypes = {
+  setHeaderHeight: PropTypes.func.isRequired, // Function to set header height
+  user: PropTypes.object, // The user object, optional (you can adjust based on your data structure)
 };
 
 export default Header;

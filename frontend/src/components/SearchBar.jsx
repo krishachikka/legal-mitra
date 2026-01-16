@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";  // Import PropTypes
 import SearchIcon from "@mui/icons-material/Search";
 import MicIcon from "@mui/icons-material/Mic";
 import axios from "axios";
@@ -9,6 +10,8 @@ const SearchBar = ({ onSearch }) => {
   const [recognition, setRecognition] = useState(null);
   const [selectedLang, setSelectedLang] = useState("en");  // Language selection state
   const [translatedText, setTranslatedText] = useState("");
+
+  console.log(translatedText)
 
   useEffect(() => {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
@@ -69,7 +72,7 @@ const SearchBar = ({ onSearch }) => {
   const handleTranslate = async () => {
     try {
       // Change the URL to the FastAPI endpoint for translation
-      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate/`, {
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/translate/`, {
         text: query,
         target_lang: "en",  // Always translate to English
         source_lang: selectedLang
@@ -146,6 +149,11 @@ const SearchBar = ({ onSearch }) => {
       )} */}
     </div>
   );
+};
+
+// PropTypes for validation
+SearchBar.propTypes = {
+  onSearch: PropTypes.func.isRequired, // The function to handle search action
 };
 
 export default SearchBar;

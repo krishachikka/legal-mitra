@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
@@ -12,11 +12,11 @@ const LawyerDetailsPage = () => {
         const fetchLawyerDetails = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/${lawyerId}`);  // Adjusted URL
+                const response = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/${lawyerId}`);  // Adjusted URL
                 setLawyer(response.data.data);  // Assuming the response returns the lawyer's data in the 'data' field
                 setLoading(false);
             } catch (err) {
-                setError('Error fetching lawyer details');
+                setError('Error fetching lawyer details', err);
                 setLoading(false);
             }
         };

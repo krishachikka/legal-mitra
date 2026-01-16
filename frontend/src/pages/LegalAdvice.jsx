@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import SearchBar from "../components/SearchBar";
 import { CircularProgress } from "@mui/material";
@@ -14,9 +14,10 @@ const LegalAdvice = () => {
   const [translatedSummary, setTranslatedSummary] = useState(""); // Store translated summary
 
   // Function to fetch keywords from the query
+  console.log(summarizedContent)
   const fetchKeywords = async (query) => {
     try {
-      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/extract_keywords`, {
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/extract_keywords`, {
         query,
       });
       // Log the extracted keywords
@@ -85,7 +86,7 @@ const LegalAdvice = () => {
   // Translate the summarized content based on selected language
   const translateSummary = async (text) => {
     try {
-      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/translate`, {
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/translate`, {
         text: text,
         target_lang: selectedLang,
         source_lang: "en", // Always translate from English
@@ -169,7 +170,7 @@ const LegalAdvice = () => {
     pdfFiles.forEach((file) => formData.append("pdf_files", file));
 
     try {
-      const response = await axios.post(`${VITE_PYTHON_BACKEND_URL_003}/upload_pdf/`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/upload_pdf/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.data); // Handle PDF response if needed
@@ -177,6 +178,8 @@ const LegalAdvice = () => {
       console.error("Error uploading PDF:", error);
     }
   };
+
+  console.log(handlePdfUpload)
 
   return (
     <div className="p-6 ml-0 md:ml-15 transition-all duration-300 min-h-screen bg-gradient-to-r from-gray-300 to-red-100">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,13 +14,13 @@ const LawyersLandingPage = () => {
     const fetchLawyers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/lawyers`);
+        const response = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/api/v1/lawyers-directory/lawyers`);
         const fetchedLawyers = Array.isArray(response.data.data) ? response.data.data : [];
         setLawyers(fetchedLawyers);
         setFilteredLawyers(fetchedLawyers); // Set all lawyers initially
         setLoading(false);
       } catch (err) {
-        setError('Error fetching data');
+        setError('Error fetching data', err);
         setLoading(false);
       }
     };

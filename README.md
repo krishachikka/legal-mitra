@@ -1,105 +1,100 @@
-<div align="center">
-  <img src="https://img.icons8.com/color/96/law.png" width="80" />
-  <h1>Legal Mitra 🤝⚖️</h1>
-  <p><strong>Bringing Legal Help to Your Fingertips</strong></p>
-</div>
 
-## 📜 Project Overview
-**Legal Mitra** is an innovative web application designed to connect individuals in need of legal advice with qualified legal professionals. By bridging the gap between clients and lawyers, Legal Mitra serves as a digital legal companion—your "Mitra" for legal matters.
-> 💡 This project was developed as part of the Project and research-oriented requirement for the **Computer Science Engineering** program.
+# ⚖️ Legal Mitra: Multilingual Legal Resources and Guidance Platform
 
-## Demonstration
-https://github.com/user-attachments/assets/56c9f37f-dd83-47b7-927c-1ce8fef7c476
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Framework: LangChain](https://img.shields.io/badge/Framework-LangChain-green.svg)](https://www.langchain.com/)
+[![Vector DB: Pinecone](https://img.shields.io/badge/VectorDB-Pinecone-orange.svg)](https://www.pinecone.io/)
 
----
-## 🛠️ Tech Stack
+**Legal Mitra** is an enterprise-grade AI ecosystem designed to democratize legal access in India. By combining **Retrieval-Augmented Generation (RAG)** with domain-specific rule-aware reasoning, it provides citizens with grounded, citation-linked legal guidance in six regional languages.
 
-| Component         | Technology                  |
-|------------------|------------------------------|
-| Frontend         | React, JavaScript, Streamlit |
-| Backend          | NodeJs, Express, JWT, Python |
-| Database         | MongoDB, Pinecone            |
-| Hosting          | Currently - localhost        |
+## 🏆 Project Milestones & Recognition
+
+| Achievement | Description | Record |
+| :--- | :--- | :--- |
+| **🥇 Hackathon Winner** | Awarded 1st place at **Code-o-Fiesta** for innovative legal-tech AI implementation. | [View Certificate](https://drive.google.com/file/d/1VA_JRFVYsFONZcoeW13FaTShAwGzXpsA/view?usp=sharing) |
+| **📑 IEEE Publication** | Published research in IEEE Xplore. | [Read Paper](https://ieeexplore.ieee.org/document/11140002) |
+| **📜 Registered Patent** | Novel architecture for multilingual legal retrieval & secure verification. | [Patent Copy](https://drive.google.com/file/d/1fqHANQBJlyw3oLeyUT6_RImjutMzntcy/view?usp=sharing) |
 
 ---
 
-## Key Features
 
-**Client Registration & Login**  
-**Lawyer Registration & Login**  
-**Admin Panel for Verification**  
-**Case Filing & Tracking**  
-**Secure Chat System**  
-**Lawyer Approval Flow**  
-**Profile Management for Users and Lawyers**
----
+## Architecture:
 
-## System Modules
+### 1. Retrieval Augmented Generation (RAG):
+<img width="1535" height="666" alt="image" src="https://github.com/user-attachments/assets/54c08406-9a8d-4917-9d01-8171dd7860b1" />
 
-### User Module
-- Register/Login as a Client or Lawyer
-- Update profile & change password
-- Submit queries or cases
-- View assigned lawyer details
+### 2. Legal Advice High Level Diagram:
+<img width="1475" height="576" alt="image" src="https://github.com/user-attachments/assets/a935c60c-c92b-4649-b113-bff375a53a54" />
 
-### Lawyer Module
-- Register/Login as a Legal Expert
-- View assigned cases
-- Respond via chat
-- Update profile info
 
-### Admin Module
-- Verify & approve lawyers
-- Manage users and lawyers
-- Monitor system activity
----
+## Core Capabilities
 
-## Database Design
-
-The system uses database collections such as:
-- `users`
-- `lawyers`
-- `cases`
-- `messages`
-- `admin`
+1. **Multilingual Intelligence:**\
+  Native support for 6 Indian languages via fine-tuned transformer models for high-precision legal translation.
+2. **Grounded RAG Architecture:**\
+  Vectorized knowledge base encompassing the **Constitution of India**, **IPC**, **CrPC**, and landmark case laws.
+3. **Document-Chat Engine:**\
+  Analyze complex legal artifacts including **FIRs**, **Notices**, and **Contracts** using contextual semantic search.
+4. **Verification Suite:**\
+  Secure lawyer onboarding utilizing **Computer Vision (OCR)** to validate Bar Council certificates against public records.
+5. **Voice-to-Law:**\
+  Seamless integration of ASR (Automatic Speech Recognition) for hands-free legal queries.
 
 ---
 
-## Screenshots
+## Technical Stack
 
-<details>
-
-![image](https://github.com/user-attachments/assets/a6ed2a0a-662e-4b67-8e62-4155d75a1cae)
-![image](https://github.com/user-attachments/assets/1cdf929f-5e77-43f7-9bcb-0ee6ba004848)
-![image](https://github.com/user-attachments/assets/2b4a4dd7-242c-44ba-9370-be608d07e054)
-![image](https://github.com/user-attachments/assets/84badf9a-8b08-496c-aeb2-f01c817e34bd)
-
-
-</details>
+| Layer | Technology |
+| :--- | :--- |
+| **LLM Orchestration** | LangChain |
+| **Vector Store** | FAISS |
+| **OCR/Vision** | Tesseract |
+| **Backend** | FastAPI and Express |
+| **Deployment** | Docker |
 
 ---
 
-## Future Enhancements
+## Architecture Overview
 
-- Video Conferencing with Lawyers
-- Mobile App Integration
-- Multi-language Support
-- Legal Document Upload/Download
-- Advanced Lawyer Search Filters
+The system utilizes a **bi-encoder/cross-encoder** pipeline for retrieval:
+1.  **Query Expansion:** Re-writing user queries for better semantic matching.
+2.  **Dense Retrieval:** Fetching top-k legal chunks from the vector database.
+3.  **Reranking:** Re-ordering results based on jurisdiction relevance and case law priority.
+4.  **Synthesis:** Generation of a response strictly grounded in the retrieved citations.
 
 ---
 
-## Project Team
+To market **Legal Mitra** with maximum impact, we will use a "Feature Spotlight" format. This focuses on the high-level value proposition while maintaining technical credibility.
 
-**Developers:**
-- Krisha Prabhakar Chikka
-- Yash Chetan Chavan 
-- Anjali Ajaykumar Gupta
-
-**Guide:**  
-- Prof. Dr. Megha Trivedi
 ---
 
-## License
-MIT License © 2025 – Legal Mitra Team
+## Platform Highlights
+
+### 1. Multilingual Semantic Intelligence
+
+* **Language-Agnostic Retrieval:** Leveraging multilingual transformers to bridge the gap between regional language queries and English-centric legal statutes.
+* **Contextual Accuracy:** Goes beyond keyword matching to understand the *intent* of a legal grievance in Hindi, Marathi, Gujarati, and more.
+
+### 2. Verified Citation Engine (RAG)
+
+* **Zero-Hallucination Policy:** Every response is programmatically anchored to the **Constitution of India, IPC, and CrPC**.
+* **Traceable Evidence:** Provides direct references to specific sections and landmark case laws, ensuring the guidance is legally defensible and trustworthy.
+
+### 3. OCR-Powered Lawyer Verification
+
+* **Computer Vision Validation:** Uses high-precision OCR and image processing to analyze Bar Council certificates for authenticity.
+* **Secure Onboarding:** Cross-references extracted data with public records to ensure a high-trust environment for citizen-lawyer interactions.
+
+### 4. Smart Document-Chat Engine
+
+* **Automated Legal Analysis:** Instantly deconstructs complex documents like **FIRs, legal notices, and contracts**.
+* **Actionable Summaries:** Translates dense "legalese" into simplified summaries, highlighting critical deadlines, obligations, and fundamental rights.
+
+---
+
+### The Vision
+
+**Legal Mitra** is not just a tool; it is a scalable infrastructure for justice. By integrating this platform with public grievance systems, we aim to reduce the burden on local courts and empower every Indian citizen with a "Digital Legal Counsel" in their pocket.
+
 ---

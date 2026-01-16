@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FiBell } from 'react-icons/fi'; // Bell Icon for "Recent Updates"
 import { AiOutlineSearch } from 'react-icons/ai'; // Search Icon
@@ -12,7 +12,7 @@ const LegalNews = () => {
 
   useEffect(() => {
     // Fetch news from FastAPI backend (changed URL to match FastAPI's port)
-    axios.get(`${VITE_PYTHON_BACKEND_URL_003}/api/news`)  // Changed port to 8000 for FastAPI
+    axios.get(`${import.meta.env.VITE_PYTHON_BACKEND_URL_003}/api/news`)  // Changed port to 8000 for FastAPI
       .then(response => {
         setNews(response.data);
         setLoading(false);

@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'; // Import Navigate
 import { onAuthStateChangedListener } from './utils/auth'; // Import auth state change listener
-import SideDrawer from './components/SideDrawer';
+// import SideDrawer from './components/SideDrawer';
 import LegalAdvice from './pages/LegalAdvice';
 import PdfChat from './components/PdfChat';
 import Header from './components/Header';
-import SpeechTranslator from './pages/SpeechTranslator';
+// import SpeechTranslator from './pages/SpeechTranslator';
 import LegalNews from './pages/LegalNews';
 import CaseStudies from './pages/CaseStudies';
 import FAQ from './pages/FAQ';
 import LandingPage from './pages/LandingPage';
-import Translator from './Translator';
+// import Translator from './Translator';
 import LawyersLandingPage from './pages/Lawyers_Directory/LawyersLandingPage';
 import LawyerDetailsPage from './pages/Lawyers_Directory/LawyerDetailsPage';
-import Summarizer from './pages/Summarizer';
-import UserForm from './pages/UserForm';
+// import Summarizer from './pages/Summarizer';
+// import UserForm from './pages/UserForm';
 import LawyersForm from './pages/Lawyers_Directory/LawyersForm';
-import SignUp from './pages/Login_System/Signup';
+import SignUp from './pages/Login_System/SignUp';
 import Login from './pages/Login_System/Login';
-import NotFound from './pages/NotFound';
+// import NotFound from './pages/NotFound';
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);

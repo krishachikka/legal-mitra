@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const CaseStudies = () => {
@@ -39,6 +39,8 @@ const CaseStudies = () => {
         const date = new Date(dateString);
         return date.toLocaleDateString(); // Formats date to MM/DD/YYYY
     };
+
+    console.log(formatDate)
 
     if (loading) return <p className="text-center text-xl">Loading...</p>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
